@@ -1,0 +1,17 @@
+[1.215s] Invoking command in '/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build --no-deps symlink_data
+[1.569s] running develop
+[1.805s] running egg_info
+[1.809s] writing robot_subscriber.egg-info/PKG-INFO
+[1.809s] writing dependency_links to robot_subscriber.egg-info/dependency_links.txt
+[1.809s] writing entry points to robot_subscriber.egg-info/entry_points.txt
+[1.809s] writing requirements to robot_subscriber.egg-info/requires.txt
+[1.809s] writing top-level names to robot_subscriber.egg-info/top_level.txt
+[1.814s] reading manifest file 'robot_subscriber.egg-info/SOURCES.txt'
+[1.815s] writing manifest file 'robot_subscriber.egg-info/SOURCES.txt'
+[1.817s] running build_ext
+[1.818s] Creating /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot-subscriber.egg-link (link to .)
+[1.821s] Installing API_move script to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/robot_subscriber
+[1.821s] 
+[1.821s] Installed /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber
+[1.821s] running symlink_data
+[1.873s] Invoked command in '/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber' returned '0': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build --no-deps symlink_data

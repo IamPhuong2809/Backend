@@ -1,0 +1,37 @@
+[1.767s] Invoking command in '/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build
+[2.244s] running develop
+[2.602s] Removing /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot-subscriber.egg-link (link to .)
+[2.699s] Invoked command in '/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber' returned '0': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build
+[2.700s] Invoking command in '/home/phuongnguyen/DATN/Backend/ros2_ws/src/robot_subscriber': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_subscriber build --build-base /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build install --record /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/install.log --single-version-externally-managed install_data --force
+[3.373s] running egg_info
+[3.374s] writing ../../build/robot_subscriber/robot_subscriber.egg-info/PKG-INFO
+[3.378s] writing dependency_links to ../../build/robot_subscriber/robot_subscriber.egg-info/dependency_links.txt
+[3.379s] writing entry points to ../../build/robot_subscriber/robot_subscriber.egg-info/entry_points.txt
+[3.379s] writing requirements to ../../build/robot_subscriber/robot_subscriber.egg-info/requires.txt
+[3.379s] writing top-level names to ../../build/robot_subscriber/robot_subscriber.egg-info/top_level.txt
+[3.382s] reading manifest file '../../build/robot_subscriber/robot_subscriber.egg-info/SOURCES.txt'
+[3.383s] writing manifest file '../../build/robot_subscriber/robot_subscriber.egg-info/SOURCES.txt'
+[3.384s] running build
+[3.384s] running build_py
+[3.385s] running install
+[3.385s] running install_lib
+[3.388s] creating /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber
+[3.388s] copying /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build/lib/robot_subscriber/tool_pos_subscriber.py -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber
+[3.388s] copying /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build/lib/robot_subscriber/joints_subscriber.py -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber
+[3.388s] copying /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build/lib/robot_subscriber/positions_subscriber.py -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber
+[3.389s] copying /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build/lib/robot_subscriber/__init__.py -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber
+[3.390s] byte-compiling /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber/tool_pos_subscriber.py to tool_pos_subscriber.cpython-310.pyc
+[3.391s] byte-compiling /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber/joints_subscriber.py to joints_subscriber.cpython-310.pyc
+[3.392s] byte-compiling /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber/positions_subscriber.py to positions_subscriber.cpython-310.pyc
+[3.392s] byte-compiling /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber/__init__.py to __init__.cpython-310.pyc
+[3.392s] running install_data
+[3.392s] copying resource/robot_subscriber -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/share/ament_index/resource_index/packages
+[3.395s] copying package.xml -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/share/robot_subscriber
+[3.395s] running install_egg_info
+[3.398s] Copying ../../build/robot_subscriber/robot_subscriber.egg-info to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot_subscriber-0.0.0-py3.10.egg-info
+[3.400s] running install_scripts
+[3.463s] Installing joint_angle_subs script to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/robot_subscriber
+[3.464s] Installing robot_pos_subs script to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/robot_subscriber
+[3.464s] Installing tool_pos_subs script to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/robot_subscriber
+[3.464s] writing list of installed files to '/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/install.log'
+[3.532s] Invoked command in '/home/phuongnguyen/DATN/Backend/ros2_ws/src/robot_subscriber' returned '0': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_subscriber build --build-base /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/build install --record /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber/install.log --single-version-externally-managed install_data --force

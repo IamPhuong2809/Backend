@@ -1,0 +1,14 @@
+# Bỏ qua môi trường ảo
+.venv/
+venv/
+
+# Bỏ qua file cài đặt tự động
+__pycache__/
+*.pyc
+*.pyo
+
+# Bỏ qua database SQLite (nếu có)
+db.sqlite3
+
+# Bỏ qua thông tin cấu hình cá nhân (nếu có)
+.env

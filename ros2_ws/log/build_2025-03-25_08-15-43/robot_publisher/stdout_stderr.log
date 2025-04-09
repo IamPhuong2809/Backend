@@ -1,0 +1,16 @@
+running develop
+running egg_info
+writing robot_publisher.egg-info/PKG-INFO
+writing dependency_links to robot_publisher.egg-info/dependency_links.txt
+writing entry points to robot_publisher.egg-info/entry_points.txt
+writing requirements to robot_publisher.egg-info/requires.txt
+writing top-level names to robot_publisher.egg-info/top_level.txt
+reading manifest file 'robot_publisher.egg-info/SOURCES.txt'
+writing manifest file 'robot_publisher.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages/robot-publisher.egg-link (link to .)
+
+Installed /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher
+running symlink_data
+symbolically linking /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/resource/robot_publisher -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/share/ament_index/resource_index/packages
+symbolically linking /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/package.xml -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/share/robot_publisher

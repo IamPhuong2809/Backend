@@ -1,0 +1,28 @@
+[1.231s] Invoking command in '/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/build
+[1.583s] running develop
+[1.804s] Removing /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages/robot-publisher.egg-link (link to .)
+[1.851s] Invoked command in '/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher' returned '0': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/build
+[1.854s] Invoking command in '/home/phuongnguyen/DATN/Backend/ros2_ws/src/robot_publisher': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_publisher build --build-base /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/build install --record /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/install.log --single-version-externally-managed install_data --force
+[2.186s] running egg_info
+[2.187s] writing ../../build/robot_publisher/robot_publisher.egg-info/PKG-INFO
+[2.187s] writing dependency_links to ../../build/robot_publisher/robot_publisher.egg-info/dependency_links.txt
+[2.187s] writing entry points to ../../build/robot_publisher/robot_publisher.egg-info/entry_points.txt
+[2.187s] writing requirements to ../../build/robot_publisher/robot_publisher.egg-info/requires.txt
+[2.188s] writing top-level names to ../../build/robot_publisher/robot_publisher.egg-info/top_level.txt
+[2.190s] reading manifest file '../../build/robot_publisher/robot_publisher.egg-info/SOURCES.txt'
+[2.191s] writing manifest file '../../build/robot_publisher/robot_publisher.egg-info/SOURCES.txt'
+[2.191s] running build
+[2.191s] running build_py
+[2.192s] running install
+[2.192s] running install_lib
+[2.193s] creating /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages/robot_publisher
+[2.193s] copying /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/build/lib/robot_publisher/__init__.py -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages/robot_publisher
+[2.194s] byte-compiling /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages/robot_publisher/__init__.py to __init__.cpython-310.pyc
+[2.194s] running install_data
+[2.194s] copying resource/robot_publisher -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/share/ament_index/resource_index/packages
+[2.195s] copying package.xml -> /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/share/robot_publisher
+[2.195s] running install_egg_info
+[2.197s] Copying ../../build/robot_publisher/robot_publisher.egg-info to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages/robot_publisher-0.0.0-py3.10.egg-info
+[2.199s] running install_scripts
+[2.237s] writing list of installed files to '/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/install.log'
+[2.275s] Invoked command in '/home/phuongnguyen/DATN/Backend/ros2_ws/src/robot_publisher' returned '0': PYTHONPATH=/home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_publisher/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_publisher build --build-base /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/build install --record /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_publisher/install.log --single-version-externally-managed install_data --force

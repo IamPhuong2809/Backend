@@ -1,0 +1,18 @@
+running develop
+running egg_info
+writing robot_subscriber.egg-info/PKG-INFO
+writing dependency_links to robot_subscriber.egg-info/dependency_links.txt
+writing entry points to robot_subscriber.egg-info/entry_points.txt
+writing requirements to robot_subscriber.egg-info/requires.txt
+writing top-level names to robot_subscriber.egg-info/top_level.txt
+reading manifest file 'robot_subscriber.egg-info/SOURCES.txt'
+writing manifest file 'robot_subscriber.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/python3.10/site-packages/robot-subscriber.egg-link (link to .)
+Installing API_move script to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/robot_subscriber
+Installing joint_angle_subs script to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/robot_subscriber
+Installing robot_pos_subs script to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/robot_subscriber
+Installing tool_pos_subs script to /home/phuongnguyen/DATN/Backend/ros2_ws/install/robot_subscriber/lib/robot_subscriber
+
+Installed /home/phuongnguyen/DATN/Backend/ros2_ws/build/robot_subscriber
+running symlink_data

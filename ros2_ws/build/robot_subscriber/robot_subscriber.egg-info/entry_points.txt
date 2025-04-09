@@ -1,0 +1,3 @@
+[console_scripts]
+API_move = robot_subscriber.API_move:main
+

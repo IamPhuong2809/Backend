@@ -1,0 +1,2 @@
+[INFO] [1742842529.647188879] [tool_pos_subscriber]: Received tool positions: array('d', [2.5, 1.0, 1.5, 41.0, 51.0, 61.0])
+[INFO] [1742842531.432802252] [tool_pos_subscriber]: Received tool positions: array('d', [2.5, 1.0, 1.5, 41.0, 51.5, 61.0])

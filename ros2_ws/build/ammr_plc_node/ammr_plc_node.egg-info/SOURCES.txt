@@ -8,10 +8,9 @@ setup.py
 ../../build/ammr_plc_node/ammr_plc_node.egg-info/requires.txt
 ../../build/ammr_plc_node/ammr_plc_node.egg-info/top_level.txt
 ../../build/ammr_plc_node/ammr_plc_node.egg-info/zip-safe
-ammr_plc_node/Manipulator.py
 ammr_plc_node/__init__.py
+ammr_plc_node/manipulator.py
 ammr_plc_node/test.py
-ammr_plc_node/tf_map_to_base.py
 resource/ammr_plc_node
 test/test_copyright.py
 test/test_flake8.py

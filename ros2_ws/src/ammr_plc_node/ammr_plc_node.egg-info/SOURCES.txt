@@ -1,0 +1,17 @@
+package.xml
+setup.cfg
+setup.py
+ammr_plc_node/__init__.py
+ammr_plc_node/manipulator.py
+ammr_plc_node/test.py
+ammr_plc_node.egg-info/PKG-INFO
+ammr_plc_node.egg-info/SOURCES.txt
+ammr_plc_node.egg-info/dependency_links.txt
+ammr_plc_node.egg-info/entry_points.txt
+ammr_plc_node.egg-info/requires.txt
+ammr_plc_node.egg-info/top_level.txt
+ammr_plc_node.egg-info/zip-safe
+resource/ammr_plc_node
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py

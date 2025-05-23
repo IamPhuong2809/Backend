@@ -80,13 +80,18 @@ def O0005(request):
 @api_view(['POST'])
 def O0013(request):
     data = request.data
-    dataLoad = data.get('dataLoad')
-    nameLoad = data.get('nameLoad')
-    idLoad = data.get("id")
-    
-    LoadData.objects.filter(id=(idLoad+1)).update(**dataLoad)
-    LoadName.objects.filter(id=(idLoad+1)).update(name=nameLoad)
+    try:
+        dataLoad = data.get('dataLoad')
+        nameLoad = data.get('nameLoad')
+        idLoad = data.get("id")
 
+        update_Data = LoadData.objects.filter(id=(idLoad+1)).update(**dataLoad)
+        update_Name = LoadName.objects.filter(id=(idLoad+1)).update(name=nameLoad)
+        if update_Data and update_Name:  
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": False, "error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response(status=status.HTTP_204_NO_CONTENT)
 

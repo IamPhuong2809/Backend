@@ -14,24 +14,31 @@ def O0007(request):
 @api_view(['POST'])
 def O0016(request):
     data = request.data
-    parameter = data.get('data')
-    idPoint = data.get('idPoint')
-    idPath = data.get("idPath")
+    try:
+        parameter = data.get('data')
+        idPoint = data.get('idPoint')
+        idPath = data.get("idPath")
 
-    motion, cont, stop, vel, acc, corner = parameter
-    cont_bool = True if cont.upper() == 'TRUE' else False
-    stop_bool = True if stop.upper() == 'TRUE' else False
-    Point.objects.filter(point_id=idPoint, path_id=idPath).update(
-        motion=motion,
-        cont=cont_bool,
-        stop=stop_bool,
-        vel=vel,
-        acc=acc,
-        corner=corner
-    )
-    print(parameter,idPath, idPoint)
+        motion, cont, stop, vel, acc, corner = parameter
+        cont_bool = True if cont.upper() == 'TRUE' else False
+        stop_bool = True if stop.upper() == 'TRUE' else False
+        updated = Point.objects.filter(point_id=idPoint, path_id=idPath).update(
+            motion=motion,
+            cont=cont_bool,
+            stop=stop_bool,
+            vel=vel,
+            acc=acc,
+            corner=corner
+        )
 
-    return Response(status=status.HTTP_204_NO_CONTENT)
+        if updated:  
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": False, "error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return Response({"success": False, "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 def insert_path_id(id, id_target):
     if id == id_target:

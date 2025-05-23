@@ -6,6 +6,7 @@ Maintainer: horizon
 Maintainer-email: nminhphuong2809@gmail.com
 License: TODO: License declaration
 Requires-Dist: setuptools
+Requires-Dist: pymcprotocol
 Dynamic: license
 Dynamic: maintainer
 Dynamic: maintainer-email

@@ -12,6 +12,7 @@ urlpatterns = [
     path('O0005/', configuration.O0005, name='O0005'),
     path('O0006/', position_list.O0006, name='O0006'),
     path('O0007/', teach_path.O0007, name='O0007'),
+    path('O0008/', move_path.O0008, name='O0008'),
     # path('O0009/', power_robot.O0009, name='O0009'),
     path('O0010/', power_robot.O0010, name='O0010'),
     # path('O0011/', power_robot.O0011, name='O0011'),
@@ -32,6 +33,10 @@ urlpatterns = [
     path('O0025/', move.O0025, name='O0025'),
 
     path('O0026/', move_path.O0026, name='O0026'),
+
+    path('O0027/', move.O0027, name='O0027'),
+    path('O0028/', move.O0028, name='O0028'),
+
 
     path('global/', position_list.global_list, name='global'),
     path('path/', teach_path.path_list, name='path'),

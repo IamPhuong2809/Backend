@@ -1,0 +1,26 @@
+running egg_info
+writing ../../build/ammr_plc_node/ammr_plc_node.egg-info/PKG-INFO
+writing dependency_links to ../../build/ammr_plc_node/ammr_plc_node.egg-info/dependency_links.txt
+writing entry points to ../../build/ammr_plc_node/ammr_plc_node.egg-info/entry_points.txt
+writing requirements to ../../build/ammr_plc_node/ammr_plc_node.egg-info/requires.txt
+writing top-level names to ../../build/ammr_plc_node/ammr_plc_node.egg-info/top_level.txt
+reading manifest file '../../build/ammr_plc_node/ammr_plc_node.egg-info/SOURCES.txt'
+writing manifest file '../../build/ammr_plc_node/ammr_plc_node.egg-info/SOURCES.txt'
+running build
+running build_py
+copying ammr_plc_node/test.py -> /home/horizon/datn/Backend/ros2_ws/build/ammr_plc_node/build/lib/ammr_plc_node
+copying ammr_plc_node/manipulator.py -> /home/horizon/datn/Backend/ros2_ws/build/ammr_plc_node/build/lib/ammr_plc_node
+copying ammr_plc_node/__init__.py -> /home/horizon/datn/Backend/ros2_ws/build/ammr_plc_node/build/lib/ammr_plc_node
+running install
+running install_lib
+copying /home/horizon/datn/Backend/ros2_ws/build/ammr_plc_node/build/lib/ammr_plc_node/manipulator.py -> /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node
+byte-compiling /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/manipulator.py to manipulator.cpython-310.pyc
+running install_data
+copying resource/ammr_plc_node -> /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/share/ament_index/resource_index/packages
+copying package.xml -> /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/share/ammr_plc_node
+running install_egg_info
+removing '/home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node-0.0.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/ammr_plc_node/ammr_plc_node.egg-info to /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node-0.0.0-py3.10.egg-info
+running install_scripts
+Installing ammr_plc_node script to /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/ammr_plc_node
+writing list of installed files to '/home/horizon/datn/Backend/ros2_ws/build/ammr_plc_node/install.log'

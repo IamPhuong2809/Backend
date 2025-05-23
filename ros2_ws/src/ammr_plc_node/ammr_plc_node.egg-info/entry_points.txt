@@ -1,0 +1,3 @@
+[console_scripts]
+ammr_plc_node = ammr_plc_node.manipulator:main
+

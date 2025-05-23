@@ -4,6 +4,7 @@ from rest_framework import status
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
+from api.models import Point,Global
 
 rclpy.init()
 
@@ -80,3 +81,55 @@ def O0024(request):
     print("home")
 
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def O0027(request):
+    data = request.data
+    try:
+        id = data.get("id")
+        name = data.get("name")
+        joint = [float(j) for j in data.get("joint")] 
+        updated = Global.objects.filter(point_id=id).update(
+            name = name,
+            x = joint[0],
+            y = joint[1],
+            z = joint[2],
+            roll = joint[3],
+            pitch = joint[4],
+            yaw = joint[5]
+        )
+
+        if updated:  
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": False, "error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return Response({"success": False, "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def O0028(request):
+    data = request.data
+    try:
+        id_path = data.get("id_parent")
+        id = data.get("id")
+        name = data.get("name")
+        joint = [float(j) for j in data.get("joint")] 
+        updated = Point.objects.filter(path_id=id_path,point_id=id).update(
+            name = name,
+            x = joint[0],
+            y = joint[1],
+            z = joint[2],
+            roll = joint[3],
+            pitch = joint[4],
+            yaw = joint[5]
+        )
+
+        if updated:  
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": False, "error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return Response({"success": False, "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+

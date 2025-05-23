@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-# EASY-INSTALL-ENTRY-SCRIPT: 'ammr-plc-node==0.0.0','console_scripts','ammr_plc_node'
+# EASY-INSTALL-ENTRY-SCRIPT: 'ammr_plc_node==0.0.0','console_scripts','ammr_plc_node'
 import re
 import sys
 
 # for compatibility with easy_install; see #2198
-__requires__ = 'ammr-plc-node==0.0.0'
+__requires__ = 'ammr_plc_node==0.0.0'
 
 try:
     from importlib.metadata import distribution
@@ -30,4 +30,4 @@ globals().setdefault('load_entry_point', importlib_load_entry_point)
 
 if __name__ == '__main__':
     sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
-    sys.exit(load_entry_point('ammr-plc-node==0.0.0', 'console_scripts', 'ammr_plc_node')())
+    sys.exit(load_entry_point('ammr_plc_node==0.0.0', 'console_scripts', 'ammr_plc_node')())

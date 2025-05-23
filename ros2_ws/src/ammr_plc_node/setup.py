@@ -11,7 +11,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
-    install_requires=['setuptools'],
+    install_requires=['setuptools', 'pymcprotocol'],
     zip_safe=True,
     maintainer='horizon',
     maintainer_email='nminhphuong2809@gmail.com',
@@ -19,9 +19,7 @@ setup(
     license='TODO: License declaration',
     entry_points={
         'console_scripts': [
-            "ammr_plc_node = ammr_plc_node.Manipulator:main",
-            "test_node = ammr_plc_node.test:main",
-            "tf_relay = ammr_plc_node.tf_map_to_base:main"
+            "ammr_plc_node = ammr_plc_node.manipulator:main"
         ],
     },
 )

@@ -11,17 +11,20 @@ def O0006(request):
     result = [{'id': p['point_id'], 'name': p['name']} for p in points]
     return Response(result)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def O0014(request):
-    print(f"Robot run")
-
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    data = request.data
+    id = data.get("id")
+    position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw', 'figure')
+    if position[0] == None:
+        return Response({"success": False}, status=status.HTTP_200_OK)
+    else:
+        return Response({"success": True}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def O0015(request):
-    print(f"Robot abort")
 
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response({"success": True}, status=status.HTTP_200_OK)
 
 
 def insert_point_id(id, id_target):
@@ -59,7 +62,7 @@ def global_list(request):
         else:
             id = data.get("id")
             position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw', 'figure') 
-            return Response(position)
+            return Response(position[0])
         
         return Response(status=status.HTTP_204_NO_CONTENT)
 

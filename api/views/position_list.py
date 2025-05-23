@@ -1,30 +1,15 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from api.models import Global
+from django.db import transaction
+from django.db.models import F
 
-@api_view(['POST'])
-def O0005(request):
-    try:
-        idLoad = int(request.data)  # Lấy index từ request
-        if idLoad < 0 or idLoad >= 3:
-            return Response({"error": "Invalid index"}, status=400)
-        
-        # name_list = list(LoadName.objects.order_by("id").values_list("name", flat=True))
-        # data_list = LoadData.objects.filter(id=idLoad+1).values(
-        #     "x", "y", "z", "mass", "jx", "jxy", "jxz", 
-        #     "jyx", "jy", "jyz", "jzx", "jzy", "jz"
-        # ).first()
-        # print(data_list)
-        
-        # response_data = {
-        #     "dataLoad": data_list,  # Lấy dữ liệu theo ID
-        #     "nameLoad": name_list,  # Trả về danh sách tên
-        # }
-
-        # return Response(response_data)
-    
-    except (ValueError, KeyError, TypeError) as e:
-        return Response({"error": str(e)}, status=400)
+@api_view(['GET'])
+def O0006(request):
+    points = Global.objects.all().values('point_id', 'name')  
+    result = [{'id': p['point_id'], 'name': p['name']} for p in points]
+    return Response(result)
 
 @api_view(['GET'])
 def O0014(request):
@@ -37,3 +22,57 @@ def O0015(request):
     print(f"Robot abort")
 
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def insert_point_id(id, id_target):
+    if id == id_target:
+        return
+
+    with transaction.atomic():
+        Global.objects.filter(point_id=id).update(point_id=-1)
+
+        if id < id_target:
+            Global.objects.filter(point_id__gt=id, point_id__lte=id_target).update(point_id=F('point_id') - 1)
+        else:
+            Global.objects.filter(point_id__gte=id_target, point_id__lt=id).update(point_id=F('point_id') + 1)
+
+        Global.objects.filter(point_id=-1).update(point_id=id_target)
+
+@api_view(['POST', 'DELETE'])
+def global_list(request):    
+    if request.method == 'POST':
+        data = request.data
+        type_data = data.get("type")
+        if type_data == "add":
+            id = data.get("id")
+            name = data.get("name")
+            Global.objects.filter(point_id__gte=id).update(point_id=F('point_id') + 1)
+            Global.objects.create(point_id=id, name=name, x=0, y=0, z=0, roll=0, pitch=0, yaw=0, tool=0, figure=0, work=0)
+        elif type_data == "rename":
+            id = data.get("id")
+            name = data.get("name")
+            Global.objects.filter(point_id=id).update(name=name)
+        elif type_data == "update":
+            id = data.get("id")
+            id_target = data.get("id_target")
+            insert_point_id(id, id_target)
+        else:
+            id = data.get("id")
+            position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw', 'figure') 
+            return Response(position)
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    elif request.method == 'DELETE':
+        data = request.data
+        delete_all = data.get("delete_all")
+        if delete_all:
+            Global.objects.all().delete()
+        else:
+            id = data.get("id")
+            Global.objects.filter(point_id=id).delete()
+            Global.objects.filter(point_id__gt=id).update(point_id=F('point_id') - 1)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

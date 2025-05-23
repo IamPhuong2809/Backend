@@ -1,0 +1,4 @@
+[console_scripts]
+ammr_plc_node = ammr_plc_node.Manipulator:main
+test_node = ammr_plc_node.test:main
+tf_relay = ammr_plc_node.tf_map_to_base:main

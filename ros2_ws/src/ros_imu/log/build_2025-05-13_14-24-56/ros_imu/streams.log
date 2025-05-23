@@ -1,0 +1,36 @@
+[0.795s] Invoking command in '/home/horizon/datn/Backend/ros2_ws/src/ros_imu': PYTHONPATH=/home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base build/ros_imu build --build-base /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build install --record /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/install.log --single-version-externally-managed install_data
+[1.082s] running egg_info
+[1.102s] creating build/ros_imu/ros_imu.egg-info
+[1.102s] writing build/ros_imu/ros_imu.egg-info/PKG-INFO
+[1.103s] writing dependency_links to build/ros_imu/ros_imu.egg-info/dependency_links.txt
+[1.103s] writing entry points to build/ros_imu/ros_imu.egg-info/entry_points.txt
+[1.103s] writing requirements to build/ros_imu/ros_imu.egg-info/requires.txt
+[1.103s] writing top-level names to build/ros_imu/ros_imu.egg-info/top_level.txt
+[1.104s] writing manifest file 'build/ros_imu/ros_imu.egg-info/SOURCES.txt'
+[1.147s] reading manifest file 'build/ros_imu/ros_imu.egg-info/SOURCES.txt'
+[1.148s] writing manifest file 'build/ros_imu/ros_imu.egg-info/SOURCES.txt'
+[1.148s] running build
+[1.148s] running build_py
+[1.149s] creating /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu
+[1.149s] copying ros_imu/__init__.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu
+[1.150s] copying ros_imu/Node_imu.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu
+[1.150s] copying ros_imu/ros_imu.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu
+[1.150s] running install
+[1.155s] running install_lib
+[1.175s] creating /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu
+[1.176s] copying /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu/__init__.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu
+[1.176s] copying /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu/Node_imu.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu
+[1.176s] copying /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu/ros_imu.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu
+[1.176s] byte-compiling /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu/__init__.py to __init__.cpython-310.pyc
+[1.177s] byte-compiling /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu/Node_imu.py to Node_imu.cpython-310.pyc
+[1.178s] byte-compiling /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu/ros_imu.py to ros_imu.cpython-310.pyc
+[1.179s] running install_data
+[1.179s] creating /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/share/ament_index/resource_index/packages
+[1.180s] copying resource/ros_imu -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/share/ament_index/resource_index/packages
+[1.180s] copying package.xml -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/share/ros_imu
+[1.180s] running install_egg_info
+[1.203s] Copying build/ros_imu/ros_imu.egg-info to /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu-0.0.0-py3.10.egg-info
+[1.204s] running install_scripts
+[1.351s] Installing ros_imu script to /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/ros_imu
+[1.352s] writing list of installed files to '/home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/install.log'
+[1.388s] Invoked command in '/home/horizon/datn/Backend/ros2_ws/src/ros_imu' returned '0': PYTHONPATH=/home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base build/ros_imu build --build-base /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build install --record /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/install.log --single-version-externally-managed install_data

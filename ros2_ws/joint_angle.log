@@ -1,4 +1,0 @@
-[INFO] [1742842519.286626313] [joints_subscriber]: Received joint angles: array('d', [2.5, 1.0, 3.0, 41.0, 51.0, 61.0])
-[INFO] [1742842520.561157475] [joints_subscriber]: Received joint angles: array('d', [2.5, 1.0, 2.5, 41.0, 51.0, 61.0])
-[INFO] [1742842524.251344043] [joints_subscriber]: Received joint angles: array('d', [2.5, 1.0, 2.0, 41.0, 51.0, 61.0])
-[INFO] [1742842524.510811608] [joints_subscriber]: Received joint angles: array('d', [2.5, 1.0, 1.5, 41.0, 51.0, 61.0])

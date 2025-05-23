@@ -1,0 +1,2 @@
+[console_scripts]
+ros_imu = ros_imu.Node_imu:main

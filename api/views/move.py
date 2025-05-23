@@ -7,10 +7,10 @@ from std_msgs.msg import Float64MultiArray
 
 rclpy.init()
 
-node = rclpy.create_node('API_move')
-publisher_joint = node.create_publisher(Float64MultiArray, 'joint_angles', 10)
-publisher_work = node.create_publisher(Float64MultiArray, 'robot_position', 10)
-publisher_tool = node.create_publisher(Float64MultiArray, 'tool_position', 10)
+node = rclpy.create_node('Manipulator')
+publisher_joint = node.create_publisher(Float64MultiArray, 'joint_angles_move', 10)
+publisher_work = node.create_publisher(Float64MultiArray, 'robot_position_move', 10)
+publisher_tool = node.create_publisher(Float64MultiArray, 'tool_position_move', 10)
 publisher_lin = node.create_publisher(Float64MultiArray, 'linear_move', 10)
 
 @api_view(['POST'])
@@ -67,7 +67,7 @@ def O0022(request):
         msg.data = [float(j) for j in dataArray] 
         publisher_work.publish(msg)
     
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def O0023(request):

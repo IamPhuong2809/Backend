@@ -1,7 +1,7 @@
 from django.db import models
 
 class Path(models.Model):
-    path_id = models.IntegerField()
+    path_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=255)
 
     class Meta:
@@ -11,7 +11,7 @@ class Path(models.Model):
         return self.name
 
 class Point(models.Model):
-    path = models.ForeignKey(Path, related_name='points', on_delete=models.CASCADE)
+    path = models.ForeignKey(Path, to_field='path_id', on_delete=models.CASCADE)
     point_id = models.IntegerField()
     name = models.CharField(max_length=255)
     x = models.FloatField()

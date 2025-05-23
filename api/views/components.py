@@ -1,6 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float64MultiArray
 
 robotData = {
     "Power":True,
@@ -9,7 +12,7 @@ robotData = {
     "AUX": True,
     "busy": False,
     "ee": False,
-    "abort":True,
+    "abort":False,
     "error": False,
     "override": 10,
     "tool": 5,

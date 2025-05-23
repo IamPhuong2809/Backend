@@ -1,0 +1,34 @@
+running egg_info
+creating build/ros_imu/ros_imu.egg-info
+writing build/ros_imu/ros_imu.egg-info/PKG-INFO
+writing dependency_links to build/ros_imu/ros_imu.egg-info/dependency_links.txt
+writing entry points to build/ros_imu/ros_imu.egg-info/entry_points.txt
+writing requirements to build/ros_imu/ros_imu.egg-info/requires.txt
+writing top-level names to build/ros_imu/ros_imu.egg-info/top_level.txt
+writing manifest file 'build/ros_imu/ros_imu.egg-info/SOURCES.txt'
+reading manifest file 'build/ros_imu/ros_imu.egg-info/SOURCES.txt'
+writing manifest file 'build/ros_imu/ros_imu.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu
+copying ros_imu/__init__.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu
+copying ros_imu/Node_imu.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu
+copying ros_imu/ros_imu.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu
+running install
+running install_lib
+creating /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu
+copying /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu/__init__.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu
+copying /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu/Node_imu.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu
+copying /home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/build/lib/ros_imu/ros_imu.py -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu
+byte-compiling /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu/__init__.py to __init__.cpython-310.pyc
+byte-compiling /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu/Node_imu.py to Node_imu.cpython-310.pyc
+byte-compiling /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu/ros_imu.py to ros_imu.cpython-310.pyc
+running install_data
+creating /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/share/ament_index/resource_index/packages
+copying resource/ros_imu -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/share/ament_index/resource_index/packages
+copying package.xml -> /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/share/ros_imu
+running install_egg_info
+Copying build/ros_imu/ros_imu.egg-info to /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/python3.10/site-packages/ros_imu-0.0.0-py3.10.egg-info
+running install_scripts
+Installing ros_imu script to /home/horizon/datn/Backend/ros2_ws/src/ros_imu/install/ros_imu/lib/ros_imu
+writing list of installed files to '/home/horizon/datn/Backend/ros2_ws/src/ros_imu/build/ros_imu/install.log'

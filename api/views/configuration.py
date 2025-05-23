@@ -66,7 +66,6 @@ def O0005(request):
             "x", "y", "z", "mass", "jx", "jxy", "jxz", 
             "jyx", "jy", "jyz", "jzx", "jzy", "jz"
         ).first()
-        print(data_list)
         
         response_data = {
             "dataLoad": data_list,  # Lấy dữ liệu theo ID

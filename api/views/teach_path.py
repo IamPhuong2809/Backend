@@ -80,37 +80,36 @@ def path_list(request):
                     path.path_id += 1
                     path.save()
                 Point.objects.filter(path_id__gte=id).update(path_id=F('path_id') + 1)
-            Path.objects.create(path_id=id, name=name)
+            updated = Path.objects.create(path_id=id, name=name)
         elif type_data == "rename":
             id = data.get("id")
             name = data.get("name")
-            Path.objects.filter(path_id=id).update(name=name)
+            updated = Path.objects.filter(path_id=id).update(name=name)
         elif type_data == "update":
             id = data.get("id")
             id_target = data.get("id_target")
             insert_path_id(id, id_target)
-        
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+            updated = True
     elif request.method == 'DELETE':
         data = request.data
         delete_all = data.get("delete_all")
         if delete_all:
-            Path.objects.all().delete()
+            updated = Path.objects.all().delete()
         else:
             id = data.get("id")
             with transaction.atomic():
-                Path.objects.filter(path_id=id).delete()
+                updated = Path.objects.filter(path_id=id).delete()
                 paths = Path.objects.filter(path_id__gt=id).order_by('path_id')
                 for path in paths:
                     path.path_id -= 1
                     path.save()
                 Point.objects.filter(path_id__gt=id).update(path_id=F('path_id') - 1)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    if updated:  
+        return Response({"success": True}, status=status.HTTP_200_OK)
+    else:
+        return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
     
-    return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 def insert_point_id(id_path, id, id_target):
     if id == id_target:
         return
@@ -135,18 +134,19 @@ def point_list(request):
             id = data.get("id")
             name = data.get("name")
             Point.objects.filter(path_id=id_path, point_id__gte=id).update(point_id=F('point_id') + 1)
-            Point.objects.create(path_id=id_path,point_id=id,name=name,x=0,y=0,z=0,roll=0,pitch=0,yaw=0,
+            updated = Point.objects.create(path_id=id_path,point_id=id,name=name,x=0,y=0,z=0,roll=0,pitch=0,yaw=0,
                                  tool=0,figure=0,work=0,motion="LIN",cont=False,stop=False,vel=0,acc=0,corner=0)
         elif type_data == "rename":
             id_path = data.get("id_parent")
             id = data.get("id")
             name = data.get("name")
-            Point.objects.filter(path_id=id_path, point_id=id).update(name=name)
+            updated = Point.objects.filter(path_id=id_path, point_id=id).update(name=name)
         elif type_data == "update":
             id = data.get("id")
             id_target = data.get("id_target")
             id_path = data.get("id_parent")
             insert_point_id(id_path, id, id_target)
+            updated = True
         elif type_data == "data":
             id_path = data.get("id_parent")
             id = data.get("id")
@@ -159,21 +159,20 @@ def point_list(request):
             points = Point.objects.filter(path_id=id).values('point_id', 'name')  
             result = [{'id': p['point_id'], 'name': p['name']} for p in points]
             return Response(result)
-        
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
     elif request.method == 'DELETE':
         data = request.data
         delete_all = data.get("delete_all")
         if delete_all:
             id_path = data.get("id_parent")
-            Point.objects.filter(path_id=id_path).delete()
+            updated = Point.objects.filter(path_id=id_path).delete()
         else:
             id_path = data.get("id_parent")
             id = data.get("id")
-            Point.objects.filter(path_id=id_path, point_id=id).delete()
+            updated = Point.objects.filter(path_id=id_path, point_id=id).delete()
             Point.objects.filter(path_id=id_path, point_id__gt=id).update(point_id=F('point_id') - 1)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    if updated:  
+        return Response({"success": True}, status=status.HTTP_200_OK)
+    else:
+        return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
     
-    return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

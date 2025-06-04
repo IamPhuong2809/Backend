@@ -9,7 +9,8 @@ setup.py
 ../../build/ammr_plc_node/ammr_plc_node.egg-info/top_level.txt
 ../../build/ammr_plc_node/ammr_plc_node.egg-info/zip-safe
 ammr_plc_node/__init__.py
-ammr_plc_node/manipulator.py
+ammr_plc_node/action_control.py
+ammr_plc_node/plc_node.py
 ammr_plc_node/test.py
 resource/ammr_plc_node
 test/test_copyright.py

@@ -15,6 +15,7 @@ def O0026(request):
     data = request.data
     idPoint = data.get('idPoint')
     idPath = data.get("idPath")
-    print(idPath, idPoint)
+    stepMode = data.get("stepMode")
+    print(idPath, idPoint, stepMode)
 
     return Response(status=status.HTTP_204_NO_CONTENT)

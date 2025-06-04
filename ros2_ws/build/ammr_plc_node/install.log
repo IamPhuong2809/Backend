@@ -1,8 +1,10 @@
+/home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/action_control.py
 /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/test.py
-/home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/manipulator.py
+/home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/plc_node.py
 /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/__init__.py
+/home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/__pycache__/action_control.cpython-310.pyc
 /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/__pycache__/test.cpython-310.pyc
-/home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/__pycache__/manipulator.cpython-310.pyc
+/home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/__pycache__/plc_node.cpython-310.pyc
 /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/lib/python3.10/site-packages/ammr_plc_node/__pycache__/__init__.cpython-310.pyc
 /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/share/ament_index/resource_index/packages/ammr_plc_node
 /home/horizon/datn/Backend/ros2_ws/install/ammr_plc_node/share/ammr_plc_node/package.xml

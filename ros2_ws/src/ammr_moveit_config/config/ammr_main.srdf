@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+    <robot name="ammr_main">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="arm">
+        <joint name="Manipulator_J1_Joint"/>
+        <joint name="Manipulator_J2_Joint"/>
+        <joint name="Manipulator_J3_Joint"/>
+        <joint name="Manipulator_J4_Joint"/>
+        <joint name="Manipulator_J5_Joint"/>
+        <joint name="Manipulator_J6_Joint"/>
+        <joint name="EE_1"/>
+    </group>
+    <group name="gripper">
+        <joint name="EE_R"/>
+    </group>
+    <group name="diff_base">
+        <joint name="Right_Drive_wheel_Joint"/>
+        <joint name="Left_Drive_wheel_Joint"/>
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="home" group="arm">
+        <joint name="Manipulator_J1_Joint" value="1.5708"/>
+        <joint name="Manipulator_J2_Joint" value="1.5708"/>
+        <joint name="Manipulator_J3_Joint" value="0.7854"/>
+        <joint name="Manipulator_J4_Joint" value="1.5708"/>
+        <joint name="Manipulator_J5_Joint" value="1.5708"/>
+        <joint name="Manipulator_J6_Joint" value="3.1416"/>
+    </group_state>
+    <group_state name="transport" group="arm">
+        <joint name="Manipulator_J1_Joint" value="1.5708"/>
+        <joint name="Manipulator_J2_Joint" value="2.2563"/>
+        <joint name="Manipulator_J3_Joint" value="0.1041"/>
+        <joint name="Manipulator_J4_Joint" value="1.5708"/>
+        <joint name="Manipulator_J5_Joint" value="1.1629"/>
+        <joint name="Manipulator_J6_Joint" value="3.1416"/>
+    </group_state>
+    <group_state name="open" group="gripper">
+        <joint name="EE_R" value="0"/>
+    </group_state>
+    <group_state name="close" group="gripper">
+        <joint name="EE_R" value="0.01"/>
+    </group_state>
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="gripper" parent_link="Manipulator_J6_Link_2" group="gripper" parent_group="arm"/>
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="base_joint" type="floating" parent_frame="odom" child_link="base_link"/>
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="Caster_backleft_Link" link2="Caster_backright_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Caster_frontleft_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Caster_frontright_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Depth_Camera_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Left_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Lidar_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J1_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J2_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J3_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J4_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J6_Link_1" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backleft_Link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Caster_frontleft_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Caster_frontright_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Depth_Camera_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Left_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Lidar_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J1_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J2_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J3_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J4_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J6_Link_1" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Caster_backright_Link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Caster_frontright_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Depth_Camera_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Left_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Lidar_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J1_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J2_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J3_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J4_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J6_Link_1" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontleft_Link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Depth_Camera_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Left_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Lidar_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J1_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J2_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J3_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J4_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J6_Link_1" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Caster_frontright_Link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Depth_Camera_Link" link2="Left_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Depth_Camera_Link" link2="Lidar_Link" reason="Never"/>
+    <disable_collisions link1="Depth_Camera_Link" link2="Manipulator_J1_Link" reason="Never"/>
+    <disable_collisions link1="Depth_Camera_Link" link2="Manipulator_J2_Link" reason="Never"/>
+    <disable_collisions link1="Depth_Camera_Link" link2="Manipulator_J3_Link" reason="Never"/>
+    <disable_collisions link1="Depth_Camera_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Depth_Camera_Link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Left_Drive_wheel_Link" link2="Lidar_Link" reason="Never"/>
+    <disable_collisions link1="Left_Drive_wheel_Link" link2="Manipulator_J1_Link" reason="Never"/>
+    <disable_collisions link1="Left_Drive_wheel_Link" link2="Manipulator_J2_Link" reason="Never"/>
+    <disable_collisions link1="Left_Drive_wheel_Link" link2="Manipulator_J3_Link" reason="Never"/>
+    <disable_collisions link1="Left_Drive_wheel_Link" link2="Manipulator_J4_Link" reason="Never"/>
+    <disable_collisions link1="Left_Drive_wheel_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Left_Drive_wheel_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Left_Drive_wheel_Link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Lidar_Link" link2="Manipulator_J1_Link" reason="Never"/>
+    <disable_collisions link1="Lidar_Link" link2="Manipulator_J2_Link" reason="Never"/>
+    <disable_collisions link1="Lidar_Link" link2="Manipulator_J3_Link" reason="Never"/>
+    <disable_collisions link1="Lidar_Link" link2="Manipulator_J4_Link" reason="Never"/>
+    <disable_collisions link1="Lidar_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Lidar_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Lidar_Link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Manipulator_J2_Link" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Manipulator_J3_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Manipulator_J4_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Manipulator_J6_Link_1" reason="Never"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J1_Link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="Manipulator_J3_Link" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="Manipulator_J4_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="Manipulator_J6_Link_1" reason="Never"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J2_Link" link2="base_link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J3_Link" link2="Manipulator_J4_Link" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J3_Link" link2="Manipulator_J5_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J3_Link" link2="Manipulator_J6_Link_1" reason="Never"/>
+    <disable_collisions link1="Manipulator_J3_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Manipulator_J3_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Manipulator_J3_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Manipulator_J3_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J4_Link" link2="Manipulator_J5_Link" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J4_Link" link2="Manipulator_J6_Link_1" reason="Never"/>
+    <disable_collisions link1="Manipulator_J4_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Manipulator_J4_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Manipulator_J4_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Manipulator_J4_Link" link2="Right_Drive_wheel_Link" reason="Never"/>
+    <disable_collisions link1="Manipulator_J4_Link" link2="base_link" reason="Default"/>
+    <disable_collisions link1="Manipulator_J5_Link" link2="Manipulator_J6_Link_1" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J5_Link" link2="Manipulator_J6_Link_2" reason="Never"/>
+    <disable_collisions link1="Manipulator_J5_Link" link2="Manipulator_J6_Link_EEL" reason="Never"/>
+    <disable_collisions link1="Manipulator_J5_Link" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Manipulator_J5_Link" link2="base_link" reason="Default"/>
+    <disable_collisions link1="Manipulator_J6_Link_1" link2="Manipulator_J6_Link_2" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J6_Link_2" link2="Manipulator_J6_Link_EEL" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J6_Link_2" link2="Manipulator_J6_Link_EER" reason="Adjacent"/>
+    <disable_collisions link1="Manipulator_J6_Link_EEL" link2="Manipulator_J6_Link_EER" reason="Never"/>
+    <disable_collisions link1="Right_Drive_wheel_Link" link2="base_link" reason="Adjacent"/>
+</robot>

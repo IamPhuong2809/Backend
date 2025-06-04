@@ -1,10 +1,21 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from api.views.plc_manager import get_plc_manager
+
+plc_manager = get_plc_manager()
 
 @api_view(['GET'])
 def O0000(request):
-    print(f"Robot off")
+    success = plc_manager.write_random(
+        word_devices=["M0"],
+        word_values=[1]
+    )
+
+    if success:
+        print("[PLC] Robot power off command sent")
+    else:
+        print("[PLC] Failed to send robot power off command")
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 

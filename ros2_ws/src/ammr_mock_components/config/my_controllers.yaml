@@ -1,0 +1,106 @@
+# This config file is used by ros2_control
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+    # use_sim_time: true
+
+# Robot arm controllers
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+# Robot arm's gripper controllers 
+    gripper_controller:
+      type: position_controllers/GripperActionController
+# Robot differential wheels base controller 
+    diff_base_controller:
+      type: "diff_drive_controller/DiffDriveController"
+# Publishing Joint State from the real model 
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - Manipulator_J1_Joint
+      - Manipulator_J2_Joint
+      - Manipulator_J3_Joint
+      - Manipulator_J4_Joint
+      - Manipulator_J5_Joint
+      - Manipulator_J6_Joint
+
+    velocity_limits:
+      Manipulator_J1_Joint: 1.2  # Slightly reduced for efficiency
+      Manipulator_J2_Joint: 1.2
+      Manipulator_J3_Joint: 1.2
+      Manipulator_J4_Joint: 1.2
+      Manipulator_J5_Joint: 1.2
+      Manipulator_J6_Joint: 1.2
+    acceleration_limits:
+      Manipulator_J1_Joint: 2.5  # Reduced for smoother motion
+      Manipulator_J2_Joint: 2.5
+      Manipulator_J3_Joint: 2.5
+      Manipulator_J4_Joint: 2.5
+      Manipulator_J5_Joint: 2.5
+      Manipulator_J6_Joint: 2.5
+
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+gripper_controller:
+  ros__parameters:
+    joint: EE_R
+    
+    
+    
+diff_base_controller:
+  ros__parameters:
+    publish_limited_velocity: true
+    velocity_rolling_window_size: 10
+
+    left_wheel_names: ["Left_Drive_wheel_Joint"]
+    right_wheel_names: ["Right_Drive_wheel_Joint"]
+
+    wheel_separation: 0.46
+    wheel_radius: 0.161
+
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    odom_frame_id: odom
+    base_frame_id: base_link
+
+    use_stamped_vel: false
+    pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+
+    open_loop: true
+    enable_odom_tf: true
+
+    cmd_vel_timeout: 0.5
+    publish_limited_velocity: true
+    velocity_rolling_window_size: 10
+
+    # Velocity and acceleration limits
+    # Whenever a min_* is unspecified, default to -max_*
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.has_jerk_limits: false
+    linear.x.max_velocity: 1.0
+    linear.x.min_velocity: -1.0
+    linear.x.max_acceleration: 1.0
+    linear.x.max_jerk: 0.0
+    linear.x.min_jerk: 0.0
+
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.has_jerk_limits: false
+    angular.z.max_velocity: 1.0
+    angular.z.min_velocity: -1.0
+    angular.z.max_acceleration: 1.0
+    angular.z.min_acceleration: -1.0
+    angular.z.max_jerk: 0.0
+    angular.z.min_jerk: 0.0

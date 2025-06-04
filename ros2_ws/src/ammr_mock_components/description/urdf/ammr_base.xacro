@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<robot name="ammr_main" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<!-- THIS PAGE IS USED TO DESCRIBE THE AUTONOMOUS MOBILE MANIPULATOR BASE 
+WHICH CONSIST OF THE BASE FRAME, CASTER WHEELS AND MANIPULATOR BASE-->
+
+    <xacro:property name="frame_ground_offset" value="0.115"/>
+    <xacro:property name="caster_wheels_radius" value="0.033"/>
+
+
+    <link name="base_link">
+    <visual>
+        <origin xyz="0 0 ${frame_ground_offset}" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="file://$(find ammr_mock_components)/meshes/base_link.STL" />
+        </geometry>
+        <material name="">
+            <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+        </material>
+    </visual>
+
+    <inertial>
+        <origin xyz="0.0638 0 ${frame_ground_offset + 0.2215}" rpy="0 0 0" />
+        <mass value="13.4575990474881" />
+        <inertia
+            ixx="0.0749328452865162"
+            ixy="-3.34691918883614E-07"
+            ixz="-7.21976014961377E-06"
+            iyy="0.208344462052985"
+            iyz="2.91737092245682E-06"
+            izz="0.255209316885901" />
+    </inertial>
+
+    <collision>
+        <origin xyz="0 0 ${frame_ground_offset}" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="file://$(find ammr_mock_components)/meshes/base_link.STL" />
+        </geometry>
+    </collision>
+    </link>
+
+<!-- CASTER WHEELS LINK-->
+    <!-- FRONT RIGHT CASTER WHEELS-->
+    <link name="Caster_frontright_Link">
+        <inertial>
+            <origin xyz="-0.0123 0.0325 ${frame_ground_offset}" rpy="0 0 0" />
+            <mass value="0.111608045817562" />
+            <inertia
+                ixx="4.75864898068099E-05"
+                ixy="1.61941943522179E-06"
+                ixz="3.91878885089351E-10"
+                iyy="5.65023298002223E-05"
+                iyz="-6.24847969157307E-09"
+                izz="6.48109553875577E-05" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr_mock_components)/meshes/Caster_frontright_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.8 0.8 0.8 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="${caster_wheels_radius}"/>
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Caster_frontright_Link" type="fixed">
+        <origin xyz="0.447 -0.262 ${frame_ground_offset - 0.08335}" rpy="1.5707963267949 0 0" />
+        <parent link="base_link" />
+        <child link="Caster_frontright_Link" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <!-- FRONT LEFT CASTER WHEELS-->
+    <link name="Caster_frontleft_Link">
+        <inertial>
+            <origin xyz="-0.01229 0.03252 0" rpy="0 0 0" />
+            <mass value="0.111608046232635" />
+            <inertia
+                ixx="4.75864901264927E-05"
+                ixy="1.61941948382726E-06"
+                ixz="3.91999887235058E-10"
+                iyy="5.65023300764558E-05"
+                iyz="-6.2487680010785E-09"
+                izz="6.48109557119836E-05" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr_mock_components)/meshes/Caster_frontleft_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.8 0.8 0.8 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="${caster_wheels_radius}"/>
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Caster_frontleft_Joint" type="fixed">
+        <origin xyz="0.447 0.262 ${frame_ground_offset - 0.08335}" rpy="${pi/2} 0 0" />
+        <parent link="base_link" />
+        <child link="Caster_frontleft_Link" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <!-- REAR RIGHT CASTER WHEELS-->
+    <link name="Caster_backright_Link">
+        <inertial>
+            <origin xyz="-0.0123 0.0325 0" rpy="0 0 0" />
+            <mass value="0.111608042759464" />
+            <inertia
+                ixx="4.7586489109651E-05"
+                ixy="1.61941942376714E-06"
+                ixz="3.91868858418766E-10"
+                iyy="5.650232910697E-05"
+                iyz="-6.24820035109413E-09"
+                izz="6.48109545818733E-05" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr_mock_components)/meshes/Caster_backright_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.8 0.807843137254902 0.8 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="${caster_wheels_radius}"/>
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Caster_backright_Joint" type="fixed">
+        <origin xyz="-0.377 -0.262 ${frame_ground_offset - 0.08335}" rpy="1.5707963267949 0 0" />
+        <parent link="base_link" />
+        <child link="Caster_backright_Link" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <!-- REAR LEFT CASTER WHEELS-->
+    <link name="Caster_backleft_Link">
+        <inertial>
+            <origin xyz="-0.01229 0.03252 0" rpy="0 0 0" />
+            <mass value="0.111608043890482" />
+            <inertia
+                ixx="4.75864893867588E-05"
+                ixy="1.61941942703802E-06"
+                ixz="3.91879892164815E-10"
+                iyy="5.65023293877921E-05"
+                iyz="-6.24808701339665E-09"
+                izz="6.4810954938133E-05" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr_mock_components)/meshes/Caster_backleft_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.8 0.807843137254902 0.8 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="${caster_wheels_radius}"/>
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Caster_backleft_Joint" type="fixed">
+        <origin xyz="-0.377 0.262 ${frame_ground_offset - 0.08335}" rpy="1.5707963267949 0 0" />
+        <parent link="base_link" />
+        <child link="Caster_backleft_Link" />
+        <axis xyz="0 0 0" />
+    </joint>
+    
+</robot>

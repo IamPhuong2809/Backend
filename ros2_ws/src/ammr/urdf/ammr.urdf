@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="ammr">
+<!-- BASE LINK-->
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0638178597484663 -7.24734008648691E-06 0.2215005582657"
+        rpy="0 0 0" />
+      <mass
+        value="13.4575990474881" />
+      <inertia
+        ixx="0.0749328452865162"
+        ixy="-3.34691918883614E-07"
+        ixz="-7.21976014961377E-06"
+        iyy="0.208344462052985"
+        iyz="2.91737092245682E-06"
+        izz="0.255209316885901" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0.115"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+<!-- RIGHT DRIVE WHEEL LINK-->
+  <link
+    name="Right_Drive_wheel_Link">
+    <inertial>
+      <origin
+        xyz="-7.63278329429795E-17 -1.11022302462516E-16 -0.00236500745899665"
+        rpy="0 0 0" />
+      <mass
+        value="3.39203243164232" />
+      <inertia
+        ixx="0.0243089316503053"
+        ixy="1.60800968207563E-18"
+        ixz="3.26375472339224E-16"
+        iyy="0.0243089316503053"
+        iyz="-7.7401651668733E-17"
+        izz="0.047247796608228" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Right_Drive_wheel_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Right_Drive_wheel_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+<!-- RIGHT DRIVE WHEEL JOINT-->
+  <joint
+    name="Right_Drive_wheel_Joint"
+    type="continuous">
+    <origin
+      xyz="-0.0399999999999189 -0.205599999999989 0.0451499976997314"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Right_Drive_wheel_Link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+<!-- LEFT DRIVE WHEEL LINK-->
+  <link
+    name="Left_Drive_wheel_Link">
+    <inertial>
+      <origin
+        xyz="6.93889390390723E-18 -8.32667268468867E-17 0.00236500745899662"
+        rpy="0 0 0" />
+      <mass
+        value="3.39203243164232" />
+      <inertia
+        ixx="0.0243089316503053"
+        ixy="4.85437810349641E-19"
+        ixz="2.48098582544798E-16"
+        iyy="0.0243089316503053"
+        iyz="1.31831110354224E-16"
+        izz="0.047247796608228" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Left_Drive_wheel_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Left_Drive_wheel_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+<!-- LEFT DRIVE WHEEL JOINT-->
+  <joint
+    name="Left_Drive_wheel_Joint"
+    type="continuous">
+    <origin
+      xyz="-0.0400000000000798 0.205599999999988 0.045149997699734"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Left_Drive_wheel_Link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+<!-- ROBOT ARM -->
+<!-- ROBOT ARM JOINT 1-->
+  <link
+    name="Manipulator_J1_Link">
+    <inertial>
+      <origin
+        xyz="-0.00821912518927564 0.00204815917950716 0.0530925004865024"
+        rpy="0 0 0" />
+      <mass
+        value="2.59329608264777" />
+      <inertia
+        ixx="0.00541011353910455"
+        ixy="-0.000216772139965237"
+        ixz="0.000471798412674179"
+        iyy="0.00495712301252238"
+        iyz="0.000104473121389477"
+        izz="0.00758603560467172"/>
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J1_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.913725490196078 0.925490196078431 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J1_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Manipulator_J1_Joint"
+    type="revolute">
+    <origin
+      xyz="0.219999999999998 0 0.542999997699728"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Manipulator_J1_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-1.57"
+      upper="-1.57"
+      effort="1.0"
+      velocity="0" />
+  </joint>
+<!-- ROBOT ARM JOINT 2-->
+  <link
+    name="Manipulator_J2_Link">
+    <inertial>
+      <origin
+        xyz="0.268007694289762 1.46819887106298E-05 0.0129207836678231"
+        rpy="0 0 0" />
+      <mass
+        value="3.28133642199679" />
+      <inertia
+        ixx="0.00454471795558157"
+        ixy="-2.23147098638011E-05"
+        ixz="-0.00137080766306488"
+        iyy="0.0606976765403595"
+        iyz="2.92238591315652E-06"
+        izz="0.0621935957971754" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J2_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.105882352941176 0.105882352941176 0.105882352941176 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J2_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Manipulator_J2_Joint"
+    type="revolute">
+    <origin
+      xyz="-0.0400000000000001 -0.108 0.0800000000000004"
+      rpy="1.5707963267949 -1.5707963267949 0" />
+    <parent
+      link="Manipulator_J1_Link" />
+    <child
+      link="Manipulator_J2_Link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+<!-- ROBOT ARM JOINT 3-->
+  <link
+    name="Manipulator_J3_Link">
+    <inertial>
+      <origin
+        xyz="0.00014034205643132 0.0440525028885528 -0.0578749054823926"
+        rpy="0 0 0" />
+      <mass
+        value="1.38170624978669" />
+      <inertia
+        ixx="0.00263174058686681"
+        ixy="-4.5321398764385E-06"
+        ixz="-8.52933391138061E-07"
+        iyy="0.00214482782657671"
+        iyz="-0.000422611906677292"
+        izz="0.00299245933707587" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J3_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J3_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Manipulator_J3_Joint"
+    type="revolute">
+    <origin
+      xyz="0.499999824561943 0 -0.0421"
+      rpy="0 0 0" />
+    <parent
+      link="Manipulator_J2_Link" />
+    <child
+      link="Manipulator_J3_Link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+<!-- ROBOT ARM JOINT 4-->
+  <link
+    name="Manipulator_J4_Link">
+    <inertial>
+      <origin
+        xyz="0.000757867605260309 -0.00230470053236008 -0.167080789067498"
+        rpy="0 0 0" />
+      <mass
+        value="2.30789517300308" />
+      <inertia
+        ixx="0.00545812897609848"
+        ixy="-1.77166808163763E-06"
+        ixz="-1.81332816884373E-06"
+        iyy="0.00617064954688975"
+        iyz="4.72262432095123E-05"
+        izz="0.00237671238950573" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J4_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0 0 0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J4_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Manipulator_J4_Joint"
+    type="revolute">
+    <origin
+      xyz="0 -0.0504999999999998 -0.065"
+      rpy="-1.5707963267949 0 0" />
+    <parent
+      link="Manipulator_J3_Link" />
+    <child
+      link="Manipulator_J4_Link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+<!-- ROBOT ARM JOINT 5-->
+  <link
+    name="Manipulator_J5_Link">
+    <inertial>
+      <origin
+        xyz="0.00101719551785973 0.000162011629914138 0.0475034712246007"
+        rpy="0 0 0" />
+      <mass
+        value="0.656515332445086" />
+      <inertia
+        ixx="0.000548812323732704"
+        ixy="1.47501401739925E-06"
+        ixz="5.29856422926262E-07"
+        iyy="0.000687393677149892"
+        iyz="1.33696209379453E-06"
+        izz="0.000489604296478664" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J5_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 0 0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Manipulator_J5_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Manipulator_J5"
+    type="revolute">
+    <origin
+      xyz="0.000799999999991807 0.0474999999999999 -0.3693"
+      rpy="1.5707963267949 1.5707963267949 0" />
+    <parent
+      link="Manipulator_J4_Link" />
+    <child
+      link="Manipulator_J5_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+<!-- CASTER WHEELS LINK-->
+  <!-- FRONT RIGHT CASTER WHEELS-->
+  <link
+    name="Caster_frontright_Link">
+    <inertial>
+      <origin
+        xyz="-0.0122909479371563 0.0325242164146823 -2.69390506797973E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.111608045817562" />
+      <inertia
+        ixx="4.75864898068099E-05"
+        ixy="1.61941943522179E-06"
+        ixz="3.91878885089351E-10"
+        iyy="5.65023298002223E-05"
+        iyz="-6.24847969157307E-09"
+        izz="6.48109553875577E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Caster_frontright_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.8 0.807843137254902 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Caster_frontright_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Caster_frontright_Link"
+    type="fixed">
+    <origin
+      xyz="0.446999999999999 -0.261999999544999 -0.083350001810004"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Caster_frontright_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <!-- FRONT LEFT CASTER WHEELS-->
+  <link
+    name="Caster_frontleft_Link">
+    <inertial>
+      <origin
+        xyz="-0.0122909478469858 0.0325242161156536 -2.69391310157019E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.111608046232635" />
+      <inertia
+        ixx="4.75864901264927E-05"
+        ixy="1.61941948382726E-06"
+        ixz="3.91999887235058E-10"
+        iyy="5.65023300764558E-05"
+        iyz="-6.2487680010785E-09"
+        izz="6.48109557119836E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Caster_frontleft_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.8 0.807843137254902 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Caster_frontleft_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Caster_frontleft_Joint"
+    type="fixed">
+    <origin
+      xyz="0.447000000000001 0.262000000455002 -0.0833500023002717"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Caster_frontleft_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <!-- REAR RIGHT CASTER WHEELS-->
+  <link
+    name="Caster_backright_Link">
+    <inertial>
+      <origin
+        xyz="-0.0122909482694706 0.0325242174712774 -2.69388985030816E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.111608042759464" />
+      <inertia
+        ixx="4.7586489109651E-05"
+        ixy="1.61941942376714E-06"
+        ixz="3.91868858418766E-10"
+        iyy="5.650232910697E-05"
+        iyz="-6.24820035109413E-09"
+        izz="6.48109545818733E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Caster_backright_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.8 0.807843137254902 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Caster_backright_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Caster_backright_Joint"
+    type="fixed">
+    <origin
+      xyz="-0.377000000000001 -0.261999999544998 -0.0833500018100013"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Caster_backright_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <!-- REAR LEFT CASTER WHEELS-->
+  <link
+    name="Caster_backleft_Link">
+    <inertial>
+      <origin
+        xyz="-0.0122909481504996 0.0325242172507511 -2.69389852438073E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.111608043890482" />
+      <inertia
+        ixx="4.75864893867588E-05"
+        ixy="1.61941942703802E-06"
+        ixz="3.91879892164815E-10"
+        iyy="5.65023293877921E-05"
+        iyz="-6.24808701339665E-09"
+        izz="6.4810954938133E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Caster_backleft_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.8 0.807843137254902 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Caster_backleft_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Caster_backleft_Joint"
+    type="fixed">
+    <origin
+      xyz="-0.376999999999999 0.262000000455009 -0.0833500023002675"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Caster_backleft_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+<!-- LIDAR-->
+  <link
+    name="Lidar_Link">
+    <inertial>
+      <origin
+        xyz="0.00866531230820938 -0.000832782906331645 -0.0277148363523506"
+        rpy="0 0 0" />
+      <mass
+        value="0.13786153915786" />
+      <inertia
+        ixx="6.41461131518994E-05"
+        ixy="-1.31334011454766E-07"
+        ixz="5.18497570641788E-07"
+        iyy="0.00011115472443412"
+        iyz="-9.15763468622709E-08"
+        izz="0.000160248589897905" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Lidar_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Lidar_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Lidar_Joint"
+    type="fixed">
+    <origin
+      xyz="0.373790057428704 8.262872725008E-05 0.187164669903624"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Lidar_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+<!-- DEPTH CAMERA-->
+  <link
+    name="Depth_Camera_Link">
+    <inertial>
+      <origin
+        xyz="-0.0246055548591465 -0.00216112757630004 0.00130733744912853"
+        rpy="0 0 0" />
+      <mass
+        value="0.130220768275134" />
+      <inertia
+        ixx="0.000338389282224253"
+        ixy="5.02320565349973E-07"
+        ixz="3.5074407953116E-10"
+        iyy="2.15010143394374E-05"
+        iyz="5.61027883659055E-09"
+        izz="0.000328398024437841" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Depth_Camera_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find ammr)/meshes/Depth_Camera_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Depth_Camera_Joint"
+    type="fixed">
+    <origin
+      xyz="0.469000000000002 0.00253949827639006 0.367599997699721"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Depth_Camera_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

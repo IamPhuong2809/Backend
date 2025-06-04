@@ -58,7 +58,6 @@ class Global(models.Model):
 class LoadName(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
-    
 class LoadData(models.Model):
     x = models.FloatField()
     y = models.FloatField()
@@ -73,5 +72,28 @@ class LoadData(models.Model):
     jzx = models.FloatField()
     jzy = models.FloatField()
     jz = models.FloatField()
+
+class Site(models.Model):
+    site_id = models.IntegerField(unique=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ["site_id"]
+
+    def __str__(self):
+        return self.name
+    
+class Map(models.Model):
+    site = models.ForeignKey(Site, to_field='site_id', on_delete=models.CASCADE)
+    map_id = models.IntegerField()
+    name = models.CharField(max_length=255)
+    new_file = models.BooleanField()
+    name_file = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['map_id']
+
+    def __str__(self):
+        return f"Point {self.map_id} of {self.site.name}"
 
 

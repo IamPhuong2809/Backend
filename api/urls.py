@@ -1,5 +1,14 @@
 from django.urls import path
-from .views import power_robot, move, move_path, configuration, teach_path, position_list, components
+from .views import (
+    power_robot,
+    move,
+    move_path,
+    configuration,
+    teach_path,
+    position_list,
+    components,
+    maps,
+)
 
 urlpatterns = [
     path('EMG/', components.EMG, name='EMG'),
@@ -23,9 +32,7 @@ urlpatterns = [
     path('O0015/', position_list.O0015, name='O0015'),
 
     path('O0016/', teach_path.O0016, name='O0016'),
-    # path('O0017/', power_robot.O0017, name='O0017'),
 
-    # path('O0020/', power_robot.O0020, name='O0020'),
     path('O0021/', move.O0021, name='O0021'),
     path('O0022/', move.O0022, name='O0022'),
     path('O0023/', move.O0023, name='O0023'),
@@ -37,10 +44,16 @@ urlpatterns = [
     path('O0027/', move.O0027, name='O0027'),
     path('O0028/', move.O0028, name='O0028'),
 
-
     path('global/', position_list.global_list, name='global'),
     path('path/', teach_path.path_list, name='path'),
     path('point/', teach_path.point_list, name='point'),
 
     path('I1001/', components.I1001, name='I1001'),
+
+    #====================================================================================
+
+    path('O0031/', maps.O0031, name='O0031'),
+    path('site/', maps.site_list, name='site'),
+    path('map/', maps.map_list, name='map'),
+    path('save_map/', maps.save_map, name='save_map'),
 ]

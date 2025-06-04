@@ -50,32 +50,39 @@ def global_list(request):
             id = data.get("id")
             name = data.get("name")
             Global.objects.filter(point_id__gte=id).update(point_id=F('point_id') + 1)
-            Global.objects.create(point_id=id, name=name, x=0, y=0, z=0, roll=0, pitch=0, yaw=0, tool=0, figure=0, work=0)
+            updated = Global.objects.create(point_id=id, name=name, x=0, y=0, z=0, roll=0, pitch=0, yaw=0, tool=0, figure=0, work=0)
         elif type_data == "rename":
             id = data.get("id")
             name = data.get("name")
-            Global.objects.filter(point_id=id).update(name=name)
+            updated = Global.objects.filter(point_id=id).update(name=name)
         elif type_data == "update":
             id = data.get("id")
             id_target = data.get("id_target")
             insert_point_id(id, id_target)
+            updated = True
         else:
             id = data.get("id")
             position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw', 'figure') 
             return Response(position[0])
         
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if updated:  
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
 
     elif request.method == 'DELETE':
         data = request.data
         delete_all = data.get("delete_all")
         if delete_all:
-            Global.objects.all().delete()
+            updated = Global.objects.all().delete()
         else:
             id = data.get("id")
             Global.objects.filter(point_id=id).delete()
-            Global.objects.filter(point_id__gt=id).update(point_id=F('point_id') - 1)
+            updated = Global.objects.filter(point_id__gt=id).update(point_id=F('point_id') - 1)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if updated:  
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
     
     return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

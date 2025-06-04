@@ -1,6 +1,8 @@
 # Bỏ qua môi trường ảo
 .venv/
-venv/
+ros2_ws/build
+ros2_ws/log
+ros2_ws/install
 
 # Bỏ qua file cài đặt tự động
 __pycache__/

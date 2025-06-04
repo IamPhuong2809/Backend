@@ -8,3 +8,4 @@ tzdata==2025.1
 gunicorn==23.0.0
 django-cors-headers==4.7.0
 scipy==1.15.3
+pymcprotocol==0.3.0

@@ -19,7 +19,7 @@ setup(
     license='TODO: License declaration',
     entry_points={
         'console_scripts': [
-            "ammr_plc_node = ammr_plc_node.manipulator:main"
+            "ammr_plc_node = ammr_plc_node.plc_node:main",
         ],
     },
 )

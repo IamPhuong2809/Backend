@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot name="ammr_main" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- <xacro:include filename="common_properties.xacro" /> -->
+    <xacro:include filename="ammr_base.xacro" />
+    <xacro:include filename="ammr_drivewheel.xacro" /> 
+    <xacro:include filename="ammr_manipulator.xacro" />
+    <xacro:include filename="ammr_sensor.xacro" />
+    <xacro:include filename="ammr_camera.xacro" />
+    <!-- <xacro:include filename="ammr_gazebo.xacro" />
+    <xacro:include filename="ammr_trans.xacro" />
+    <xacro:include filename="ammr.ros2_control.xacro" />  -->
+
+</robot>

@@ -1,0 +1,372 @@
+<?xml version="1.0"?>
+<robot name="ammr_main" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<!-- ROBOT ARM JOINT 1-->
+    <!-- Robot arm Link 1 -->
+    <link name="Manipulator_J1_Link">
+        <inertial>
+            <origin xyz="-0.00821912518927564 0.00204815917950716 0.0530925004865024" rpy="0 0 0" />
+            <mass value="2.59329608264777" />
+            <inertia
+            ixx="0.00541011353910455"
+            ixy="-0.000216772139965237"
+            ixz="0.000471798412674179"
+            iyy="0.00495712301252238"
+            iyz="0.000104473121389477"
+            izz="0.00758603560467172"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J1_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.898039215686275 0.913725490196078 0.925490196078431 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J1_Link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Robot arm Joint 1 -->
+    <joint name="Manipulator_J1_Joint" type="revolute">
+        <origin xyz="0.22 0 ${frame_ground_offset + 0.543}" rpy="0 0 ${-pi/2}" />
+        <parent link="base_link" />
+        <child link="Manipulator_J1_Link" />
+        <axis xyz="0 0 1" />
+        <limit
+            lower="0.0"
+            upper="${pi}"
+            effort="1.0"
+            velocity="1.0" />
+    </joint>
+<!-- ROBOT ARM JOINT 2-->
+    <!-- Robot arm Link 2 -->
+    <link name="Manipulator_J2_Link">
+        <inertial>
+            <origin xyz="0.268007694289762 1.46819887106298E-05 0.0129207836678231" rpy="0 0 0" />
+            <mass value="3.28133642199679" />
+            <inertia
+                ixx="0.00454471795558157"
+                ixy="-2.23147098638011E-05"
+                ixz="-0.00137080766306488"
+                iyy="0.0606976765403595"
+                iyz="2.92238591315652E-06"
+                izz="0.0621935957971754" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J2_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.929 0.298 0.337 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J2_Link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Robot arm Joint 2 -->
+    <joint name="Manipulator_J2_Joint" type="revolute">
+        <origin xyz="-0.0400000000000001 -0.108 0.0800000000000004" rpy="${pi/2} 0 0" />
+        <parent link="Manipulator_J1_Link" />
+        <child link="Manipulator_J2_Link" />
+        <axis xyz="0 0 1" />
+        <limit
+            lower="0.0"
+            upper="${pi}"
+            effort="1.0"
+            velocity="1.0" />
+    </joint>
+<!-- ROBOT ARM JOINT 3-->
+    <!-- Robot arm Link 3 -->
+    <link name="Manipulator_J3_Link">
+        <inertial>
+            <origin xyz="0.00014034205643132 0.0440525028885528 -0.0578749054823926" rpy="0 0 0" />
+            <mass value="1.38170624978669" />
+            <inertia
+            ixx="0.00263174058686681"
+            ixy="-4.5321398764385E-06"
+            ixz="-8.52933391138061E-07"
+            iyy="0.00214482782657671"
+            iyz="-0.000422611906677292"
+            izz="0.00299245933707587" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J3_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="1 1 1 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J3_Link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Robot arm Joint 3 -->
+    <joint name="Manipulator_J3_Joint" type="revolute">
+        <origin xyz="0.499999824561943 0 -0.0421" rpy="0 0 ${-pi/4}" />
+        <parent link="Manipulator_J2_Link" />
+        <child link="Manipulator_J3_Link" />
+        <axis xyz="0 0 1" />
+        <limit
+            lower="0.0"
+            upper="${3*pi/4}"
+            effort="1.0"
+            velocity="1.0" />
+    </joint>
+<!-- ROBOT ARM JOINT 4-->
+    <!-- Robot arm Link 4 -->
+    <link name="Manipulator_J4_Link">
+        <inertial>
+            <origin xyz="0.000757867605260309 -0.00230470053236008 -0.167080789067498" rpy="0 0 0" />
+            <mass value="2.30789517300308" />
+            <inertia
+                ixx="0.00545812897609848"
+                ixy="-1.77166808163763E-06"
+                ixz="-1.81332816884373E-06"
+                iyy="0.00617064954688975"
+                iyz="4.72262432095123E-05"
+                izz="0.00237671238950573" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J4_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.929 0.298 0.337 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J4_Link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Robot arm Joint 4 -->
+    <joint name="Manipulator_J4_Joint" type="revolute">
+        <origin xyz="0 -0.0505 -0.065" rpy="${-pi/2} ${pi/2} 0" />
+        <parent link="Manipulator_J3_Link" />
+        <child link="Manipulator_J4_Link" />
+        <axis xyz="0 0 1" />
+        <limit
+            lower="0.0"
+            upper="${pi}"
+            effort="1.0"
+            velocity="1.0" />
+    </joint>
+<!-- ROBOT ARM JOINT 5-->
+    <!-- Robot arm Link 5 -->
+    <link name="Manipulator_J5_Link">
+        <inertial>
+            <origin xyz="0.00101719551785973 0.000162011629914138 0.0475034712246007" rpy="0 0 0" />
+            <mass value="0.656515332445086" />
+            <inertia
+                ixx="0.000548812323732704"
+                ixy="1.47501401739925E-06"
+                ixz="5.29856422926262E-07"
+                iyy="0.000687393677149892"
+                iyz="1.33696209379453E-06"
+                izz="0.000489604296478664" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 -0.1" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J5_Link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="1 1 1 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.1" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ammr)/meshes/Manipulator_J5_Link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Robot arm Joint 5 -->
+    <joint name="Manipulator_J5_Joint" type="revolute">
+        <origin xyz="0.0008 0.0525 -0.3693" rpy="${-pi/2} 0 0" />
+        <parent link="Manipulator_J4_Link" />
+        <child link="Manipulator_J5_Link" />
+        <axis xyz="0 0 1" />
+        <limit
+            lower="0.0"
+            upper="${pi}"
+            effort="1.0"
+            velocity="1.0" />
+    </joint>
+<!-- ROBOT ARM JOINT 6-->
+    <!--LINK 6 - 1-->
+    <link name="Manipulator_J6_Link_1">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <mass value="0.656515332445086" />
+            <inertia
+                ixx="0.000548812323732704"
+                ixy="1.47501401739925E-06"
+                ixz="5.29856422926262E-07"
+                iyy="0.000687393677149892"
+                iyz="1.33696209379453E-06"
+                izz="0.000489604296478664"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0.035" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="0.07" radius="0.03"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.929 0.298 0.337 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.035" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="0.07" radius="0.03"/>
+            </geometry>
+        </collision>
+    </link>
+    <!--LINK 6 - 2-->
+    <link name="Manipulator_J6_Link_2">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <mass value="0.656515332445086" />
+            <inertia
+                ixx="0.000548812323732704"
+                ixy="1.47501401739925E-06"
+                ixz="5.29856422926262E-07"
+                iyy="0.000687393677149892"
+                iyz="1.33696209379453E-06"
+                izz="0.000489604296478664" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0.01" rpy="0 0 0" />
+            <geometry>
+                <box size="0.1 0.04 0.02" />
+            </geometry>
+            <material name="">
+                <color rgba="0.929 0.298 0.337 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.01" rpy="0 0 0" />
+            <geometry>
+                <box size="0.1 0.04 0.02" />
+            </geometry>
+        </collision>
+    </link>
+    <!--LINK 6 GRIPPER RIGHT-->
+    <link name="Manipulator_J6_Link_EER">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <mass value="0.656515332445086" />
+            <inertia
+                ixx="0.000548812323732704"
+                ixy="1.47501401739925E-06"
+                ixz="5.29856422926262E-07"
+                iyy="0.000687393677149892"
+                iyz="1.33696209379453E-06"
+                izz="0.000489604296478664" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0.03" rpy="0 0 0" />
+            <geometry>
+                <box size="0.01 0.01 0.06" />
+            </geometry>
+            <material name="eeR_material">
+                <color rgba="0.213 0.59 0.59 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.03" rpy="0 0 0" />
+            <geometry>
+                <box size="0.01 0.01 0.06" />
+            </geometry>
+        </collision>
+    </link>
+    <!--LINK 6 GRIPPER LEFT-->
+    <link name="Manipulator_J6_Link_EEL">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <mass value="0.656515332445086" />
+            <inertia
+                ixx="0.000548812323732704"
+                ixy="1.47501401739925E-06"
+                ixz="5.29856422926262E-07"
+                iyy="0.000687393677149892"
+                iyz="1.33696209379453E-06"
+                izz="0.000489604296478664" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0.03" rpy="0 0 0" />
+            <geometry>
+                <box size="0.01 0.01 0.06" />
+            </geometry>
+            <material name="eeL_material">
+                <color rgba="0.213 0.59 0.59 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.03" rpy="0 0 0" />
+            <geometry>
+                <box size="0.01 0.01 0.06" />
+            </geometry>
+        </collision>
+    </link>
+
+<!-- JOINT 6 GRIPPER-->
+    <joint name="Manipulator_J6_Joint" type="revolute">
+        <origin xyz="0.06 0 -0.0525" rpy="0 ${pi/2} 0" />
+        <parent link="Manipulator_J5_Link" />
+        <child link="Manipulator_J6_Link_1" />
+        <axis xyz="0 0 1" />
+        <limit
+            lower="0.0"
+            upper="6.2832"
+            effort="1.0"
+            velocity="1.0" />
+    </joint>
+
+    <joint name="EE_1" type="fixed">
+        <origin xyz="0 0 0.07" rpy="0 0 0" />
+        <parent link="Manipulator_J6_Link_1" />
+        <child link="Manipulator_J6_Link_2" />
+    </joint>
+
+    <joint name="EE_R" type="prismatic">
+        <origin xyz="-0.04 -0.02 0.01" rpy="${pi/2} 0 0" />
+        <parent link="Manipulator_J6_Link_2" />
+        <child link="Manipulator_J6_Link_EER" />
+        <limit 
+            lower="-0.005" 
+            upper="0.03"
+            effort="1.0"
+            velocity="1.0"/>
+    </joint>
+
+    <joint name="EE_L" type="prismatic">
+        <origin xyz="0.04 -0.02 0.01" rpy="${-pi/2} 0 ${pi}" />
+        <parent link="Manipulator_J6_Link_2" />
+        <child link="Manipulator_J6_Link_EEL" />
+        <limit 
+            lower="-0.005" 
+            upper="0.03"
+            effort="1.0"
+            velocity="1.0"/>
+        <mimic joint="EE_R" multiplier="1" offset="0" />
+    </joint>
+</robot>

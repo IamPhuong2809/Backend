@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="diffdrive_robot">
+  <xacro:arg name="prefix" default="" />
+  <xacro:arg name="use_mock_hardware" default="true" />
+
+  <xacro:include filename="$(find ammr_mock_components)/ros2_control/robot.ros2_control.xacro" />
+
+  <xacro:include filename="ammr_base.xacro" />
+  <xacro:include filename="ammr_drivewheel.xacro" /> 
+  <xacro:include filename="ammr_manipulator.xacro" />
+  <xacro:include filename="ammr_sensor.xacro" />
+  <xacro:include filename="ammr_camera.xacro" />
+
+  <xacro:mock_ros2_control
+    name="ammr_mock_controllers" prefix="$(arg prefix)" use_mock_hardware="$(arg use_mock_hardware)"/>
+
+</robot>

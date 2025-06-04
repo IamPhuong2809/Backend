@@ -1,0 +1,21 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/ubuntu_ros2/ws_moveit2/install/moveit_task_constructor_core/local/lib/python3.10/dist-packages",
+        "/home/ubuntu_ros2/ws_moveit2/install/moveit_configs_utils/lib/python3.10/site-packages",
+        "/home/ubuntu_ros2/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages",
+        "/home/ubuntu_ros2/ws_moveit2/install/moveit_task_constructor_msgs/local/lib/python3.10/dist-packages",
+        "/home/ubuntu_ros2/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/ubuntu_ros2/ws_moveit2/install/moveit_task_constructor_core/local/lib/python3.10/dist-packages",
+        "/home/ubuntu_ros2/ws_moveit2/install/moveit_configs_utils/lib/python3.10/site-packages",
+        "/home/ubuntu_ros2/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages",
+        "/home/ubuntu_ros2/ws_moveit2/install/moveit_task_constructor_msgs/local/lib/python3.10/dist-packages",
+        "/home/ubuntu_ros2/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "cmake.sourceDirectory": "/home/ubuntu_ros2/model_ws/src/my_robot_brightup"
+}

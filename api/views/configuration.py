@@ -90,7 +90,7 @@ def O0013(request):
         if update_Data and update_Name:  
             return Response({"success": True}, status=status.HTTP_200_OK)
         else:
-            return Response({"success": False, "error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
 
     except Exception as e:
         return Response(status=status.HTTP_204_NO_CONTENT)

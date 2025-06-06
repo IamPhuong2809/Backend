@@ -97,3 +97,14 @@ class Map(models.Model):
         return f"Point {self.map_id} of {self.site.name}"
 
 
+class Accounts(models.Model):
+    username = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    fullname = models.CharField(max_length=255)
+    gmail = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['username']
+
+    def __str__(self):
+        return f"Its work with {self.username}"

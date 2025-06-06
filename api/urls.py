@@ -8,9 +8,12 @@ from .views import (
     position_list,
     components,
     maps,
+    login
 )
 
 urlpatterns = [
+    path('login/', login.Login, name='login'),
+
     path('EMG/', components.EMG, name='EMG'),
     
     path('O0000/', power_robot.O0000, name='O0000'),

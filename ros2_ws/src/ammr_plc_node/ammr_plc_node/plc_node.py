@@ -27,8 +27,8 @@ class manipulator(Node):
         self.vel_addrs_write = [f"D{addr}" for addr in range(5522, 5533, 2)]
         self.jog_addrs_write = [f"D{addr}" for addr in range(5534, 5545, 2)]
         #region Wheel sub
-        self.d = 0.35  # Distance between wheels
-        self.a = 0.05  # Wheel radius
+        self.d = 0.46 # Distance between wheels
+        self.a = 0.161 # Wheel radius
         
         self.wheel_subcriber = self.create_subscription(
             Twist,
@@ -77,13 +77,13 @@ class manipulator(Node):
         if not PLCR._is_connected:
             self.get_logger().info("Can't connect to PLC")
             return
-        r_val = (1 / self.a) * (msg.linear.x - msg.angular.z * self.d / 2) * (60 / (math.pi * 2))
-        l_val = (1 / self.a) * (msg.linear.x + msg.angular.z * self.d / 2) * (60 / (math.pi * 2))
+        l_val = (msg.linear.x - msg.angular.z * self.d / 2) * (60000) #(1 / self.a) * 
+        r_val = (msg.linear.x + msg.angular.z * self.d / 2) * (60000)
         # message = f"({int(r_val)};{int(l_val)})"
         # print(message)
         PLCR.randomwrite(word_devices=[], word_values=[],
-                          dword_devices=["D1032", "D1037"],
-                            dword_values=[int(r_val*100000), int(l_val*100000)])
+                          dword_devices=["D5546", "D5548"],
+                            dword_values=[int(r_val), int(l_val)])
         
     def plan_callback(self, msg : DisplayTrajectory):
         if not PLCR._is_connected:
@@ -99,7 +99,7 @@ class manipulator(Node):
         if self.timerPlan is not None:
             self.timerPlan.cancel()
 
-        for i in range(100):
+        for i in range(200):
             if i >= len(self.trajectory_points):
                 joint_positions = [0, 0, 0, 0, 0, 0]
                 joint_velocities = [0, 0, 0, 0, 0, 0]

@@ -107,6 +107,12 @@ def generate_launch_description():
         parameters=[moveit_config.robot_description]
     )
 
+    ammr_moveit_controller_node = Node(
+        package='ammr_moveit_controller',
+        executable='ammr_moveit_controller',
+        output='log'   
+    )
+
     ## LAUNCH ROS2 CONTROL NODE
     ros2_control_node = Node(
         package="controller_manager",
@@ -158,9 +164,10 @@ def generate_launch_description():
         rviz_node,
         static_tf_node,
         robot_state_publisher_node,
+        ammr_moveit_controller_node,
         move_group_node,
         ros2_control_node,
-        # joint_state_broadcaster_spawner,
+        joint_state_broadcaster_spawner,
         arm_controller_spawner,
         gripper_controller_spawner,
         diff_base_controller_spawner,

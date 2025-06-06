@@ -34,9 +34,9 @@ class ManipulatorController:
         print(f"[ROS CALLBACK] arm_status received: {msg.data} -> success = {self.success}")
     
     def create_pose_message(self, x_mm, y_mm, z_mm, roll_deg, pitch_deg, yaw_deg):
-        x = x_mm / 100.0 
-        y = y_mm / 100.0
-        z = z_mm / 100.0
+        x = x_mm / 1000.0 
+        y = y_mm / 1000.0
+        z = z_mm / 1000.0
         roll = math.radians(roll_deg)
         pitch = math.radians(pitch_deg)
         yaw = math.radians(yaw_deg)
@@ -129,7 +129,6 @@ def O0022(request):
         if all(item == 0 for item in dataArray[:6]):
             return Response(status=status.HTTP_204_NO_CONTENT)
         msg = controller.create_pose_message(*validated_data[:6])
-        print(msg)
         controller.publisher_work.publish(msg)
     
     return Response(status=status.HTTP_204_NO_CONTENT)

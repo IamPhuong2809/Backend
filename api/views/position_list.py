@@ -4,6 +4,7 @@ from rest_framework import status
 from api.models import Global
 from django.db import transaction
 from django.db.models import F
+from api.views.move import controller
 
 @api_view(['GET'])
 def O0006(request):
@@ -13,13 +14,23 @@ def O0006(request):
 
 @api_view(['POST'])
 def O0014(request):
-    data = request.data
-    id = data.get("id")
-    position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw', 'figure')
-    if position[0] == None:
-        return Response({"success": False}, status=status.HTTP_200_OK)
-    else:
+    try:
+        data = request.data
+        id = data.get("id")
+        position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw')[0]
+        if not position:
+            return Response({"error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        msg = controller.create_pose_message(
+            position["x"], position["y"], position["z"],
+            position["roll"], position["pitch"], position["yaw"]
+        )
+
+        controller.publisher_work.publish(msg)
         return Response({"success": True}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def O0015(request):

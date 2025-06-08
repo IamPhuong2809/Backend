@@ -98,7 +98,7 @@ def generate_launch_description():
           'Grid/CellSize': "0.05",      # Kích thước mỗi ô (m)
           'Grid/MaxGroundHeight':'0.05', # All points above 5 cm are obstacles
           'Grid/MaxObstacleHeight':'1.0',  # All points over 1 meter are ignored
-          'Grid/RangeMin':'0.2', # ignore laser scan points on the robot itself
+          'Grid/RangeMin':'0.5', # ignore laser scan points on the robot itself
           'Grid/FromDepth': 'false',        # Create 2D occupancy grid from laser scan
           #'Optimizer/GravitySigma':'0', # Disable imu constraints (we are already in 2D)
           #'Vis/UseIMU': "true",        # giảm drift yaw
@@ -117,10 +117,10 @@ def generate_launch_description():
           'Mem/SaveDepth16Format': "false",
           'Mem/DepthCompressionFormat': ".png",
           'Optimizer/Slam2D': 'true',
-          'topic_queue_size': 15,
-          'sync_queue_size': 15,
+          'topic_queue_size': 30,
+          'sync_queue_size': 30,
           'Rtabmap/MaxRepublished': '5',
-          'Rtabmap/DetectionRate': '3',
+          'Rtabmap/DetectionRate': '2',
           'subscribe_initial_pose': True,
           'initial_pose_topic': 'initialpose',
           'database_path': db_path
@@ -132,9 +132,9 @@ def generate_launch_description():
 
     remappings=[
           ('odom', '/odometry/filtered'),
-          ('rgb/image', '/camera/image_raw'),
-          ('rgb/camera_info', '/camera/camera_info'),
-          ('depth/image', '/camera/depth/image_raw')]
+          ('rgb/image', '/camera/camera/color/image_raw'),
+          ('rgb/camera_info', '/camera/camera/color/camera_info'),
+          ('depth/image', '/camera/camera/aligned_depth_to_color/image_raw')]
 
     return LaunchDescription([
 
@@ -178,7 +178,8 @@ def generate_launch_description():
             package='rtabmap_sync', executable='rgbd_sync', output='screen',
             parameters=[{'approx_sync':True,
                          'rgbd_sync': False,
-                         'queue_size': 15,
+                         'topic_queue_size': 30,
+                         'sync_queue_size': 30,
                          'approx_sync_max_interval': 0.05,
                          'use_sim_time':use_sim_time
                         }],
@@ -220,13 +221,17 @@ def generate_launch_description():
             parameters=[{'decimation': 2,
                          'max_depth': 3.0,
                          'voxel_size': 0.02,
-                         'use_sim_time': use_sim_time}],
-            remappings=[('depth/image', '/camera/depth/image_raw'),
-                        ('depth/camera_info', '/camera/depth/camera_info'),
+                        #  'use_sim_time': use_sim_time
+                         }],
+            remappings=[('depth/image', '/camera/camera/aligned_depth_to_color/image_raw'),
+                        ('depth/camera_info', '/camera/camera/aligned_depth_to_color/camera_info'),
                         ('cloud', '/camera/cloud')]),
         Node(
             package='rtabmap_util', executable='obstacles_detection', output='screen',
-            parameters=[parameters, {'use_sim_time': use_sim_time}],
+            parameters=[parameters, 
+                        {
+                            # 'use_sim_time': use_sim_time
+                        }],
             remappings=[('cloud', '/camera/cloud'),
                         ('obstacles', '/camera/obstacles'),
                         ('ground', '/camera/ground')]

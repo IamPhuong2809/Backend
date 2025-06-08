@@ -59,4 +59,5 @@ urlpatterns = [
     path('site/', maps.site_list, name='site'),
     path('map/', maps.map_list, name='map'),
     path('save_map/', maps.save_map, name='save_map'),
+    path('jog/', move.jog_mode, name='jog'),
 ]

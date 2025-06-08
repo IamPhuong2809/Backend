@@ -297,7 +297,7 @@ class PLCManager:
         )
         return True
     
-    def read_device_block(self, device_name: List[str], size: int) -> Optional[List[int]]:
+    def read_device_block(self, device_name: str, size: int) -> Optional[List[int]]:
         """
         Đọc block dữ liệu từ device với timeout
         """
@@ -324,14 +324,14 @@ class PLCManager:
             self.is_connected = False
             return None
     
-    def _read_block_internal(self, device_name: List[str], size: int):
+    def _read_block_internal(self, device_name: str, size: int):
         """
         Internal block read function
         """
         if not self.plc:
             raise Exception("PLC not connected")
             
-        return self.plc.batchread_wordunits(
+        return self.plc.batchread_bitunits(
             headdevice=device_name, 
             readsize=size
         )

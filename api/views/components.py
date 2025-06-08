@@ -19,16 +19,16 @@ joint_real = [0, 0, 0, 0, 0, 0]
 med = [-90, 0, -45, -90, -90, 0]
 robotData = {
     "Power":True,
-    "S": False,
+    "S": True,
     "I": False,
     "AUX": False,
     "busy": False,
     "ee": True,
     "abort":False,
     "error": False,
-    "override": 10,
-    "tool": 5,
-    "work": 2,
+    "override": 100,
+    "tool": 0,
+    "work": 0,
     "positionCurrent": {"x": 0, "y": 1, "z": 2, "rl": 3, "pt": 4, "yw": 5},
     "jointCurrent": {"t1": 6, "t2": 7, "t3": 8, "t4": 9, "t5": 10, "t6": 11},
 }
@@ -41,20 +41,20 @@ def EMG(request):
 
 @api_view(['GET'])
 def I1001(request):
-    # updateRobotData()
+    updateRobotData()
     return Response(robotData)
 
 def updateRobotData():
     try:
         #Joint
         data_joint = plc_manager.read_random(dword_devices=pos_addrs_read)
-        joint = [round(val / 100000.0, 2)  for val in data_joint[1]]
+        joint = [val / 100000.0  for val in data_joint[1]]
         for i in range(5):
             joint_real[i] = joint[i] + med[i]
         if joint and len(joint) >= 6:
             keys = ['t1', 't2', 't3', 't4', 't5', 't6']
             for i, key in enumerate(keys):
-                robotData["jointCurrent"][key] = joint_real[i]
+                robotData["jointCurrent"][key] = round(joint[i], 3)
         #Position
         pos_rpy = ForwardKinematis(joint_real)
         keys = ["x", "y", "z", "rl", "pt", "yw"]
@@ -62,10 +62,7 @@ def updateRobotData():
             robotData["positionCurrent"][key] = round(float(pos_rpy[i]), 3)
 
         #Bit
-        robotData["busy"] = plc_manager._read_block_internal(device_name="M650", size=1)[0]
-        robotData["S"] = plc_manager._read_block_internal(device_name="M651", size=1)[0]
-        robotData["error"] = plc_manager._read_block_internal(device_name="M652", size=1)[0]
-
+        robotData["busy"], robotData["S"], robotData["error"] = plc_manager.read_device_block(device_name="M650", size=3)
     except Exception as e:
         print(e)
 

@@ -24,6 +24,9 @@ private:
     // Khởi tạo MoveGroupInterface
     move_group_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(
         shared_from_this(), "arm");
+    move_group_->setGoalPositionTolerance(0.01);        // THÊM
+    move_group_->setGoalOrientationTolerance(0.01);     // THÊM
+    move_group_->setPlanningTime(5.0);     
 
     // Tạo subscriber
     sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
@@ -41,9 +44,12 @@ private:
     RCLCPP_INFO(this->get_logger(), "Received pose, planning...");
 
     move_group_->setPoseTarget(msg->pose);
+    move_group_->setPlannerId("RRTConnectkConfigDefault"); 
     moveit::planning_interface::MoveGroupInterface::Plan plan;
     bool success = (move_group_->plan(plan) == moveit::core::MoveItErrorCode::SUCCESS);
     std_msgs::msg::String status_msg;
+    auto traj = plan.trajectory_.joint_trajectory;
+    RCLCPP_INFO(this->get_logger(), "Trajectory has %zu points", traj.points.size());
 
     if (success) {
       RCLCPP_INFO(this->get_logger(), "Executing...");

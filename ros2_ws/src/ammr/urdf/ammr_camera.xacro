@@ -35,14 +35,25 @@
     </link>
     <joint name="Depth_Camera_Joint" type="fixed">
     <origin
-        xyz="0.469 0.002539 ${frame_ground_offset + 0.3676}"
-        rpy="0 0 0" />
+        xyz="0 -0.05834 0.1825"
+        rpy="0 0 -${pi/2}"/>
     <parent
-        link="base_link" />
+        link="Manipulator_J6_Link_1" />
     <child
         link="Depth_Camera_Link" />
     <axis
         xyz="0 0 0" />
+    </joint>
+
+
+
+    <link name="camera_link">
+    </link>
+
+    <joint name="camera_link_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="Depth_Camera_Link"/>
+        <child link="camera_link"/>
     </joint>
 
 </robot>

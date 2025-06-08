@@ -15,6 +15,7 @@ import time
 PLCR = pymcprotocol.Type3E(plctype="iQ-R")
 PLCR.setaccessopt(commtype="ascii")
 
+
 class manipulator(Node):
     def __init__(self):
         super().__init__('plc_node')
@@ -25,14 +26,14 @@ class manipulator(Node):
         self.tor_addrs_read = [f"D{addr}" for addr in range(1059, 1069, 1)]
         self.pos_addrs_write = [f"D{addr}" for addr in range(5500, 5521, 4)]
         self.vel_addrs_write = [f"D{addr}" for addr in range(5522, 5533, 2)]
-        self.jog_addrs_write = [f"D{addr}" for addr in range(5534, 5545, 2)]
+        self.jog_addrs_write = [f"D{addr}" for addr in range(5550, 5565, 2)]
         #region Wheel sub
         self.d = 0.46 # Distance between wheels
         self.a = 0.161 # Wheel radius
         
         self.wheel_subcriber = self.create_subscription(
             Twist,
-            '/diff_cont/cmd_vel_unstamped',
+            '/diff_base_controller/cmd_vel_unstamped',
             self.wheel_callback,
             10)
         #endregion
@@ -47,6 +48,12 @@ class manipulator(Node):
         self.timerPlan = None
         self.trajectory_points = []
         self.current_index = 0
+
+        self.plan_subcriber = self.create_subscription(
+            Float64MultiArray,
+            '/joint_angles_move',
+            self.joint_move,
+            10)
         #endregion
 
         #region Action and Sub control gripper
@@ -75,29 +82,32 @@ class manipulator(Node):
 
     def wheel_callback(self, msg:Twist):
         if not PLCR._is_connected:
-            self.get_logger().info("Can't connect to PLC")
             return
-        l_val = (msg.linear.x - msg.angular.z * self.d / 2) * (60000) #(1 / self.a) * 
-        r_val = (msg.linear.x + msg.angular.z * self.d / 2) * (60000)
-        # message = f"({int(r_val)};{int(l_val)})"
+        l_val = (msg.linear.x - msg.angular.z * self.d / 2) * (60000) * 1000 #(1 / self.a) * 
+        r_val = (msg.linear.x + msg.angular.z * self.d / 2) * (60000) * 1000
+        message = f"({int(r_val)};{int(l_val)})"
         # print(message)
         PLCR.randomwrite(word_devices=[], word_values=[],
                           dword_devices=["D5546", "D5548"],
                             dword_values=[int(r_val), int(l_val)])
+        print(message)
         
     def plan_callback(self, msg : DisplayTrajectory):
-        if not PLCR._is_connected:
-            self.get_logger().info("Can't connect to PLC")
+        if not PLCR._is_connected :
             return
         
         self.trajectory_points.clear()
         for trajectory in msg.trajectory:
             self.trajectory_points.extend(trajectory.joint_trajectory.points)
-        self.current_index = 2
-        print(len(self.trajectory_points))
+
+        if len(self.trajectory_points) > 200:
+            print("Out of range")
+            return
 
         if self.timerPlan is not None:
             self.timerPlan.cancel()
+        
+        PLCR.randomwrite_bitunits(bit_devices=["M108"], values=[0])
 
         for i in range(200):
             if i >= len(self.trajectory_points):
@@ -124,7 +134,17 @@ class manipulator(Node):
             dword_values=[]
         )
 
-        PLCR.randomwrite_bitunits(bit_devices=["M108"], values=[0])
+        PLCR.randomwrite_bitunits(bit_devices=["M106"], values=[1])
+
+    def joint_move(self, msg: Float64MultiArray):
+        if not PLCR._is_connected:
+            return
+        value = [int(data*100000) for data in msg.data]
+        PLCR.randomwrite(
+            word_devices=[], word_values=[],
+            dword_devices=self.jog_addrs_write,
+            dword_values=value
+        )
     
     def pose(self):
         msg = PoseStamped()
@@ -148,7 +168,6 @@ class manipulator(Node):
         
     def read_data(self):
         if not PLCR._is_connected:
-            self.get_logger().info("Can't connect to PLC")
             return
         msg = JointState()
 

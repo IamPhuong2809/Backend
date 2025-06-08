@@ -161,13 +161,13 @@ def generate_launch_description():
 
     return LaunchDescription([
         ros2_control_hardware_type,
-        rviz_node,
+        # rviz_node,
         static_tf_node,
         robot_state_publisher_node,
         ammr_moveit_controller_node,
         move_group_node,
         ros2_control_node,
-        joint_state_broadcaster_spawner,
+        # joint_state_broadcaster_spawner,
         arm_controller_spawner,
         gripper_controller_spawner,
         diff_base_controller_spawner,

@@ -36,7 +36,16 @@ WHICH CONSIST OF THE BASE FRAME, CASTER WHEELS AND MANIPULATOR BASE-->
             <mesh filename="file://$(find ammr)/meshes/base_link.STL" />
         </geometry>
     </collision>
+
+    
     </link>
+    <link name="base_footprint">
+    </link>
+    <joint name="base_footprint_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="base_footprint" />
+    </joint>
 
 <!-- CASTER WHEELS LINK-->
     <!-- FRONT RIGHT CASTER WHEELS-->

@@ -9,7 +9,12 @@ from transforms3d.euler import euler2quat
 from api.models import Point,Global
 from django.db.models import Max
 import math
+import time
 import threading
+from api.views.plc_manager import get_plc_manager
+from api.views.components import robotData
+
+plc_manager = get_plc_manager()
 
 class ManipulatorController:
     def __init__(self):
@@ -93,7 +98,7 @@ def O0025(request):
         controller.publisher_work.publish(msg)
     elif jogMode =="Joint":
         msg = Float64MultiArray()
-        msg.data = [float(j) for j in dataArray]
+        msg.data = [round(float(j),3) for j in dataArray]
         controller.publisher_joint.publish(msg)
     elif jogMode == "Tool":
         msg = Float64MultiArray()
@@ -129,6 +134,7 @@ def O0022(request):
         if all(item == 0 for item in dataArray[:6]):
             return Response(status=status.HTTP_204_NO_CONTENT)
         msg = controller.create_pose_message(*validated_data[:6])
+        print(msg)
         controller.publisher_work.publish(msg)
     
     return Response(status=status.HTTP_204_NO_CONTENT)
@@ -141,7 +147,31 @@ def O0023(request):
 
 @api_view(['GET'])
 def O0024(request):
-    print("home")
+    # plc_manager.write_device_block(device_name=["M108"], values=[1])
+    # time.sleep(0.02)
+    # plc_manager.write_device_block(device_name=["M108"], values=[0])
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def jog_mode(request):
+    type = request.data.get("type")
+    plc_manager.write_device_block(device_name=["M108"], values=[1])
+    time.sleep(0.02)
+    plc_manager.write_device_block(device_name=["M108"], values=[0])
+    if type == "Joint" or type == "Joint":
+        plc_manager.write_device_block(device_name=["M112"], values=[1])
+        jog_addrs_write = [f"D{addr}" for addr in range(5550, 5565, 2)]
+        joint = [0, 0, 0, 0, 0, 0, 200000, 0]
+        keys = ['t1', 't2', 't3', 't4', 't5', 't6']
+        for i, key in enumerate(keys):
+            joint[i] = int(robotData["jointCurrent"][key])*100000
+        plc_manager.write_random(
+            dword_devices=jog_addrs_write,
+            dword_values=joint
+        )
+    elif type == "Work" or type == "PTP":
+        plc_manager.write_device_block(device_name=["M112"], values=[0])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 

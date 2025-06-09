@@ -40,6 +40,12 @@ class manipulator(Node):
             '/diff_base_controller/cmd_vel_unstamped',
             self.wheel_callback,
             10)
+
+        self.wheel_subcriber = self.create_subscription(
+            Twist,
+            'cmd_vel_nav',
+            self.wheel_callback,
+            10)
         #endregion
 
         #region Joint sub
@@ -174,18 +180,14 @@ class manipulator(Node):
             "Right_Drive_wheel_Joint",
             "Left_Drive_wheel_Joint"
         ]
-
         data_pos = self.plc_manager.read_random(dword_devices=self.pos_addrs_read)
         data_vel = self.plc_manager.read_random(dword_devices=self.vel_addrs_read)
         data_tor = self.plc_manager.read_random(dword_devices=self.tor_addrs_read)
-        try:
+        if data_pos[1] != None and data_vel != None and data_tor != None:
             msg.position = [val * math.pi / 18000000.0 for val in data_pos[1]]
             msg.velocity = [np.deg2rad(val * self.transmission_ratio[i]  / 100.0) for i, val in enumerate(data_vel[1])]
             msg.effort   = [val / 100000.0 for val in data_tor[1]]
             self.ammr_publisher.publish(msg)
-        except Exception as e:
-            print(f"Error: {e}")
-            return
 
     def action_control_grip(self, msg : Float64MultiArray):
         data = msg.data

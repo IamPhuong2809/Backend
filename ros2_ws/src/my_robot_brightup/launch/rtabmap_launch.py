@@ -61,7 +61,7 @@ def generate_launch_description():
           'publish_null_when_lost': False,  # không publish giá trị null, giữ nguyên giá trị odometry cuối cùng
           'Odom/ResetCountdown': '1',   # Reset ngay lập tức khi phát hiện loop closure hay đk reset
           'Odom/FillInfoData': 'true',  # thu thập thông tin (key features, độ tin cậy ước tính) đưa vào dữ liệu odometry
-          'OdomF2M/MaxSize': '800',    # giới hạn số lượng keyframe tối đa trong bộ nhớ để xây dựng bản đồ  odometry
+          'OdomF2M/MaxSize': '1000',    # giới hạn số lượng keyframe tối đa trong bộ nhớ để xây dựng bản đồ  odometry
           'Odom/GuessSmoothingDelay': '0',
           'Reg/Strategy':'1',               # 1=ICP cho lidar
           'Icp/PointToPlane': "true",       # Kích hoạt ICP Point-to-Plane
@@ -89,7 +89,7 @@ def generate_launch_description():
           'RGBD/StartAtOrigin': 'true',         # starting with the first node
           #'RGBD/LoopClosureFeatures': '0',      # so luong features de chap nhan loop closure
           #'RGBD/OptimizeStrategy': '2',        # g20=1, GTSAM=2
-          'Grid/RayTracing':'true', # Fill empty space
+          'Grid/RayTracing':'false', # Fill empty space
           'Grid/3D':'false', # Use 2D occupancy
           # Cau hinh Nav2
           'Grid/RangeMax':'0',               # o=inf
@@ -99,7 +99,7 @@ def generate_launch_description():
           'Grid/MaxGroundHeight':'0.05', # All points above 5 cm are obstacles
           'Grid/MaxObstacleHeight':'1.0',  # All points over 1 meter are ignored
           'Grid/RangeMin':'0.5', # ignore laser scan points on the robot itself
-          'Grid/FromDepth': 'false',        # Create 2D occupancy grid from laser scan
+        #   'Grid/FromDepth': 'false',        # Create 2D occupancy grid from laser scan
           #'Optimizer/GravitySigma':'0', # Disable imu constraints (we are already in 2D)
           #'Vis/UseIMU': "true",        # giảm drift yaw
           'Vis/FeatureType': "2" ,      # Sử dụng ORB (nhanh)
@@ -108,7 +108,7 @@ def generate_launch_description():
           'Vis/InlierDistance': '0.1',      # so sanh point cloud cua frame hien tai va fram trc, khoang cach point cloud 2 frame > nguong thi loai bo
           'Kp/DetectorStrategy': '2', # 0=SURF 1=SIFT 2=ORB 3=FAST/FREAK 4=FAST/BRIEF 5=GFTT/FREAK 6=GFTT/BRIEF 7=BRISK 8=GFTT/ORB
           'Kp/MaxDepth': '4.0',             # do sau toi da cua depth cam
-          'Kp/MaxFeatures': '800',
+          'Kp/MaxFeatures': '1000',
           'Kp/MinFeatures': '20',
           'Mem/TimeThr': '700',
           'Mem/STMSize': '30',          # Chi giu lai 30 node gan nhat
@@ -120,7 +120,7 @@ def generate_launch_description():
           'topic_queue_size': 30,
           'sync_queue_size': 30,
           'Rtabmap/MaxRepublished': '5',
-          'Rtabmap/DetectionRate': '2',
+          'Rtabmap/DetectionRate': '4',
           'subscribe_initial_pose': True,
           'initial_pose_topic': 'initialpose',
           'database_path': db_path

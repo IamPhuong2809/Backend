@@ -148,7 +148,7 @@ controller_server:
       min_vel_y: 0.0
       max_vel_x: 0.5    # vận tốc dài tối đa
       max_vel_y: 0.0
-      max_vel_theta: 1.0   # vận tốc gốc tối đa 
+      max_vel_theta: 0.05   # vận tốc gốc tối đa 
       min_speed_xy: 0.0
       max_speed_xy: 0.5
       min_speed_theta: 0.0
@@ -217,7 +217,7 @@ local_costmap:
         observation_sources: scan camera_ground camera_obstacles
         scan:
           topic: /scan
-          max_obstacle_height: 1.0
+          max_obstacle_height: 2.0
           clearing: True
           marking: True
           data_type: "LaserScan"
@@ -227,8 +227,8 @@ local_costmap:
           obstacle_min_range: 0.0
         camera_ground:
           topic: /camera/ground
-          max_obstacle_height: 0.4
-          clearing: True
+          max_obstacle_height: 2.0
+          clearing: false
           marking: False
           data_type: "PointCloud2"
           raytrace_max_range: 3.0
@@ -237,8 +237,8 @@ local_costmap:
           obstacle_min_range: 0.0
         camera_obstacles:
           topic: /camera/obstacles
-          max_obstacle_height: 0.4
-          clearing: True
+          max_obstacle_height: 2.0
+          clearing: false
           marking: True
           data_type: "PointCloud2"
           raytrace_max_range: 3.0
@@ -269,7 +269,7 @@ global_costmap:
         observation_sources: scan
         scan:
           topic: /scan
-          max_obstacle_height: 1.0
+          max_obstacle_height: 2.0
           clearing: True
           marking: True
           data_type: "LaserScan"

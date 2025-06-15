@@ -7,6 +7,7 @@ from std_msgs.msg import Float64MultiArray
 import pymcprotocol
 import math
 from api.views.plc_manager import get_plc_manager
+# from api.views.position import data
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 import warnings
@@ -35,7 +36,7 @@ robotData = {
 
 @api_view(['GET'])
 def EMG(request):
-    print("Emergency")
+    plc_manager.write_device_block(device_name=["M108"], values=[1])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -49,7 +50,7 @@ def updateRobotData():
         #Joint
         data_joint = plc_manager.read_random(dword_devices=pos_addrs_read)
         joint = [val / 100000.0  for val in data_joint[1]]
-        for i in range(5):
+        for i in range(6):
             joint_real[i] = joint[i] + med[i]
         if joint and len(joint) >= 6:
             keys = ['t1', 't2', 't3', 't4', 't5', 't6']
@@ -61,6 +62,8 @@ def updateRobotData():
         for i, key in enumerate(keys):
             robotData["positionCurrent"][key] = round(float(pos_rpy[i]), 3)
 
+        # print(data)
+
         #Bit
         robotData["busy"], robotData["S"], robotData["error"] = plc_manager.read_device_block(device_name="M650", size=3)
     except Exception as e:
@@ -68,16 +71,16 @@ def updateRobotData():
 
 
 def ForwardKinematis(joint_deg, N=6):
-    L1 = 385.9; L2 = 40; L3 = 500; L4 = 0.9; L5 = 417.37; L6 = 60
+    L0 = 220; L1 = 737; L2 = 40; L3 = 500; L4 = 0.9; L5 = 419.8; L6 = 160; L7 = 200
     joint = np.radians(joint_deg)
     DH = np.array([
-        [   0,       0,     L1,       joint[0] ],
+        [  L0,       0,     L1,       joint[0] ],
         [ -L2,   np.pi/2,    0,       joint[1] ],
         [  L3,       0,    -L4,       joint[2] ],
         [   0,  -np.pi/2,  -L5,       joint[3] ],
         [   0,   np.pi/2,    0,       joint[4] ],
         [   0,   np.pi/2,    0,       joint[5] ],
-        [   0,       0,     L6,       0        ]
+        [ -L7,       0,     L6,       0        ]
     ])
 
     A = np.zeros((N+1, 4, 4))
@@ -96,11 +99,11 @@ def ForwardKinematis(joint_deg, N=6):
     for i in range(1, N+1):
         T = T @ A[i]
     position = T[:3, 3]         
-    rotation = T[:3, :3]        
+    rotation = T[:3, :3]
 
     r = R.from_matrix(rotation)
-    rpy = r.as_euler('zyx', degrees=True)
-    roll, pitch, yaw = rpy[2], rpy[1], rpy[0] 
+    rpy = r.as_euler('zyz', degrees=True)
+    yaw, pitch, roll = rpy[0], rpy[1], rpy[2] 
 
     return np.array([*position, roll, pitch, yaw])
 

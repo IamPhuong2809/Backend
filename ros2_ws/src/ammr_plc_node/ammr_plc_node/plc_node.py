@@ -3,41 +3,49 @@ from rclpy.node import Node
 from rclpy.action import ActionClient
 from control_msgs.action import FollowJointTrajectory, GripperCommand
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from tf2_ros import Buffer, TransformListener
 from moveit_msgs.msg import DisplayTrajectory
 from sensor_msgs.msg import JointState
-from geometry_msgs.msg import Twist, PoseStamped, Point, Quaternion
+from geometry_msgs.msg import Twist, PoseStamped, Point, Quaternion, TransformStamped
 from std_msgs.msg import Header, Float64MultiArray
 import numpy as np
 import pymcprotocol
 from pymcprotocol import Type3E
 import math
 import time
-import sys
-import os
-sys.path.append(os.path.abspath('/home/horizon/datn/Backend/ros2_ws/src/ammr_plc_node/ammr_plc_node'))
-from plc_manager_node import get_plc_manager
+# import sys
+# import os
+# sys.path.append(os.path.abspath('/home/horizon/datn/Backend/ros2_ws/src/ammr_plc_node/ammr_plc_node'))
+# from plc_manager_node import get_plc_manager
+LimitRangeRobot = [ [0, 180], [0, 180], [0, 135], [0, 180], [0, 180], [0, 359.99],]
 
 class manipulator(Node):
     def __init__(self):
         super().__init__('plc_node')
+        self.PLCR = pymcprotocol.Type3E(plctype = "iQ-R")
+        self.PLCR.setaccessopt(commtype="ascii")
+        self.connect = False
 
-        self.plc_manager = get_plc_manager()
+        # self.plc_manager = get_plc_manager()
 
         #Initialize serial communication
-        self.pos_addrs_read = [f"D{addr}" for addr in range(1000, 1028, 3)]
+        self.vel_mobile_read = ["D1054", "D1057"]
+        self.pos_addrs_read = [f"D{addr}" for addr in range(1000, 1022, 3)] + ["D32336", "D32384"]
         self.vel_addrs_read = [f"D{addr}" for addr in range(1030, 1058, 3)]
         self.transmission_ratio = [150, 100, 112, 7, 100, 9, 1, 1, 43.75, 43.75]
         self.tor_addrs_read = [f"D{addr}" for addr in range(1059, 1069, 1)]
         self.pos_addrs_write = [f"D{addr}" for addr in range(5500, 5521, 4)]
         self.vel_addrs_write = [f"D{addr}" for addr in range(5522, 5533, 2)]
-        self.jog_addrs_write = [f"D{addr}" for addr in range(5550, 5565, 2)]
+        self.jogpos_addrs_write = [f"D{addr}" for addr in range(5550, 5561, 2)]
+        self.jogvel_addrs_write = ["D5562", "D5564"]
         #region Wheel sub
-        self.d = 0.46 # Distance between wheels
+        self.d = 0.48 # Distance between wheels
         self.a = 0.161 # Wheel radius
         
         self.wheel_subcriber = self.create_subscription(
             Twist,
-            '/diff_base_controller/cmd_vel_unstamped',
+            '/cmd_vel_plc',
+            # '/diff_base_controller/cmd_vel_unstamped',
             self.wheel_callback,
             10)
 
@@ -46,6 +54,12 @@ class manipulator(Node):
             'cmd_vel_nav',
             self.wheel_callback,
             10)
+
+        self.pub_vel_unstampd = self.create_publisher(
+            Twist,
+            '/diff_base_controller/cmd_vel_unstamped',
+            10)
+        
         #endregion
 
         #region Joint sub
@@ -55,9 +69,7 @@ class manipulator(Node):
             self.plan_callback,
             10)
         
-        self.timerPlan = None
         self.trajectory_points = []
-        self.current_index = 0
 
         self.plan_subcriber = self.create_subscription(
             Float64MultiArray,
@@ -90,58 +102,88 @@ class manipulator(Node):
         # )
         # self.timer = self.create_timer(5, self.pose)
 
+    def connect_PLC(self):
+        self.PLCR.connect("192.168.5.10", 5010)
+        if self.PLCR._is_connected:
+            print("[PLC Manager] Connected to PLC at 192.168.5.10:5010")
+            self.PLCR._sock.settimeout(10.0)
+            self.connect = True
+        else:
+            print("[PLC Manager] Can't connect to PLC")
+            self.connect = False
+    
+    def navigation_callback(self, msg:Twist):
+        self.pub_vel_unstampd.publish(msg)
+
     def wheel_callback(self, msg:Twist):
-        l_val = (msg.linear.x - msg.angular.z * self.d / 2) * (60000) * 1000 #(1 / self.a) * 
-        r_val = (msg.linear.x + msg.angular.z * self.d / 2) * (60000) * 1000
-        message = f"({int(r_val)};{int(l_val)})"
+        if not self.PLCR._is_connected:
+            self.connect_PLC()
+            return
+
+        l_val = (msg.linear.x - msg.angular.z * self.d / 2) * (60000) * 100 #(1 / self.a) * 
+        r_val = (msg.linear.x + msg.angular.z * self.d / 2) * (60000) * 100
+        # message = f"({int(r_val)};{int(l_val)})"
         # print(message)
-        self.plc_manager.write_random(dword_devices=["D5546", "D5548"], dword_values=[int(r_val), int(l_val)])
-        print(message)
+        try:
+            self.PLCR.randomwrite(word_devices=[], word_values =[], dword_devices=["D5546", "D5548"], dword_values=[int(r_val), int(l_val)])
+        except:
+            self.PLCR.remote_reset()
+            print("Failed to write whell")
+            return
         
     def plan_callback(self, msg : DisplayTrajectory):
+        if not self.PLCR._is_connected:
+            self.connect_PLC()
+            return
+
         self.trajectory_points.clear()
         for trajectory in msg.trajectory:
             self.trajectory_points.extend(trajectory.joint_trajectory.points)
-
-        if len(self.trajectory_points) > 200:
-            print("Out of range")
-            return
-
-        if self.timerPlan is not None:
-            self.timerPlan.cancel()
         
-        self.plc_manager.write_device_block(device_name=["M108"], values=[0])
+        if self.trajectory_points:
+            point = self.trajectory_points[-1]  # Lấy điểm cuối cùng trong danh sách
 
-        for i in range(200):
-            if i >= len(self.trajectory_points):
-                joint_positions = [0, 0, 0, 0, 0, 0]
-                joint_velocities = [0, 0, 0, 0, 0, 0]
+            joint= [int(pos * 180 * 100000 / math.pi) for pos in point.positions]
+            joint = joint
 
-            else:  
-                point = self.trajectory_points[i]
-                joint_positions = [int(pos * 180 *100000 / math.pi)  for pos in point.positions]
-                joint_velocities = [abs(int(vel * 1000 * 60 * 180 / math.pi)) for vel in point.velocities]
-            
-            print(f"{i}, pos {joint_positions}, vel {joint_velocities}")
+            print(f"End Point -> pos: {joint}")
 
-            self.plc_manager.write_random(
-                word_devices=["D1"], word_values=[i],
-                dword_devices=self.pos_addrs_write + self.vel_addrs_write,
-                dword_values=joint_positions + joint_velocities
-            )
-            time.sleep(0.01)
+            try:
+                self.PLC.randomwrite(
+                    word_devices=[], word_values=[],  # Có thể bỏ hoặc đặt index tùy ý
+                    dword_devices=self.pos_addrs_write,
+                    dword_values=joint
+                )
+            except:
+                self.PLCR.remote_reset()
+                print("Failed to write Move Pos")
+                return
         
-        self.plc_manager.write_random(word_devices=["D2", "D3", "D4", "D5", "D6", "D7", "D8"], word_values=[len(self.trajectory_points) - 1, 0, 0, 0, 0, 0, 0],)
-
-        self.plc_manager.write_random(device_name=["M106"], values=[1])
 
     def joint_move(self, msg: Float64MultiArray):
-        value = [int(data*100000) for data in msg.data]
-        self.plc_manager.write_random(
-            word_devices=[], word_values=[],
-            dword_devices=self.jog_addrs_write,
-            dword_values=value
-        )
+        if not self.PLCR._is_connected:
+            self.connect_PLC()
+            return
+
+        data = msg.data
+        for i, val in enumerate(data):
+            min_val, max_val = LimitRangeRobot[i]
+            if not (min_val <= val <= max_val):
+                print(f"[!] Joint {i+1} value {val} out of range [{min_val}, {max_val}]")
+                return  # Không write nếu có giá trị sai
+
+        value = [int(d * 100000) for d in data]
+        print(value)
+        try:
+            self.PLCR.randomwrite(
+                word_devices=[], word_values=[],
+                dword_devices=self.jogpos_addrs_write,
+                dword_values=value
+            )
+        except:
+            self.PLCR.remote_reset()
+            print("Failed to write Jog Joint")
+            return
     
     def pose(self):
         msg = PoseStamped()
@@ -164,6 +206,10 @@ class manipulator(Node):
         self.goal.publish(msg)
         
     def read_data(self):
+        if not self.PLCR._is_connected:
+            self.connect_PLC()
+            return
+
         msg = JointState()
 
         msg.header = Header()
@@ -180,14 +226,27 @@ class manipulator(Node):
             "Right_Drive_wheel_Joint",
             "Left_Drive_wheel_Joint"
         ]
-        data_pos = self.plc_manager.read_random(dword_devices=self.pos_addrs_read)
-        data_vel = self.plc_manager.read_random(dword_devices=self.vel_addrs_read)
-        data_tor = self.plc_manager.read_random(dword_devices=self.tor_addrs_read)
-        if data_pos[1] != None and data_vel != None and data_tor != None:
-            msg.position = [val * math.pi / 18000000.0 for val in data_pos[1]]
-            msg.velocity = [np.deg2rad(val * self.transmission_ratio[i]  / 100.0) for i, val in enumerate(data_vel[1])]
-            msg.effort   = [val / 100000.0 for val in data_tor[1]]
-            self.ammr_publisher.publish(msg)
+
+        msg_wheel = Twist()
+        try:
+            data_pos = self.PLCR.randomread( word_devices=[], dword_devices=self.pos_addrs_read)
+            data_vel = self.PLCR.randomread( word_devices=[], dword_devices=self.vel_mobile_read)
+            # data_tor = self.PLCR.randomread( word_devices=[], dword_devices=self.tor_addrs_read)
+        except:
+            self.PLCR.remote_reset()
+            print("Failed to read Joint States")
+            return
+        pos1_8 = [val * math.pi / 18000000.0 for val in data_pos[1][:8]]
+        pos9_10 = [val / (10000000.0 * self.a) for val in data_pos[1][-2:]]
+        msg.position = pos1_8 + pos9_10
+        
+        vel = [float(val* (math.pi * self.a )/ (3000.0 * 43.75))  for val in data_vel[1]] #m/s
+        msg_wheel.linear.x = (vel[0] + vel[1])/2
+        msg_wheel.angular.z = (vel[0] - vel[1])/self.d
+        self.pub_vel_unstampd.publish(msg_wheel)
+        self.ammr_publisher.publish(msg)
+        # msg.velocity = [(val * (math.pi / 30) * (1 / self.transmission_ratio[i]) / 100.0) for i, val in enumerate(data_vel[1])]
+        # msg.effort   = [val / 100000.0 for val in data_tor[1]]
 
     def action_control_grip(self, msg : Float64MultiArray):
         data = msg.data

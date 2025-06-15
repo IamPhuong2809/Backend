@@ -6,12 +6,31 @@ from django.db import transaction
 from django.db.models import F
 import os
 import shutil
+from api.views.plc_manager import get_plc_manager
+import time
+
+plc_manager = get_plc_manager()
 
 @api_view(['GET'])
 def O0031(request):
     sites = Site.objects.all().values('site_id', 'name')  
     result = [{'id': p['site_id'], 'name': p['name']} for p in sites]
     return Response(result)
+
+@api_view(['GET'])
+def missions(request):
+    plc_manager.rising_pulse(device_name=["M108"])
+    plc_manager.rising_pulse(device_name=["M110"])
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def record(request):
+    plc_manager.rising_pulse(device_name=["M108"])
+    plc_manager.rising_pulse(device_name=["M110"])
+
+    
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST', 'DELETE'])
 def site_list(request):    

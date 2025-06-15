@@ -411,6 +411,11 @@ class PLCManager:
         except:
             pass
 
+    def rising_pulse(self, device_name: str):
+        self.write_device_block(device_name=device_name, values=[1])
+        time.sleep(0.05)
+        self.write_device_block(device_name=device_name, values=[0])
+
 plc_manager = PLCManager()
 
 def get_plc_manager() -> PLCManager:

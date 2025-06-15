@@ -342,13 +342,13 @@
     </joint>
 
     <joint name="EE_1" type="fixed">
-        <origin xyz="0 0 0.07" rpy="0 0 0" />
+        <origin xyz="0 -0.2 0.1" rpy="0 0 ${pi/2}" />
         <parent link="Manipulator_J6_Link_1" />
         <child link="Manipulator_J6_Link_2" />
     </joint>
 
     <joint name="EE_R" type="prismatic">
-        <origin xyz="-0.04 -0.02 0.01" rpy="${pi/2} 0 0" />
+        <origin xyz="-0.02 0.04 0.01" rpy="${pi/2} 0 ${-pi/2}" />
         <parent link="Manipulator_J6_Link_2" />
         <child link="Manipulator_J6_Link_EER" />
         <limit 
@@ -359,7 +359,7 @@
     </joint>
 
     <joint name="EE_L" type="prismatic">
-        <origin xyz="0.04 -0.02 0.01" rpy="${-pi/2} 0 ${pi}" />
+        <origin xyz="-0.02 -0.04 0.01" rpy="${-pi/2} 0 ${pi/2}" />
         <parent link="Manipulator_J6_Link_2" />
         <child link="Manipulator_J6_Link_EEL" />
         <limit 

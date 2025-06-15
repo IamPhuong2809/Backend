@@ -40,7 +40,7 @@ def O0001(request):
 
 @api_view(['GET'])
 def O0002(request):
-    print(f"Reset")
+    plc_manager.rising_pulse(device_name=["M115"])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 

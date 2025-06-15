@@ -38,19 +38,19 @@ def generate_launch_description():
 
     parameters={
           'frame_id':'base_footprint',
-          #'odom_frame_id': 'odom',
+        #   'odom_frame_id': 'odom',
           'publish_tf_odom': 'false',  # use odom from robot_localization
           #'subscribe_depth': True,
           #'subscribe_stereo': True,
-          'subscribe_odom': True,
-          'odom_topic': '/odometry/filtered',
+        #   'subscribe_odom': True,
+        #   'odom_topic': '/odometry/filtered',
           #'imu_topic': '/demo/imu/data',
           'use_sim_time':use_sim_time,
           'subscribe_rgbd':True,
           'subscribe_scan':True,
           'scan_topic': '/scan',
-          'use_action_for_goal':True,
-          'subscribe_odom_info': True,
+        #   'use_action_for_goal':True,
+        #   'subscribe_odom_info': True,
           'odom_sensor_sync': True,
           'map_negative_poses_ignored': True,
           #'wait_imu_to_init': 'true',
@@ -65,14 +65,15 @@ def generate_launch_description():
           'Odom/GuessSmoothingDelay': '0',
           'Reg/Strategy':'1',               # 1=ICP cho lidar
           'Icp/PointToPlane': "true",       # Kích hoạt ICP Point-to-Plane
-          'Icp/MaxCorrespondenceDistance': "0.1",           # Tăng khoảng cách bắt điểm chi tiết
+          'Icp/MaxCorrespondenceDistance': "0.2",           # Tăng khoảng cách bắt điểm chi tiết
           'Icp/VoxelSize': "0.05",          # Giảm kích thước voxel để chi tiết hơn
           'Reg/Force3DoF':'true',
           'Icp/PointToPlane': 'true',
-          'Icp/CorrespondenceRatio': '0.2',         # minimum scan overlap to accept loop closure
+          'Icp/CorrespondenceRatio': '0.3',         # minimum scan overlap to accept loop closure
           'RGBD/ProximityPathMaxNeighbors': "10",  # Khai báo rõ để tránh cảnh báo
-          'RGBD/NeighborLinkRefining':'true',       # Do odometry correction with consecutive laser scans
-          'RGBD/OptimizeFromGraphEnd': 'false',
+          'RGBD/ProximityMaxGraphDepth': "100",
+          'RGBD/NeighborLinkRefining':'false',       # Do odometry correction with consecutive laser scans
+          'RGBD/OptimizeFromGraphEnd': 'true',
           # Loc du lieu
           'RGBD/ProximityMaxDepth': "4.0",  # Bỏ qua điểm sâu >5m
           'RGBD/RangeMax': '4.0',
@@ -86,7 +87,7 @@ def generate_launch_description():
           'RGBD/ProximityByTime': 'false',     # Local loop closure detection with locations in STM
           'RGBD/OptimizeMaxError': '4',         # Reject any loop closure causing large errors (>3x link's covariance) in the map
           'RGBD/LocalRadius': '5',          # giới hạn vùng tính toán pointcloud ở vị trí hiện tại của robot
-          'RGBD/StartAtOrigin': 'true',         # starting with the first node
+          'RGBD/StartAtOrigin': 'False',         # starting with the first node
           #'RGBD/LoopClosureFeatures': '0',      # so luong features de chap nhan loop closure
           #'RGBD/OptimizeStrategy': '2',        # g20=1, GTSAM=2
           'Grid/RayTracing':'false', # Fill empty space
@@ -104,13 +105,13 @@ def generate_launch_description():
           #'Vis/UseIMU': "true",        # giảm drift yaw
           'Vis/FeatureType': "2" ,      # Sử dụng ORB (nhanh)
           'Vis/MaxFeatures': "800",    # Giới hạn số feature
-          'Vis/MinInliers': "8",        # Tăng ngưỡng inliers
+          'Vis/MinInliers': "6",        # Tăng ngưỡng inliers
           'Vis/InlierDistance': '0.1',      # so sanh point cloud cua frame hien tai va fram trc, khoang cach point cloud 2 frame > nguong thi loai bo
           'Kp/DetectorStrategy': '2', # 0=SURF 1=SIFT 2=ORB 3=FAST/FREAK 4=FAST/BRIEF 5=GFTT/FREAK 6=GFTT/BRIEF 7=BRISK 8=GFTT/ORB
-          'Kp/MaxDepth': '4.0',             # do sau toi da cua depth cam
+          'Kp/MaxDepth': '0.0',             # do sau toi da cua depth cam
           'Kp/MaxFeatures': '1000',
           'Kp/MinFeatures': '20',
-          'Mem/TimeThr': '700',
+          'Mem/TimeThr': '800',
           'Mem/STMSize': '30',          # Chi giu lai 30 node gan nhat
           'Mem/NotLinkedNodesKept': 'false',
           'Mem/RehearsalSimilarity': '0.4',
@@ -120,7 +121,7 @@ def generate_launch_description():
           'topic_queue_size': 30,
           'sync_queue_size': 30,
           'Rtabmap/MaxRepublished': '5',
-          'Rtabmap/DetectionRate': '4',
+          'Rtabmap/DetectionRate': '15',
           'subscribe_initial_pose': True,
           'initial_pose_topic': 'initialpose',
           'database_path': db_path
@@ -131,7 +132,7 @@ def generate_launch_description():
     }
 
     remappings=[
-          ('odom', '/odometry/filtered'),
+          ('odom', '/diff_base_controller/odom'),
           ('rgb/image', '/camera/camera/color/image_raw'),
           ('rgb/camera_info', '/camera/camera/color/camera_info'),
           ('depth/image', '/camera/camera/aligned_depth_to_color/image_raw')]
@@ -154,13 +155,13 @@ def generate_launch_description():
 
 
         # Nodes to launch
-        Node(
-            package='robot_localization',
-            executable='ekf_node',
-            name='ekf_filter_node',
-            output='screen',
-            parameters=[os.path.join(pkg_share, 'config', 'ekf.yaml')]
-        ),
+        # Node(
+        #     package='robot_localization',
+        #     executable='ekf_node',
+        #     name='ekf_filter_node',
+        #     output='screen',
+        #  parameters=[os.path.join(pkg_share, 'config', 'ekf.yaml')]
+        # ),
         #Node(
         #    package='apriltag_ros',
         #    executable='apriltag_node',

@@ -24,7 +24,7 @@ class Point(models.Model):
     figure = models.IntegerField()
     work = models.IntegerField()
     motion = models.CharField()
-    cont = models.BooleanField()
+    ee = models.CharField()
     stop = models.BooleanField()
     vel = models.IntegerField()
     acc = models.IntegerField()

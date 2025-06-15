@@ -60,4 +60,8 @@ urlpatterns = [
     path('map/', maps.map_list, name='map'),
     path('save_map/', maps.save_map, name='save_map'),
     path('jog/', move.jog_mode, name='jog'),
+    path('missions/', maps.missions, name='missions'),
+    path('record/', maps.record, name='record'),
+    path('grip/', move_path.grip, name='grip'),
+
 ]

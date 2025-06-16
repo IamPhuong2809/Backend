@@ -7,7 +7,7 @@ from django.db.models import F
 from api.views.plc_manager import get_plc_manager
 from api.views.move import controller
 from api.views.components import robotData
-from api.views.Inverse_Kinematics import quaternion_ik
+from api.views.Kinematics import quaternion_ik
 import math
 import time
 
@@ -22,7 +22,7 @@ def O0008(request):
     joint = [0, 0, 0, 0, 0, 0, 200000]
     keys = ['t1', 't2', 't3', 't4', 't5', 't6']
     for i, key in enumerate(keys):
-        joint[i] = int(robotData["jointCurrent"][key])*100000
+        joint[i] = int(robotData["jointCurrent"][key]*100000)
     plc_manager.write_random(
         dword_devices=jog_addrs_write,
         dword_values=joint
@@ -38,7 +38,7 @@ def O0026(request):
         idPath = data.get("idPath")
         stepMode = data.get("stepMode")
         position = Point.objects.filter(point_id=idPoint, path_id=idPath).values('x', 'y', 'z', 'roll', 'pitch', 'yaw')[0]
-        grip, stop = Point.objects.filter(point_id=idPoint, path_id=idPath).values('cont', 'stop')[0]
+        grip = Point.objects.filter(point_id=idPoint, path_id=idPath).values('ee')[0]
         if not position:
             return Response({"error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -50,13 +50,12 @@ def O0026(request):
         xyzrpy = [position['x'], position['y'], position['z'], position['roll'], position['pitch'], position['yaw']]
 
         msg = Float64MultiArray()
-        success, theta, _ , _ , _ , _ = quaternion_ik(xyzrpy, joint)
-        print(xyzrpy)
-        print(joint)
+        # success, theta, _ , _ , _ , _ = quaternion_ik(xyzrpy, joint)
+        success = True
         if success:
-            msg.data = [math.degrees(float(j)) for j in theta]
+            msg.data = [j for j in xyzrpy]
             controller.publisher_joint.publish(msg)
-            return Response({"success": True, "grip": grip, "stop": stop}, status=status.HTTP_200_OK)
+            return Response({"success": True, "grip": grip}, status=status.HTTP_200_OK)
         else:
             return Response({"success": False}, status=status.HTTP_200_OK)
 
@@ -68,15 +67,14 @@ def grip(request):
     # try:
     data = request.data
     bool_grip = data.get("grip")
+    print(bool_grip)
 
-    if(bool_grip):
+    if bool_grip == "GRIP":
         plc_manager.write_device_block(device_name=["M350"], values=[1])
-        print("M350")
         time.sleep(1)
         plc_manager.write_device_block(device_name=["M350"], values=[0])
-    else:
+    elif bool_grip == "RELEASE":
         plc_manager.write_device_block(device_name=["M351"], values=[1])
-        print("M351")
         time.sleep(1)
         plc_manager.write_device_block(device_name=["M351"], values=[0])
 

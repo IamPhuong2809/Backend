@@ -37,7 +37,7 @@ def generate_launch_description():
     #tag_file = os.path.join(pkg_share, 'config', 'tags.yaml')
 
     parameters={
-          'frame_id':'base_footprint',
+          'frame_id':'base_link',
         #   'odom_frame_id': 'odom',
           'publish_tf_odom': 'false',  # use odom from robot_localization
           #'subscribe_depth': True,
@@ -49,7 +49,7 @@ def generate_launch_description():
           'subscribe_rgbd':True,
           'subscribe_scan':True,
           'scan_topic': '/scan',
-        #   'use_action_for_goal':True,
+          'use_action_for_goal':True,
         #   'subscribe_odom_info': True,
           'odom_sensor_sync': True,
           'map_negative_poses_ignored': True,
@@ -104,12 +104,12 @@ def generate_launch_description():
           #'Optimizer/GravitySigma':'0', # Disable imu constraints (we are already in 2D)
           #'Vis/UseIMU': "true",        # giảm drift yaw
           'Vis/FeatureType': "2" ,      # Sử dụng ORB (nhanh)
-          'Vis/MaxFeatures': "800",    # Giới hạn số feature
+          'Vis/MaxFeatures': "400",    # Giới hạn số feature
           'Vis/MinInliers': "6",        # Tăng ngưỡng inliers
           'Vis/InlierDistance': '0.1',      # so sanh point cloud cua frame hien tai va fram trc, khoang cach point cloud 2 frame > nguong thi loai bo
           'Kp/DetectorStrategy': '2', # 0=SURF 1=SIFT 2=ORB 3=FAST/FREAK 4=FAST/BRIEF 5=GFTT/FREAK 6=GFTT/BRIEF 7=BRISK 8=GFTT/ORB
           'Kp/MaxDepth': '0.0',             # do sau toi da cua depth cam
-          'Kp/MaxFeatures': '1000',
+          'Kp/MaxFeatures': '600',
           'Kp/MinFeatures': '20',
           'Mem/TimeThr': '800',
           'Mem/STMSize': '30',          # Chi giu lai 30 node gan nhat

@@ -76,7 +76,7 @@ def ForwardKinematis(joint_deg, N=6):
     DH = np.array([
         [  L0,       0,     L1,       joint[0] ],
         [ -L2,   np.pi/2,    0,       joint[1] ],
-        [  L3,       0,    -L4,       joint[2] ],
+        [  L3,       0,      0,       joint[2] ],
         [   0,  -np.pi/2,  -L5,       joint[3] ],
         [   0,   np.pi/2,    0,       joint[4] ],
         [   0,   np.pi/2,    0,       joint[5] ],

@@ -8,7 +8,7 @@ from api.views.plc_manager import get_plc_manager
 from django.db.models import F
 from api.views.move import controller
 from api.views.components import robotData
-from api.views.Inverse_Kinematics import quaternion_ik
+from api.views.Kinematics import quaternion_ik, ForwardKinematics
 import math
 
 plc_manager = get_plc_manager()
@@ -23,7 +23,7 @@ def O0006(request):
     joint = [0, 0, 0, 0, 0, 0, 200000]
     keys = ['t1', 't2', 't3', 't4', 't5', 't6']
     for i, key in enumerate(keys):
-        joint[i] = int(robotData["jointCurrent"][key])*100000
+        joint[i] = int(robotData["jointCurrent"][key]*100000)
     plc_manager.write_random(
         dword_devices=jog_addrs_write,
         dword_values=joint
@@ -48,11 +48,10 @@ def O0014(request):
         xyzrpy = [position['x'], position['y'], position['z'], position['roll'], position['pitch'], position['yaw']]
 
         msg = Float64MultiArray()
-        print(xyzrpy)
-        print(joint)
-        success, theta, _ , _ , _ , _ = quaternion_ik(xyzrpy, joint)
+        # success, theta, _ , _ , _ , _ = quaternion_ik(xyzrpy, joint)
+        success = True
         if success:
-            msg.data = [math.degrees(float(j)) for j in theta]
+            msg.data = [j for j in xyzrpy]
             controller.publisher_joint.publish(msg)
             return Response({"success": True}, status=status.HTTP_200_OK)
         else:
@@ -103,6 +102,19 @@ def global_list(request):
         else:
             id = data.get("id")
             position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw', 'figure') 
+            # input_xyzrpy = [position[0]['x'], position[0]['y'], position[0]['z'], position[0]['roll'], position[0]['pitch'], position[0]['yaw']]
+            # result = ForwardKinematics(input_xyzrpy)
+            # print(result)
+            # new_position = {
+            #     'x': result[0],
+            #     'y': result[1],
+            #     'z': result[2],
+            #     'roll': result[3],
+            #     'pitch': result[4],
+            #     'yaw': result[5],
+            #     'figure': position.get('figure')
+            # }
+
             return Response(position[0])
         
         if updated:  

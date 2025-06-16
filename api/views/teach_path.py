@@ -19,12 +19,11 @@ def O0016(request):
         idPoint = data.get('idPoint')
         idPath = data.get("idPath")
 
-        motion, cont, stop, vel, acc, corner = parameter
-        cont_bool = True if cont.upper() == 'TRUE' else False
+        motion, ee, stop, vel, acc, corner = parameter
         stop_bool = True if stop.upper() == 'TRUE' else False
         updated = Point.objects.filter(point_id=idPoint, path_id=idPath).update(
             motion=motion,
-            cont=cont_bool,
+            ee=ee,
             stop=stop_bool,
             vel=vel,
             acc=acc,
@@ -135,7 +134,7 @@ def point_list(request):
             name = data.get("name")
             Point.objects.filter(path_id=id_path, point_id__gte=id).update(point_id=F('point_id') + 1)
             updated = Point.objects.create(path_id=id_path,point_id=id,name=name,x=0,y=0,z=0,roll=0,pitch=0,yaw=0,
-                                 tool=0,figure=0,work=0,motion="LIN",cont=False,stop=False,vel=0,acc=0,corner=0)
+                                 tool=0,figure=0,work=0,motion="LIN",e="SKIP",stop=False,vel=0,acc=0,corner=0)
         elif type_data == "rename":
             id_path = data.get("id_parent")
             id = data.get("id")
@@ -152,7 +151,15 @@ def point_list(request):
             id = data.get("id")
             data_point = Point.objects.filter(path_id=id_path, point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw',
                                                                                  'tool', 'figure', 'work', 'motion',
-                                                                                 'cont', 'stop', 'vel', 'acc', 'corner') 
+                                                                                 'ee', 'stop', 'vel', 'acc', 'corner') 
+            # input_xyzrpy = [data_point['x'], data_point['y'], data_point['z'], data_point['roll'], data_point['pitch'], data_point['yaw']]
+            # result = ForwardKinematics(input_xyzrpy)
+            # data_point['x'] = result[0],
+            # data_point['y'] = result[1],
+            # data_point['z'] = result[2],
+            # data_point['roll'] = result[3],
+            # data_point['pitch'] = result[4],
+            # data_point['yaw'] = result[5],
             return Response(data_point)
         else:
             id = data.get("id")

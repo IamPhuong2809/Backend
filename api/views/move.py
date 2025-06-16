@@ -13,7 +13,7 @@ import time
 import threading
 from api.views.plc_manager import get_plc_manager
 from api.views.components import robotData
-from api.views.Inverse_Kinematics import quaternion_ik
+from api.views.Kinematics import quaternion_ik
 
 plc_manager = get_plc_manager()
 
@@ -177,7 +177,7 @@ def jog_mode(request):
     joint = [0, 0, 0, 0, 0, 0, 200000]
     keys = ['t1', 't2', 't3', 't4', 't5', 't6']
     for i, key in enumerate(keys):
-        joint[i] = int(robotData["jointCurrent"][key])*100000
+        joint[i] = int(robotData["jointCurrent"][key]*100000)
     plc_manager.write_random(
         dword_devices=jog_addrs_write,
         dword_values=joint
@@ -231,7 +231,7 @@ def O0028(request):
         if id == max_point_id + 1:
             updated = Point.objects.create( point_id=id, name = name, x = joint[0], y = joint[1], z = joint[2],
                 roll = joint[3], pitch = joint[4], yaw = joint[5], tool=0, figure=0, work=0, motion="LIN",
-                cont=False, stop=False, vel=0, acc=0, corner=0, path_id=id_path
+                ee="SKIP", stop=False, vel=0, acc=0, corner=0, path_id=id_path
             )
         else:
             updated = Point.objects.filter(path_id=id_path,point_id=id).update(

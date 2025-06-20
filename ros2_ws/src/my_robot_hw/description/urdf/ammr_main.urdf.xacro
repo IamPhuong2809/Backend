@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ammr_main">
+    <xacro:arg name="initial_positions_file" default="$(find my_robot_hw)/config/initial_positions.yaml"/>
+
+    <!-- Import ammr_main urdf file -->
+    <xacro:include filename="ammr_base.xacro" />
+    <xacro:include filename="ammr_drivewheel.xacro" /> 
+    <xacro:include filename="ammr_manipulator.xacro" />
+    <xacro:include filename="ammr_sensor.xacro" />
+    <xacro:include filename="ammr_camera.xacro" />
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="$(find my_robot_hw)/ros2_control/ammr_main.ros2_control.xacro" />
+
+    <xacro:ammr_main_ros2_control name="AMMR_FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
+
+</robot>

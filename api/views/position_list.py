@@ -62,6 +62,7 @@ def O0014(request):
 
 @api_view(['GET'])
 def O0015(request):
+    plc_manager.write_device_block(device_name=['M116'], values=[1])
 
     return Response({"success": True}, status=status.HTTP_200_OK)
 
@@ -102,20 +103,20 @@ def global_list(request):
         else:
             id = data.get("id")
             position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw', 'figure') 
-            # input_xyzrpy = [position[0]['x'], position[0]['y'], position[0]['z'], position[0]['roll'], position[0]['pitch'], position[0]['yaw']]
-            # result = ForwardKinematics(input_xyzrpy)
-            # print(result)
-            # new_position = {
-            #     'x': result[0],
-            #     'y': result[1],
-            #     'z': result[2],
-            #     'roll': result[3],
-            #     'pitch': result[4],
-            #     'yaw': result[5],
-            #     'figure': position.get('figure')
-            # }
+            input_xyzrpy = [position[0]['x'] - 90, position[0]['y'], position[0]['z'] - 45, position[0]['roll'] - 90, position[0]['pitch'] - 90, position[0]['yaw']]
+            result = ForwardKinematics(input_xyzrpy)
+            print(result)
+            new_position = {
+                'x': result[0],
+                'y': result[1],
+                'z': result[2],
+                'roll': result[3],
+                'pitch': result[4],
+                'yaw': result[5],
+                'figure': position[0].get('figure')
+            }
 
-            return Response(position[0])
+            return Response(new_position)
         
         if updated:  
             return Response({"success": True}, status=status.HTTP_200_OK)

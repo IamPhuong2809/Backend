@@ -26,6 +26,7 @@ def O0000(request):
 
 @api_view(['GET'])
 def O0001(request):
+    plc_manager.write_device_block(device_name=["M108"], values=[0])
     success = plc_manager.write_device_block(
         device_name=["M30042"],
         values=[1]
@@ -46,7 +47,11 @@ def O0002(request):
 
 @api_view(['GET'])
 def O0003(request):
-    print(f"Abort")
+    plc_manager.write_device_block(device_name=['M108'], values=[1])
+    time.sleep(0.05)
+    plc_manager.write_device_block(device_name=["M102"], values=[1])
+    plc_manager.write_device_block(device_name=['M108'],values=[0])
+
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 

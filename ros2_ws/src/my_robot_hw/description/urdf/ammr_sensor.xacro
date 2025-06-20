@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<robot name="ammr_main" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="frame_ground_offset" value="0.115"/>
+
+<!-- LIDAR-->
+    <link
+    name="Lidar_Link">
+    <inertial>
+        <origin
+        xyz="0.00866531230820938 -0.000832782906331645 -0.0277148363523506"
+        rpy="0 0 0" />
+        <mass
+        value="0.13786153915786" />
+        <inertia
+        ixx="6.41461131518994E-05"
+        ixy="-1.31334011454766E-07"
+        ixz="5.18497570641788E-07"
+        iyy="0.00011115472443412"
+        iyz="-9.15763468622709E-08"
+        izz="0.000160248589897905" />
+    </inertial>
+    <visual>
+        <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+        <geometry>
+        <mesh
+            filename="file://$(find my_robot_hw)/meshes/Lidar_Link.STL" />
+        </geometry>
+        <material
+        name="">
+        <color
+            rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+        </material>
+    </visual>
+    <collision>
+        <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+        <geometry>
+        <mesh
+            filename="file://$(find my_robot_hw)/meshes/Lidar_Link.STL" />
+        </geometry>
+    </collision>
+    </link>
+    <joint
+    name="Lidar_Joint"
+    type="fixed">
+    <origin
+        xyz="0.373790057428704 8.262872725008E-05 ${frame_ground_offset + 0.187164669903624}"
+        rpy="0 0 0" />
+    <parent
+        link="base_link" />
+    <child
+        link="Lidar_Link" />
+    <axis
+        xyz="0 0 0" />
+    </joint>
+
+</robot>

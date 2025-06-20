@@ -4,6 +4,7 @@ from rest_framework import status
 from api.models import Point, Path
 from django.db import transaction
 from django.db.models import F
+from api.views.Kinematics import quaternion_ik, ForwardKinematics
 
 @api_view(['GET'])
 def O0007(request):
@@ -151,15 +152,12 @@ def point_list(request):
             id = data.get("id")
             data_point = Point.objects.filter(path_id=id_path, point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw',
                                                                                  'tool', 'figure', 'work', 'motion',
-                                                                                 'ee', 'stop', 'vel', 'acc', 'corner') 
-            # input_xyzrpy = [data_point['x'], data_point['y'], data_point['z'], data_point['roll'], data_point['pitch'], data_point['yaw']]
-            # result = ForwardKinematics(input_xyzrpy)
-            # data_point['x'] = result[0],
-            # data_point['y'] = result[1],
-            # data_point['z'] = result[2],
-            # data_point['roll'] = result[3],
-            # data_point['pitch'] = result[4],
-            # data_point['yaw'] = result[5],
+                                                                                 'ee', 'stop', 'vel', 'acc', 'corner')[0]
+            input_xyzrpy = [data_point['x'] - 90, data_point['y'], data_point['z'] - 45, data_point['roll'] - 90, data_point['pitch'] - 90, data_point['yaw']]
+            result = ForwardKinematics(input_xyzrpy)
+            keys = ['x', 'y', 'z', 'roll', 'pitch', 'yaw']
+            for k, v in zip(keys, result):
+                data_point[k] = v
             return Response(data_point)
         else:
             id = data.get("id")

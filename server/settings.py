@@ -142,7 +142,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "196.169.6.1",  
+    "196.169.0.45",  
     "192.168.5.110",  
     "192.168.5.111",  
 

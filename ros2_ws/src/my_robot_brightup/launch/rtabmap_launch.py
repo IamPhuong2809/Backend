@@ -99,7 +99,7 @@ def generate_launch_description():
           'Grid/CellSize': "0.05",      # Kích thước mỗi ô (m)
           'Grid/MaxGroundHeight':'0.05', # All points above 5 cm are obstacles
           'Grid/MaxObstacleHeight':'1.0',  # All points over 1 meter are ignored
-          'Grid/RangeMin':'0.5', # ignore laser scan points on the robot itself
+          'Grid/RangeMin':'0.55', # ignore laser scan points on the robot itself
         #   'Grid/FromDepth': 'false',        # Create 2D occupancy grid from laser scan
           #'Optimizer/GravitySigma':'0', # Disable imu constraints (we are already in 2D)
           #'Vis/UseIMU': "true",        # giảm drift yaw

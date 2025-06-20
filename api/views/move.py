@@ -156,16 +156,27 @@ def O0022(request):
 
 @api_view(['GET'])
 def O0023(request):
-    print("abort")
+    plc_manager.rising_pulse(device_name=['M116'])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def O0024(request):
     print("home")
-    plc_manager.rising_pulse(device_name=["M108"])
+    plc_manager.write_device_block(device_name=['M108'], values=[1])
+    time.sleep(0.05)
     plc_manager.write_device_block(device_name=["M102"], values=[1])
-
+    plc_manager.write_device_block(device_name=['M108'],values=[0])
+    jog_addrs_write = [f"D{addr}" for addr in range(5550, 5563, 2)]
+    joint = [0, 0, 0, 0, 0, 0, 200000]
+    keys = ['t1', 't2', 't3', 't4', 't5', 't6']
+    for i, key in enumerate(keys):
+        joint[i] = int(robotData["jointCurrent"][key]*100000)
+    plc_manager.write_random(
+        dword_devices=jog_addrs_write,
+        dword_values=joint
+    )
+    plc_manager.write_device_block(device_name=['M113'],values=[0])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 

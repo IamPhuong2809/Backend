@@ -33,57 +33,30 @@
 
 namespace my_robot_hw
 {
+
 class AMMRSystemHardware : public hardware_interface::SystemInterface
 {
 public:
-  RCLCPP_SHARED_PTR_DEFINITIONS(AMMRSystemHardware);
+  RCLCPP_SHARED_PTR_DEFINITIONS(AMMRSystemHardware)
 
-  hardware_interface::CallbackReturn on_init(
-    const hardware_interface::HardwareInfo & info) override;
+  hardware_interface::CallbackReturn on_init(const hardware_interface::HardwareInfo & info) override;
 
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
 
   std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
 
-  hardware_interface::CallbackReturn on_activate(
-    const rclcpp_lifecycle::State & previous_state) override;
+  hardware_interface::return_type read(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-  hardware_interface::CallbackReturn on_deactivate(
-    const rclcpp_lifecycle::State & previous_state) override;
-
-  hardware_interface::return_type read(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
-
-  hardware_interface::return_type write(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
-
-  /// Get the logger of the SystemInterface.
-  /**
-   * \return logger of the SystemInterface.
-   */
-  rclcpp::Logger get_logger() const { return *logger_; }
-
-  /// Get the clock of the SystemInterface.
-  /**
-   * \return clock of the SystemInterface.
-   */
-  rclcpp::Clock::SharedPtr get_clock() const { return clock_; }
+  hardware_interface::return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 private:
-  // Parameters for the DiffBot simulation
-  double hw_start_sec_;
-  double hw_stop_sec_;
-
-  // Objects for logging
-  std::shared_ptr<rclcpp::Logger> logger_;
-  rclcpp::Clock::SharedPtr clock_;
-
-  // Store the command for the simulated robot
   std::vector<double> hw_commands_;
   std::vector<double> hw_positions_;
   std::vector<double> hw_velocities_;
 };
 
-}  // namespace my_robot_hw
+} // namespace my_robot_hw
 
-#endif  // MY_ROBOT_HW__AMMR_SYSTEM_HPP_
+PLUGINLIB_EXPORT_CLASS(my_robot_hw::AMMRSystemHardware, hardware_interface::SystemInterface)
+
+#endif

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "my_robot_hw/ammr_system.hpp"
+#include "melcli/melcli.h"
 
 #include <chrono>
 #include <cmath>
@@ -29,72 +30,26 @@
 
 namespace my_robot_hw
 {
-hardware_interface::CallbackReturn AMMRSystemHardware::on_init(
-  const hardware_interface::HardwareInfo & info)
+
+hardware_interface::CallbackReturn AMMRSystemHardware::on_init(const hardware_interface::HardwareInfo & info)
 {
-  if (
-    hardware_interface::SystemInterface::on_init(info) !=
-    hardware_interface::CallbackReturn::SUCCESS)
+  if (hardware_interface::SystemInterface::on_init(info) != hardware_interface::CallbackReturn::SUCCESS)
   {
     return hardware_interface::CallbackReturn::ERROR;
   }
-  logger_ = std::make_shared<rclcpp::Logger>(
-    rclcpp::get_logger("controller_manager.resource_manager.hardware_component.system.DiffBot"));
-  clock_ = std::make_shared<rclcpp::Clock>(rclcpp::Clock());
 
-  // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
-  hw_start_sec_ =
-    hardware_interface::stod(info_.hardware_parameters["example_param_hw_start_duration_sec"]);
-  hw_stop_sec_ =
-    hardware_interface::stod(info_.hardware_parameters["example_param_hw_stop_duration_sec"]);
-  // END: This part here is for exemplary purposes - Please do not copy to your production code
-  hw_positions_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  hw_velocities_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+  size_t num_joints = info.joints.size();
+  hw_commands_.resize(num_joints, 0.0);
+  hw_positions_.resize(num_joints, 0.0);
+  hw_velocities_.resize(num_joints, 0.0);
 
-  for (const hardware_interface::ComponentInfo & joint : info_.joints)
+  for (size_t i = 0; i < num_joints; ++i)
   {
-    // DiffBotSystem has exactly two states and one command interface on each joint
-    if (joint.command_interfaces.size() != 1)
+    if (info.joints[i].state_interfaces.size() != 2 ||
+        (info.joints[i].command_interfaces.size() != 1))
     {
-      RCLCPP_FATAL(
-        get_logger(), "Joint '%s' has %zu command interfaces found. 1 expected.",
-        joint.name.c_str(), joint.command_interfaces.size());
-      return hardware_interface::CallbackReturn::ERROR;
-    }
-
-    if (joint.command_interfaces[0].name != hardware_interface::HW_IF_VELOCITY)
-    {
-      RCLCPP_FATAL(
-        get_logger(), "Joint '%s' have %s command interfaces found. '%s' expected.",
-        joint.name.c_str(), joint.command_interfaces[0].name.c_str(),
-        hardware_interface::HW_IF_VELOCITY);
-      return hardware_interface::CallbackReturn::ERROR;
-    }
-
-    if (joint.state_interfaces.size() != 2)
-    {
-      RCLCPP_FATAL(
-        get_logger(), "Joint '%s' has %zu state interface. 2 expected.", joint.name.c_str(),
-        joint.state_interfaces.size());
-      return hardware_interface::CallbackReturn::ERROR;
-    }
-
-    if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION)
-    {
-      RCLCPP_FATAL(
-        get_logger(), "Joint '%s' have '%s' as first state interface. '%s' expected.",
-        joint.name.c_str(), joint.state_interfaces[0].name.c_str(),
-        hardware_interface::HW_IF_POSITION);
-      return hardware_interface::CallbackReturn::ERROR;
-    }
-
-    if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY)
-    {
-      RCLCPP_FATAL(
-        get_logger(), "Joint '%s' have '%s' as second state interface. '%s' expected.",
-        joint.name.c_str(), joint.state_interfaces[1].name.c_str(),
-        hardware_interface::HW_IF_VELOCITY);
+      RCLCPP_FATAL(rclcpp::get_logger("AMMRSystemHardware"),
+                   "Joint %s must have 2 state interfaces and 1 command interface", info.joints[i].name.c_str());
       return hardware_interface::CallbackReturn::ERROR;
     }
   }
@@ -105,126 +60,39 @@ hardware_interface::CallbackReturn AMMRSystemHardware::on_init(
 std::vector<hardware_interface::StateInterface> AMMRSystemHardware::export_state_interfaces()
 {
   std::vector<hardware_interface::StateInterface> state_interfaces;
-  for (auto i = 0u; i < info_.joints.size(); i++)
+  for (size_t i = 0; i < info_.joints.size(); ++i)
   {
-    state_interfaces.emplace_back(
-      hardware_interface::StateInterface(
-        info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_positions_[i]));
-    state_interfaces.emplace_back(
-      hardware_interface::StateInterface(
-        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &hw_velocities_[i]));
+    state_interfaces.emplace_back(info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_positions_[i]);
+    state_interfaces.emplace_back(info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &hw_velocities_[i]);
   }
-
   return state_interfaces;
 }
 
 std::vector<hardware_interface::CommandInterface> AMMRSystemHardware::export_command_interfaces()
 {
   std::vector<hardware_interface::CommandInterface> command_interfaces;
-  for (auto i = 0u; i < info_.joints.size(); i++)
+  for (size_t i = 0; i < info_.joints.size(); ++i)
   {
-    command_interfaces.emplace_back(
-      hardware_interface::CommandInterface(
-        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &hw_commands_[i]));
+    command_interfaces.emplace_back(info_.joints[i].name, info_.joints[i].command_interfaces[0].name, &hw_commands_[i]);
   }
-
   return command_interfaces;
 }
 
-hardware_interface::CallbackReturn AMMRSystemHardware::on_activate(
-  const rclcpp_lifecycle::State & /*previous_state*/)
+hardware_interface::return_type AMMRSystemHardware::read(const rclcpp::Time &, const rclcpp::Duration &)
 {
-  // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
-  RCLCPP_INFO(get_logger(), "Activating ...please wait...");
-
-  for (auto i = 0; i < hw_start_sec_; i++)
+  // For mock: mirror command to position
+  for (size_t i = 0; i < hw_positions_.size(); ++i)
   {
-    rclcpp::sleep_for(std::chrono::seconds(1));
-    RCLCPP_INFO(get_logger(), "%.1f seconds left...", hw_start_sec_ - i);
+    hw_positions_[i] = hw_commands_[i];
+    hw_velocities_[i] = 0.0;
   }
-  // END: This part here is for exemplary purposes - Please do not copy to your production code
-
-  // set some default values
-  for (auto i = 0u; i < hw_positions_.size(); i++)
-  {
-    if (std::isnan(hw_positions_[i]))
-    {
-      hw_positions_[i] = 0;
-      hw_velocities_[i] = 0;
-      hw_commands_[i] = 0;
-    }
-  }
-
-  RCLCPP_INFO(get_logger(), "Successfully activated!");
-
-  return hardware_interface::CallbackReturn::SUCCESS;
-}
-
-hardware_interface::CallbackReturn AMMRSystemHardware::on_deactivate(
-  const rclcpp_lifecycle::State & /*previous_state*/)
-{
-  // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
-  RCLCPP_INFO(get_logger(), "Deactivating ...please wait...");
-
-  for (auto i = 0; i < hw_stop_sec_; i++)
-  {
-    rclcpp::sleep_for(std::chrono::seconds(1));
-    RCLCPP_INFO(get_logger(), "%.1f seconds left...", hw_stop_sec_ - i);
-  }
-  // END: This part here is for exemplary purposes - Please do not copy to your production code
-
-  RCLCPP_INFO(get_logger(), "Successfully deactivated!");
-
-  return hardware_interface::CallbackReturn::SUCCESS;
-}
-
-hardware_interface::return_type AMMRSystemHardware::read(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
-{
-  // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
-  std::stringstream ss;
-  ss << "Reading states:";
-  for (std::size_t i = 0; i < hw_velocities_.size(); i++)
-  {
-    // Simulate DiffBot wheels's movement as a first-order system
-    // Update the joint status: this is a revolute joint without any limit.
-    // Simply integrates
-    hw_positions_[i] = hw_positions_[i] + period.seconds() * hw_velocities_[i];
-
-    ss << std::fixed << std::setprecision(2) << std::endl
-       << "\t"
-          "position "
-       << hw_positions_[i] << " and velocity " << hw_velocities_[i] << " for '"
-       << info_.joints[i].name.c_str() << "'!";
-  }
-  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 500, "%s", ss.str().c_str());
-  // END: This part here is for exemplary purposes - Please do not copy to your production code
-
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type my_robot_hw ::AMMRSystemHardware::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type AMMRSystemHardware::write(const rclcpp::Time &, const rclcpp::Duration &)
 {
-  // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
-  std::stringstream ss;
-  ss << "Writing commands:";
-  for (auto i = 0u; i < hw_commands_.size(); i++)
-  {
-    // Simulate sending commands to the hardware
-    hw_velocities_[i] = hw_commands_[i];
-
-    ss << std::fixed << std::setprecision(2) << std::endl
-       << "\t" << "command " << hw_commands_[i] << " for '" << info_.joints[i].name.c_str() << "'!";
-  }
-  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 500, "%s", ss.str().c_str());
-  // END: This part here is for exemplary purposes - Please do not copy to your production code
-
+  // Here you would normally send the command to your actuators
   return hardware_interface::return_type::OK;
 }
 
-}  // namespace my_robot_hw
-
-#include "pluginlib/class_list_macros.hpp"
-PLUGINLIB_EXPORT_CLASS(
-  my_robot_hw::AMMRSystemHardware, hardware_interface::SystemInterface)
+} // namespace my_robot_hw

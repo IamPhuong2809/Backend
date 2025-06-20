@@ -5,8 +5,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
   add_compile_options(-Wall -Wextra)
 endif()
 
-# set the same behavior for windows as it is on linux
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 
 # find dependencies
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -16,7 +16,6 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   rclcpp_lifecycle
 )
 
-# find dependencies
 find_package(backward_ros REQUIRED)
 find_package(ament_cmake REQUIRED)
 foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
@@ -29,15 +28,20 @@ add_library(
   SHARED
   hardware/ammr_system.cpp
 )
+
 target_compile_features(my_robot_hw PUBLIC cxx_std_17)
+
 target_include_directories(my_robot_hw PUBLIC
-$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
-$<INSTALL_INTERFACE:include/my_robot_hw>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
+  $<INSTALL_INTERFACE:include/my_robot_hw>
 )
+
 ament_target_dependencies(
   my_robot_hw PUBLIC
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
+
+
 
 # Export hardware plugins
 pluginlib_export_plugin_description_file(hardware_interface my_robot_hw.xml)

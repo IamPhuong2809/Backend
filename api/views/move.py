@@ -142,6 +142,7 @@ def O0022(request):
         msg.data = [float(j) for j in dataJoint] 
         controller.publisher_joint.publish(msg)
     elif moveMode == "PTP":
+        print(dataJoint)
         if all(item == 0 for item in dataJoint):
             return Response(status=status.HTTP_204_NO_CONTENT)
         msg = Float64MultiArray()
@@ -162,7 +163,6 @@ def O0023(request):
 
 @api_view(['GET'])
 def O0024(request):
-    print("home")
     plc_manager.write_device_block(device_name=['M108'], values=[1])
     time.sleep(0.05)
     plc_manager.write_device_block(device_name=["M102"], values=[1])

@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import time
 from api.views.plc_manager import get_plc_manager
+from api.models import Home
 
 plc_manager = get_plc_manager()
 
@@ -58,6 +59,12 @@ def O0003(request):
 @api_view(['POST'])
 def O0010(request):
     data = request.data
-    print(data)
+    Home.objects.create(t1=data[0], t2=data[1], t3=data[2], t4=data[3], t5=data[4], t6=data[5])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def O0004(request):
+    theta = Home.objects.all().values('id', 't1', 't2', 't3', 't4', 't5', 't6')
+
+    return Response(theta)

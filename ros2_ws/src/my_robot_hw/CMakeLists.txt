@@ -16,7 +16,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   rclcpp_lifecycle
 )
 
-find_package(backward_ros REQUIRED)
+#find_package(libslmp2 REQUIRED)
 find_package(ament_cmake REQUIRED)
 foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
   find_package(${Dependency} REQUIRED)
@@ -34,7 +34,12 @@ target_compile_features(my_robot_hw PUBLIC cxx_std_17)
 target_include_directories(my_robot_hw PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
   $<INSTALL_INTERFACE:include/my_robot_hw>
+  /usr/local/include
+  /usr/local/include/melcli
 )
+
+target_link_libraries(my_robot_hw PUBLIC melcli)
+
 
 ament_target_dependencies(
   my_robot_hw PUBLIC

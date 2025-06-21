@@ -1,5 +1,21 @@
 from django.db import models
 
+
+class Home(models.Model):
+    id = models.AutoField(primary_key=True) 
+    t1 = models.FloatField()
+    t2 = models.FloatField()
+    t3 = models.FloatField()
+    t4 = models.FloatField()
+    t5 = models.FloatField()
+    t6 = models.FloatField()
+
+    class Meta:
+        ordering = ["id"]
+
+    def __str__(self):
+        return f"This is home id: {self.id}"
+
 class Path(models.Model):
     path_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=255)

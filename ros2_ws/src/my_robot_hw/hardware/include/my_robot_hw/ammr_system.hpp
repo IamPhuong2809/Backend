@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 
+#include "pluginlib/class_list_macros.hpp"
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/system_interface.hpp"
@@ -31,6 +32,8 @@
 #include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 
+#include "melcli.h"
+
 namespace my_robot_hw
 {
 
@@ -41,6 +44,12 @@ public:
 
   hardware_interface::CallbackReturn on_init(const hardware_interface::HardwareInfo & info) override;
 
+  hardware_interface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state) override;
+
+  hardware_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state) override;
+
+  hardware_interface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
+
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
 
   std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
@@ -50,13 +59,26 @@ public:
   hardware_interface::return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 private:
+  int initMelcli();
+
   std::vector<double> hw_commands_;
   std::vector<double> hw_positions_;
   std::vector<double> hw_velocities_;
+  std::vector<double> transmission_ratio_;
+
+  const melcli_station_t target_station = MELCLI_CONNECTED_STATION;
+  const melcli_timeout_t timeout = MELCLI_TIMEOUT_DEFAULT;
+  melcli_ctx_t *g_ctx = NULL;
+
+  int ctxtype = MELCLI_TYPE_TCPIP;
+  char target_ip_addr[64] = "192.168.5.10";
+  int target_port = 5010;
+  char local_ip_addr[64] = "0.0.0.0";
+  int local_port = 0;
+  int is_active_ = false;
 };
 
 } // namespace my_robot_hw
 
 PLUGINLIB_EXPORT_CLASS(my_robot_hw::AMMRSystemHardware, hardware_interface::SystemInterface)
-
 #endif

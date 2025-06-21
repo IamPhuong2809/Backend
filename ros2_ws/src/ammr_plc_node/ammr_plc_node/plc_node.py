@@ -23,7 +23,7 @@ class manipulator(Node):
     def __init__(self):
         super().__init__('plc_node')
         self.PLCR = pymcprotocol.Type3E(plctype = "iQ-R")
-        self.PLCR.setaccessopt(commtype="ascii")
+        self.PLCR.setaccessopt(commtype="binary")
         self.connect = False
 
         # self.plc_manager = get_plc_manager()
@@ -245,7 +245,7 @@ class manipulator(Node):
         msg_wheel.angular.z = (vel[0] - vel[1])/self.d
         self.pub_vel_unstampd.publish(msg_wheel)
         self.ammr_publisher.publish(msg)
-        # msg.velocity = [(val * (math.pi / 30) * (1 / self.transmission_ratio[i]) / 100.0) for i, val in enumerate(data_vel[1])]
+        # msg.velocity = [(val * math.pi * self.a ) / (3000.0 * self.transmission_ratio[i]) for i, val in enumerate(data_vel[1])]
         # msg.effort   = [val / 100000.0 for val in data_tor[1]]
 
     def action_control_grip(self, msg : Float64MultiArray):

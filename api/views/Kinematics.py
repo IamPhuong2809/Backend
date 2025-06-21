@@ -67,7 +67,6 @@ def quaternion_ik(xyzrpy, theta):
     yaw, pitch, roll = [math.radians(rad) for rad in xyzrpy[3:]]
     the0 = [math.radians(the) - comenset[index] for index, the in enumerate(theta)]
     print(xyzrpy)
-    print([math.degrees(the2) for the2 in the0])
     # RPY to Rotation Matrix
     Rz = np.array([
         [np.cos(roll), -np.sin(roll), 0],

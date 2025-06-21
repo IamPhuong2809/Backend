@@ -68,7 +68,7 @@ class PLCManager:
                     return True
                 
                 self.plc = pymcprotocol.Type3E(plctype=self.plc_type)
-                self.plc.setaccessopt(commtype="ascii")
+                self.plc.setaccessopt(commtype="binary")
                 
                 if hasattr(self.plc, 'socket') and self.plc.socket:
                     self.plc.socket.settimeout(self.socket_timeout)

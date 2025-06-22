@@ -36,9 +36,10 @@ target_include_directories(my_robot_hw PUBLIC
   $<INSTALL_INTERFACE:include/my_robot_hw>
   /usr/local/include
   /usr/local/include/melcli
+  /usr/local/include/slmp
 )
 
-target_link_libraries(my_robot_hw PUBLIC melcli)
+target_link_libraries(my_robot_hw PUBLIC melcli slmp)
 
 
 ament_target_dependencies(

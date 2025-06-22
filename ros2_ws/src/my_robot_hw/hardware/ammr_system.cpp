@@ -32,6 +32,7 @@
 
 extern "C" {
     #include "melcli.h"
+    #include "slmp.h"
 }
 
 namespace my_robot_hw
@@ -39,11 +40,16 @@ namespace my_robot_hw
 
   static const char* POS_ADDRS[] = {
     "D1000","D1003","D1006","D1009","D1012",
-    "D1015","D1018","D1021","D32336","D32384"
+    "D1015","D1018","D1021","D32336","D32384", NULL
   };
   static const char* VEL_ADDRS[] = {
-    "D1030","D1033","D1036","D1039","D1042",
-    "D1045","D1048","D1051","D1054","D1057"
+    "D1030","D1032","D1034","D1036","D1038",
+    "D1040","D1042","D1046","D1048","D1050", NULL
+  };
+
+  const char* CMD_ADDRS[] = {
+      "D1100","D1102","D1104","D1106","D1108",
+      "D1110","D1112","D1114","D1116","D1118", NULL
   };
 
   hardware_interface::CallbackReturn AMMRSystemHardware::on_init(const hardware_interface::HardwareInfo & info)
@@ -125,8 +131,9 @@ namespace my_robot_hw
       return CallbackReturn::ERROR;
     }
 
-    RCLCPP_INFO(rclcpp::get_logger("AMMRSystemHardware"), "System activated");
+    RCLCPP_INFO(rclcpp::get_logger("AMMRSystemHardware"), "System connected to PLC and activated");
     is_active_ = true;
+
     return CallbackReturn::SUCCESS;
   }
 
@@ -147,38 +154,29 @@ namespace my_robot_hw
 
   hardware_interface::return_type AMMRSystemHardware::read(const rclcpp::Time &, const rclcpp::Duration &)
   {
-
     if (!is_active_) {
       return hardware_interface::return_type::OK;
     }
-
-    if (!g_ctx) {
-      RCLCPP_ERROR_THROTTLE(rclcpp::get_logger("AMMRSystemHardware"), 
-                            *rclcpp::Clock::make_shared(), 5000, 
-                            "MELCLI context is null - connection lost");
-      return hardware_interface::return_type::ERROR;
+    static thread_local bool slmp_ok = false;
+    if (!slmp_ok) {
+        slmp_ok = (slmp_init() == 0);
     }
+    uint32_t *vel_data = NULL;
+    uint32_t *pos_data = NULL;
 
-    uint32_t * pos_data = nullptr;
-    int pos_len = 10;
-    uint32_t * vel_data = nullptr;
-    int vel_len = 10;
-
-    if (melcli_random_read_dword(g_ctx, &target_station, POS_ADDRS, &pos_data, NULL) != 0) {
+    if (melcli_random_read_dword(g_ctx, NULL, POS_ADDRS, &pos_data, NULL) != 0) {
       RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Position read failed: len=%d", pos_len);
       melcli_disconnect(g_ctx);
       melcli_free_context(g_ctx);
       g_ctx = nullptr;
-
       if (initMelcli() != 0) {
         return hardware_interface::return_type::ERROR;
       }
-
       return hardware_interface::return_type::ERROR;
     }
 
     // Read velocities
-    if (melcli_random_read_dword(g_ctx, &target_station, VEL_ADDRS, &vel_data, NULL) != 0) {
+    if (melcli_random_read_dword(g_ctx, NULL, VEL_ADDRS, &vel_data, NULL) != 0) {
       RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Velocity read failed: len=%d", vel_len);
       melcli_free(pos_data);
       melcli_disconnect(g_ctx);
@@ -187,51 +185,75 @@ namespace my_robot_hw
       if (initMelcli() != 0) {
         return hardware_interface::return_type::ERROR;
       }
-
-
       return hardware_interface::return_type::ERROR;
     }
 
-    const double a = 0.161;
     for (size_t i = 0; i < hw_positions_.size(); ++i) {
       uint32_t raw = pos_data[i];
       hw_positions_[i] = (i < 8)
         ? raw * M_PI / 18000000.0
-        : raw / (10000000.0 * a);
+        : (int32_t)raw / (10000000.0 * a);
     }
     for (size_t i = 0; i < hw_velocities_.size(); ++i) {
       uint32_t raw = vel_data[i];
       hw_velocities_[i] = raw * M_PI * a / (3000.0 * transmission_ratio_[i]);
     }
 
-    melcli_free(pos_data);
-    melcli_free(vel_data);
+    free(pos_data);
+    free(vel_data);
     return hardware_interface::return_type::OK;
   }
 
   hardware_interface::return_type AMMRSystemHardware::write(const rclcpp::Time &, const rclcpp::Duration &)
   {
-    if (melcli_connect(g_ctx) != 0) {
-      RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "MELCLI context is null, attempting reconnect...");
-      if (initMelcli() != 0) {
-        RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Reconnection failed");
-        return hardware_interface::return_type::ERROR;
-      }
+    // if (melcli_connect(g_ctx) != 0) {
+    //   RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "MELCLI context is null, attempting reconnect...");
+    //   if (initMelcli() != 0) {
+    //     RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Reconnection failed");
+    //     return hardware_interface::return_type::ERROR;
+    //   }
+    // }
+
+    if (!is_active_) {
+      return hardware_interface::return_type::OK;
     }
+    static thread_local bool slmp_ok = false;
+    if (!slmp_ok) {
+        slmp_ok = (slmp_init() == 0);
+    }
+    // for (size_t i = 0; i < hw_commands_.size(); ++i)
+    // {
+    //    RCLCPP_INFO(rclcpp::get_logger("AMMRSystemHardware"),"  - [%zu] = %.6f\n", i, hw_commands_[i]);
+    // }
     return hardware_interface::return_type::OK;
   }
 
   int AMMRSystemHardware::initMelcli()
   {
+    char target_ip[64] = "192.168.5.10";
+    int target_port = 5010;
+    const melcli_station_t target_station = MELCLI_CONNECTED_STATION;
+    const melcli_timeout_t timeout = MELCLI_TIMEOUT_DEFAULT;
+
     srand((unsigned int)time(NULL));         
         
-    g_ctx = melcli_new_context(ctxtype, target_ip_addr, target_port,
-        local_ip_addr, local_port, &target_station, &timeout);
-    if (melcli_connect(g_ctx) != 0) {
-        RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Failed to create connection context. \n");
+    g_ctx = melcli_new_context(MELCLI_TYPE_TCPIP, target_ip, target_port, "0.0.0.0", 0, &target_station, &timeout);
+
+    if (g_ctx == NULL) {
+        RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "❌ Failed to create context.");
         return -1;
     }
-    RCLCPP_INFO(rclcpp::get_logger("AMMRSystemHardware"), "Connected");
+
+    // melcli_set_debug(g_ctx, 1);
+
+    // ✅ Kết nối PLC
+    if (melcli_connect(g_ctx) != 0) {
+        RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "❌ Failed to connect to PLC.");
+        return -1;
+    }
+
+    RCLCPP_INFO(rclcpp::get_logger("AMMRSystemHardware"), "Connected to PLC at %s:%d", target_ip, target_port);
+
     return 0;
   }
 

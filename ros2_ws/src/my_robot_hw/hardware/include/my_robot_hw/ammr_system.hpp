@@ -66,16 +66,15 @@ private:
   std::vector<double> hw_velocities_;
   std::vector<double> transmission_ratio_;
 
-  const melcli_station_t target_station = MELCLI_CONNECTED_STATION;
-  const melcli_timeout_t timeout = MELCLI_TIMEOUT_DEFAULT;
   melcli_ctx_t *g_ctx = NULL;
 
-  int ctxtype = MELCLI_TYPE_TCPIP;
-  char target_ip_addr[64] = "192.168.5.10";
-  int target_port = 5010;
-  char local_ip_addr[64] = "0.0.0.0";
-  int local_port = 0;
   int is_active_ = false;
+  int initialized = false;
+  const double a = 0.161;
+
+  int pos_len = 10;
+  int vel_len = 10;
+
 };
 
 } // namespace my_robot_hw

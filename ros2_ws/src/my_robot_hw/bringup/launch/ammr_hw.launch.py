@@ -106,7 +106,7 @@ def generate_launch_description():
 
     ## LAUNCH ROS2 CONTROL NODE
     env = os.environ.copy()
-    env['LD_LIBRARY_PATH'] = '/opt/ros/humble/include/libslmp2/build/libmelcli:' + env.get('LD_LIBRARY_PATH', '')
+    # env['LD_LIBRARY_PATH'] = '/opt/ros/humble/include/libslmp2/build/libmelcli:' + env.get('LD_LIBRARY_PATH', '')
     ros2_control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
@@ -117,7 +117,7 @@ def generate_launch_description():
              "/robot_description"),
         ],
         output="screen",
-        env=env
+        # env=env
     )
 
     ## SPAWN CONTROLLER [JS_BROADCASTER / MANIPULATOR_CONTROLLER / GRIPPER_CONTROLLER]

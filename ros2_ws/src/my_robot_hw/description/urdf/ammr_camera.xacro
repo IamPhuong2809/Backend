@@ -7,53 +7,46 @@
 <!-- DEPTH CAMERA-->
     <link name="Depth_Camera_Link">
         <inertial>
-            <origin xyz="-0.0246055548591465 -0.00216112757630004 0.00130733744912853" rpy="0 0 0" />
-            <mass value="0.130220768275134" />
+            <origin xyz="-0.0125484865299799 -0.00229321233993897 -6.05690984643026E-05" rpy="0 0 0" />
+            <mass value="0.0447520695801998" />
             <inertia
-                ixx="0.000338389282224253"
-                ixy="5.02320565349973E-07"
-                ixz="3.5074407953116E-10"
-                iyy="2.15010143394374E-05"
-                iyz="5.61027883659055E-09"
-                izz="0.000328398024437841" />
+                ixx="2.72774851860532E-05"
+                ixy="2.44350049250928E-07"
+                ixz="-1.17482358884841E-09"
+                iyy="3.94471458107954E-06"
+                iyz="-2.80461518570198E-09"
+                izz="2.73620489141261E-05" />
         </inertial>
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="file://$(find my_robot_hw)/meshes/Depth_Camera_Link.STL" />
+                <mesh filename="file://$(find my_robot_hw)/meshes/Camera_Link.STL" />
             </geometry>
             <material name="">
-                <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
+                <color rgba="1 1 1 1" />
             </material>
         </visual>
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="file://$(find my_robot_hw)/meshes/Depth_Camera_Link.STL" />
+                <!-- <mesh filename="file://$(find my_robot_hw)/meshes/Camera_Link.STL" /> -->
+                <box size="0.01 0.01 0.01"/>
             </geometry>
         </collision>
     </link>
     <joint name="Depth_Camera_Joint" type="fixed">
-    <origin
-        xyz="0 -0.05834 0.1825"
-        rpy="0 0 -${pi/2}"/>
-    <parent
-        link="Manipulator_J6_Link_1" />
-    <child
-        link="Depth_Camera_Link" />
-    <axis
-        xyz="0 0 0" />
+        <origin xyz="-0.058 -0.0025 0.19025" rpy="0 0 -${pi}" />
+        <parent link="Manipulator_J6_Link" />
+        <child link="Depth_Camera_Link" />
+        <axis xyz="0 0 0" />
     </joint>
-
-
 
     <link name="camera_link">
     </link>
-
-    <joint name="camera_link_joint" type="fixed">
+    
+    <joint name="camera_optical_joint" type="fixed">
+        <parent link="Depth_Camera_Link" />
+        <child link="camera_link" />
         <origin xyz="0 0 0" rpy="0 0 0" />
-        <parent link="Depth_Camera_Link"/>
-        <child link="camera_link"/>
     </joint>
-
 </robot>

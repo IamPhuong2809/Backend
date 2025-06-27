@@ -19,7 +19,7 @@ def O0006(request):
     points = Global.objects.all().values('point_id', 'name')  
     result = [{'id': p['point_id'], 'name': p['name']} for p in points]
     plc_manager.rising_pulse(device_name=["M108"])
-    jog_addrs_write = [f"D{addr}" for addr in range(5550, 5563, 2)]
+    jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
     joint = [0, 0, 0, 0, 0, 0, 200000]
     keys = ['t1', 't2', 't3', 't4', 't5', 't6']
     for i, key in enumerate(keys):
@@ -36,23 +36,17 @@ def O0014(request):
     try:
         data = request.data
         id = data.get("id")
-        position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw')[0]
-        if not position:
-            return Response({"error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
+        theta_dict = Global.objects.filter(point_id=id).values('t1', 't2', 't3', 't4', 't5', 't6')[0]
 
-        joint = [0, 0, 0, 0, 0, 0]
         keys = ['t1', 't2', 't3', 't4', 't5', 't6']
-        for i, key in enumerate(keys):
-            joint[i] = robotData["jointCurrent"][key]
-
-        xyzrpy = [position['x'], position['y'], position['z'], position['roll'], position['pitch'], position['yaw']]
-
-        msg = Float64MultiArray()
-        # success, theta, _ , _ , _ , _ = quaternion_ik(xyzrpy, joint)
-        success = True
+        if theta_dict:
+            theta = [theta_dict[f] for f in keys]
+            success = True
+        else:
+            success = False
         if success:
-            msg.data = [j for j in xyzrpy]
-            controller.publisher_joint.publish(msg)
+            plc_manager.move_joint_degree(theta)
+            # plc_manager.write_random(dword_devices=["D2000"], dword_values=[155])
             return Response({"success": True}, status=status.HTTP_200_OK)
         else:
             return Response({"success": False}, status=status.HTTP_200_OK)
@@ -90,7 +84,7 @@ def global_list(request):
             id = data.get("id")
             name = data.get("name")
             Global.objects.filter(point_id__gte=id).update(point_id=F('point_id') + 1)
-            updated = Global.objects.create(point_id=id, name=name, x=0, y=0, z=0, roll=0, pitch=0, yaw=0, tool=0, figure=0, work=0)
+            updated = Global.objects.create(point_id=id, name=name, t1=0, t2=0, t3=0, t4=0, t5=0, t6=0, tool=0, figure=0, work=0)
         elif type_data == "rename":
             id = data.get("id")
             name = data.get("name")
@@ -102,10 +96,10 @@ def global_list(request):
             updated = True
         else:
             id = data.get("id")
-            position = Global.objects.filter(point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw', 'figure') 
-            input_xyzrpy = [position[0]['x'] - 90, position[0]['y'], position[0]['z'] - 45, position[0]['roll'] - 90, position[0]['pitch'] - 90, position[0]['yaw']]
-            result = ForwardKinematics(input_xyzrpy)
-            print(result)
+            theta_dict = Global.objects.filter(point_id=id).values('t1', 't2', 't3', 't4', 't5', 't6', 'figure')
+            theta = [theta_dict[0]['t1'] - 90, theta_dict[0]['t2'], theta_dict[0]['t3'] - 45,
+                             theta_dict[0]['t4'] - 90, theta_dict[0]['t5'] - 90, theta_dict[0]['t6']]
+            result = ForwardKinematics(theta)
             new_position = {
                 'x': result[0],
                 'y': result[1],
@@ -113,7 +107,7 @@ def global_list(request):
                 'roll': result[3],
                 'pitch': result[4],
                 'yaw': result[5],
-                'figure': position[0].get('figure')
+                'figure': theta_dict[0].get('figure')
             }
 
             return Response(new_position)

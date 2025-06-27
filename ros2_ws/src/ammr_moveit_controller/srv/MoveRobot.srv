@@ -1,0 +1,6 @@
+# Request
+string mode         # "p2p", "cartesian", or "joint"
+float64[] target    # [x, y, z, qx, qy, qz, qw] for pose; joint values for joint mode
+---
+bool success
+string message

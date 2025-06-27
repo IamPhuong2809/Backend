@@ -1,15 +1,30 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import Point, Path
+from api.models import Point, Path, Aruco
 from django.db import transaction
 from django.db.models import F
-from api.views.Kinematics import quaternion_ik, ForwardKinematics
+from api.views.plc_manager import get_plc_manager
+from api.views.components import robotData
+from api.views.Kinematics import ForwardKinematics
+
+plc_manager = get_plc_manager()
 
 @api_view(['GET'])
 def O0007(request):
     paths = Path.objects.all().values('path_id', 'name')  
     result = [{'id': p['path_id'], 'name': p['name']} for p in paths]
+    plc_manager.rising_pulse(device_name=["M108"])
+    jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
+    joint = [0, 0, 0, 0, 0, 0, 200000]
+    keys = ['t1', 't2', 't3', 't4', 't5', 't6']
+    for i, key in enumerate(keys):
+        joint[i] = int(robotData["jointCurrent"][key]*100000)
+    plc_manager.write_random(
+        dword_devices=jog_addrs_write,
+        dword_values=joint
+    )
+    plc_manager.rising_pulse(device_name=["M113"])
     return Response(result)
 
 @api_view(['POST'])
@@ -22,23 +37,74 @@ def O0016(request):
 
         motion, ee, stop, vel, acc, corner = parameter
         stop_bool = True if stop.upper() == 'TRUE' else False
-        updated = Point.objects.filter(point_id=idPoint, path_id=idPath).update(
-            motion=motion,
-            ee=ee,
-            stop=stop_bool,
-            vel=vel,
-            acc=acc,
-            corner=corner
-        )
+        if motion == "P&P":
+            updated = True
+            pos = data.get("pos")
+            motion, task, id, _, _, _ = parameter
+            id = 0 if stop.upper() == 'FALSE' else int(id)
+            point = Point.objects.get(point_id=idPoint, path_id=idPath)
+            has_aruco = Aruco.objects.filter(point=point).exists()
+            if has_aruco:
+                return Response({"success": False, "error": "This point has a aruco id. Please choose another point to save"}, status=status.HTTP_200_OK)
+            else:
+                aruco, created = Aruco.objects.update_or_create(
+                    point=point,
+                    id_aruco=id,
+                    defaults={
+                        "task": task,
+                        "x": pos[0], "y": pos[1], "z": pos[2],
+                        "roll": pos[3], "pitch": pos[4], "yaw": pos[5]
+                    }
+                )
+                if aruco or created:
+                    updated = True
+                else:
+                    updated = False
+        else:
+            motion, ee, stop, vel, acc, corner = parameter
+            stop_bool = True if stop.upper() == 'TRUE' else False
+            updated = Point.objects.filter(point_id=idPoint, path_id=idPath).update(
+                motion=motion,
+                ee=ee,
+                stop=stop_bool,
+                vel=vel,
+                acc=acc,
+                corner=corner
+            )
 
         if updated:  
             return Response({"success": True}, status=status.HTTP_200_OK)
         else:
-            return Response({"success": False, "error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"success": False, "error": "ID not found"}, status=status.HTTP_200_OK)
 
     except Exception as e:
         return Response({"success": False, "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def O0017(request):
+    data = request.data
+    try:
+        idPoint = data.get('idPoint')
+        idPath = data.get("idPath")
 
+        theta_dict = Point.objects.filter(point_id=idPoint, path_id=idPath).values('t1', 't2', 't3', 't4', 't5', 't6')[0]
+        grip = Point.objects.filter(point_id=idPoint, path_id=idPath).values('ee')[0]
+        
+        keys = ['t1', 't2', 't3', 't4', 't5', 't6']
+        if theta_dict:
+            theta = [theta_dict[f] for f in keys]
+            success = True
+        else:
+            success = False
+        if success:
+            plc_manager.move_joint_degree(theta)
+            return Response({"success": True, "grip": grip}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": False}, status=status.HTTP_200_OK)
+
+
+    except Exception as e:
+        return Response({"success": False, "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 def insert_path_id(id, id_target):
     if id == id_target:
@@ -64,7 +130,6 @@ def insert_path_id(id, id_target):
 
         Path.objects.filter(path_id=-1).update(path_id=id_target)
         Point.objects.filter(path__path_id=-1).update(path_id=id_target)
-
 
 @api_view(['POST', 'DELETE'])
 def path_list(request):    
@@ -134,8 +199,8 @@ def point_list(request):
             id = data.get("id")
             name = data.get("name")
             Point.objects.filter(path_id=id_path, point_id__gte=id).update(point_id=F('point_id') + 1)
-            updated = Point.objects.create(path_id=id_path,point_id=id,name=name,x=0,y=0,z=0,roll=0,pitch=0,yaw=0,
-                                 tool=0,figure=0,work=0,motion="LIN",e="SKIP",stop=False,vel=0,acc=0,corner=0)
+            updated = Point.objects.create(path_id=id_path,point_id=id,name=name,t1=0,t2=0,t3=0,t4=0,t5=0,t6=0,
+                                 tool=0,figure=0,work=0,motion="LIN",ee="SKIP",stop=False,vel=0,acc=0,corner=0)
         elif type_data == "rename":
             id_path = data.get("id_parent")
             id = data.get("id")
@@ -150,14 +215,31 @@ def point_list(request):
         elif type_data == "data":
             id_path = data.get("id_parent")
             id = data.get("id")
-            data_point = Point.objects.filter(path_id=id_path, point_id=id).values('x', 'y', 'z', 'roll', 'pitch', 'yaw',
+
+            data_point = Point.objects.filter(path_id=id_path, point_id=id).values('t1', 't2', 't3', 't4', 't5', 't6',
                                                                                  'tool', 'figure', 'work', 'motion',
                                                                                  'ee', 'stop', 'vel', 'acc', 'corner')[0]
-            input_xyzrpy = [data_point['x'] - 90, data_point['y'], data_point['z'] - 45, data_point['roll'] - 90, data_point['pitch'] - 90, data_point['yaw']]
-            result = ForwardKinematics(input_xyzrpy)
+            theta = [data_point['t1'] - 90, data_point['t2'], data_point['t3'] - 45, data_point['t4'] - 90, data_point['t5'] - 90, data_point['t6']]
+            result = ForwardKinematics(theta)
             keys = ['x', 'y', 'z', 'roll', 'pitch', 'yaw']
             for k, v in zip(keys, result):
                 data_point[k] = v
+
+            point = Point.objects.get(path_id=id_path, point_id=id)
+            aruco = Aruco.objects.filter(point=point).first()
+            if aruco:
+                data_point['aruco'] = {
+                    'id_aruco': aruco.id_aruco,
+                    'task': aruco.task,
+                    'x': aruco.x,
+                    'y': aruco.y,
+                    'z': aruco.z,
+                    'roll': aruco.roll,
+                    'pitch': aruco.pitch,
+                    'yaw': aruco.yaw
+                }
+            else:
+                data_point['aruco'] = None
             return Response(data_point)
         else:
             id = data.get("id")

@@ -1,11 +1,11 @@
 # Default initial positions for ammr_main's ros2_control fake system
 
 initial_positions:
-  EE_L: 0
-  EE_R: 0
+  Gripper_L_Joint: 0.005
+  Gripper_R_Joint: 0.005
   Manipulator_J1_Joint: 1.57
   Manipulator_J2_Joint: 1.57
   Manipulator_J3_Joint: 0.78
   Manipulator_J4_Joint: 1.57
   Manipulator_J5_Joint: 1.57
-  Manipulator_J6_Joint: 3.14
+  Manipulator_J6_Joint: 0

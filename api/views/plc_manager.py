@@ -42,6 +42,9 @@ class PLCManager:
         self.executor = ThreadPoolExecutor(max_workers=5, thread_name_prefix="PLCManager")
         
         self.executor.submit(self._safe_connect)
+
+        self.pos_addrs_write = [f"D{addr}" for addr in range(2500, 2511, 2)]
+        self.LimitRangeRobot = [ [0, 180], [0, 180], [0, 135], [0, 180], [0, 180], [0, 359.99]]
     
     def _safe_connect(self) -> bool:
         """
@@ -288,7 +291,6 @@ class PLCManager:
         """
         if not self.plc:
             raise Exception("PLC not connected")
-            
         self.plc.randomwrite(
             word_devices=word_devices,
             word_values=word_values,
@@ -415,6 +417,19 @@ class PLCManager:
         self.write_device_block(device_name=device_name, values=[1])
         time.sleep(0.05)
         self.write_device_block(device_name=device_name, values=[0])
+
+    def move_joint_degree(self, data: List[float]):
+        for i, val in enumerate(data):
+            min_val, max_val = self.LimitRangeRobot[i]
+            if not (min_val <= val <= max_val):
+                print(f"[!] Joint {i+1} value {val} out of range [{min_val}, {max_val}]")
+                return 
+
+        value = [int(d * 100000) for d in data]
+        self.write_random(
+            dword_devices=self.pos_addrs_write,
+            dword_values=value
+        )
 
 plc_manager = PLCManager()
 

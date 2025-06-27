@@ -54,7 +54,7 @@ def generate_launch_description():
           'odom_sensor_sync': True,
           'map_negative_poses_ignored': True,
           #'wait_imu_to_init': 'true',
-          'wait_for_transform': 0.5,    #delay to avoid some TF warning
+          'wait_for_transform': 0.1,    #delay to avoid some TF warning
           'visual_odometry': 'true',
           # RTAB-Map's parameters should be strings:
           'Odom/Strategy': '0',
@@ -75,14 +75,14 @@ def generate_launch_description():
           'RGBD/NeighborLinkRefining':'false',       # Do odometry correction with consecutive laser scans
           'RGBD/OptimizeFromGraphEnd': 'true',
           # Loc du lieu
-          'RGBD/ProximityMaxDepth': "4.0",  # Bỏ qua điểm sâu >5m
-          'RGBD/RangeMax': '4.0',
+          'RGBD/ProximityMaxDepth': "3.0",  # Bỏ qua điểm sâu >5m
+          'RGBD/RangeMax': '3.0',
           'RGBD/RangeMin': '0.2',
           #'qos_image': 0,    # Su dung chat luong dich vu (Qos) cho cam bien, 0=sensor_data/1=parameters/2=services/3=default, ep kieu integer
           #
           'RGBD/ProximityPathFiltering': "true",
-          'RGBD/LinearUpdate': "0.01",        # Chỉ cập nhật map khi di chuyển đủ xa
-          'RGBD/AngularUpdate': '0.01',       # ~0.17 rad = 10°
+          'RGBD/LinearUpdate': "0.05",        # Chỉ cập nhật map khi di chuyển đủ xa
+          'RGBD/AngularUpdate': '0.05',       # ~0.17 rad = 10°
           'RGBD/ProximityBySpace': 'true',  # Local loop closure detection (using estimated position) with locations in WM
           'RGBD/ProximityByTime': 'false',     # Local loop closure detection with locations in STM
           'RGBD/OptimizeMaxError': '4',         # Reject any loop closure causing large errors (>3x link's covariance) in the map
@@ -93,7 +93,7 @@ def generate_launch_description():
           'Grid/RayTracing':'false', # Fill empty space
           'Grid/3D':'false', # Use 2D occupancy
           # Cau hinh Nav2
-          'Grid/RangeMax':'0',               # o=inf
+          'Grid/RangeMax':'8.0',               # o=inf
           'Grid/NormalsSegmentation':'false', # Use passthrough filter to detect obstacles
           'Grid/Sensor':'2', # Use both laser scan and camera for obstacle detection in global map
           'Grid/CellSize': "0.05",      # Kích thước mỗi ô (m)
@@ -123,6 +123,7 @@ def generate_launch_description():
           'Rtabmap/MaxRepublished': '5',
           'Rtabmap/DetectionRate': '15',
           'subscribe_initial_pose': True,
+	  'Rtabmap/StartNewMapOnLoopClosure': 'true',
           'initial_pose_topic': 'initialpose',
           'database_path': db_path
           #'RGBD/MarkerDetection': 'true',

@@ -53,12 +53,12 @@ void MTCTaskNode::setupPlanningScene()
   object.header.frame_id = "odom";
   object.primitives.resize(1);
   object.primitives[0].type = shape_msgs::msg::SolidPrimitive::CYLINDER;
-  object.primitives[0].dimensions = { 0.1, 0.02 };
+  object.primitives[0].dimensions = { 0.1, 0.01 };
 
   geometry_msgs::msg::Pose pose;
-  pose.position.x = 0.8;
-  pose.position.y = -0.3;
-  pose.position.z = 1.2;
+  pose.position.x = 1.0;
+  pose.position.y = 0;
+  pose.position.z = 0.7;
   pose.orientation.w = 1.0;
   object.pose = pose;
 
@@ -103,9 +103,10 @@ mtc::Task MTCTaskNode::createTask()
   task.stages()->setName("demo task");
   task.loadRobotModel(node_);
 
+  // Initialize Groups
   const auto& arm_group_name = "arm";
   const auto& hand_group_name = "gripper";
-  const auto& hand_frame = "Manipulator_J6_Link_2";
+  const auto& hand_frame = "Gripper";
 
   // Set task properties
   task.setProperty("group", arm_group_name);
@@ -138,7 +139,7 @@ mtc::Task MTCTaskNode::createTask()
   // task.add(std::move(stage_open_hand));
 
   auto stage_move_to_pick = std::make_unique<mtc::stages::Connect>(
-      "move to pick",mtc::stages::Connect::GroupPlannerVector{ { arm_group_name, sampling_planner } });
+      "move to pick",mtc::stages::Connect::GroupPlannerVector{{ arm_group_name, sampling_planner}});
   stage_move_to_pick->setTimeout(10.0);
   stage_move_to_pick->properties().configureInitFrom(mtc::Stage::PARENT);
   task.add(std::move(stage_move_to_pick));
@@ -158,12 +159,12 @@ mtc::Task MTCTaskNode::createTask()
       stage->properties().set("marker_ns", "approach_object");
       stage->properties().set("link", hand_frame);
       stage->properties().configureInitFrom(mtc::Stage::PARENT, { "group" });
-      stage->setMinMaxDistance(-0.1, 0.15);
+      stage->setMinMaxDistance(0, 0.15);
 
       // Set hand forward direction
       geometry_msgs::msg::Vector3Stamped vec;
       vec.header.frame_id = hand_frame;
-      vec.vector.y = -0.05;
+      vec.vector.z = 0.1;
       stage->setDirection(vec);
       grasp->insert(std::move(stage));
     }
@@ -179,11 +180,11 @@ mtc::Task MTCTaskNode::createTask()
       stage->setMonitoredStage(current_state_ptr);  // Hook into current state
 
     Eigen::Isometry3d grasp_frame_transform;
-    Eigen::Quaterniond q =  Eigen::AngleAxisd(M_PI,     Eigen::Vector3d::UnitX()) *
-                            Eigen::AngleAxisd(0,        Eigen::Vector3d::UnitY()) *
-                            Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
+    Eigen::Quaterniond q =  Eigen::AngleAxisd(0,Eigen::Vector3d::UnitX()) *
+                            Eigen::AngleAxisd(0,Eigen::Vector3d::UnitY()) *
+                            Eigen::AngleAxisd(M_PI/2,Eigen::Vector3d::UnitZ());
     grasp_frame_transform.linear() = q.matrix();
-    grasp_frame_transform.translation().y() = -0.055;
+    grasp_frame_transform.translation().z() = -0.2;
 
       // Compute IK
       auto wrapper =
@@ -232,7 +233,7 @@ mtc::Task MTCTaskNode::createTask()
       // Set upward direction
       geometry_msgs::msg::Vector3Stamped vec;
       vec.header.frame_id = "odom";
-      vec.vector.z = 1.0;
+      vec.vector.z = -1.0;
       stage->setDirection(vec);
       grasp->insert(std::move(stage));
     }

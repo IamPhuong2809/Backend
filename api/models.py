@@ -30,12 +30,12 @@ class Point(models.Model):
     path = models.ForeignKey(Path, to_field='path_id', on_delete=models.CASCADE)
     point_id = models.IntegerField()
     name = models.CharField(max_length=255)
-    x = models.FloatField()
-    y = models.FloatField()
-    z = models.FloatField()
-    roll = models.FloatField()
-    pitch = models.FloatField()
-    yaw = models.FloatField()
+    t1 = models.FloatField()
+    t2 = models.FloatField()
+    t3 = models.FloatField()
+    t4 = models.FloatField()
+    t5 = models.FloatField()
+    t6 = models.FloatField()
     tool = models.IntegerField()
     figure = models.IntegerField()
     work = models.IntegerField()
@@ -52,15 +52,32 @@ class Point(models.Model):
     def __str__(self):
         return f"Point {self.point_id} of {self.path.name}"
     
-class Global(models.Model):
-    point_id = models.IntegerField()
-    name = models.CharField(max_length=255)
+class Aruco(models.Model):
+    point = models.ForeignKey(Point, on_delete=models.CASCADE, related_name='aruco_tags')
+
+    id_aruco = models.IntegerField()
+    task = models.CharField(max_length=255)
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField()
     roll = models.FloatField()
     pitch = models.FloatField()
     yaw = models.FloatField()
+
+    def __str__(self):
+        return f"Aruco {self.id_aruco} (Point {self.point.point_id}, Path {self.point.path.path_id})"
+
+
+    
+class Global(models.Model):
+    point_id = models.IntegerField()
+    name = models.CharField(max_length=255)
+    t1 = models.FloatField()
+    t2 = models.FloatField()
+    t3 = models.FloatField()
+    t4 = models.FloatField()
+    t5 = models.FloatField()
+    t6 = models.FloatField()
     tool = models.IntegerField()
     figure = models.IntegerField()
     work = models.IntegerField()

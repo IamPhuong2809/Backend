@@ -5,8 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /TF1
         - /TF1/Frames1
-        - /PlanningScene1
         - /MotionPlanning1/Planning Request1
       Splitter Ratio: 0.47697973251342773
     Tree Height: 258
@@ -68,18 +68,26 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        Caster_backleft_Link:
+        Caster_Front_Left_Link:
           Value: true
-        Caster_backright_Link:
+        Caster_Front_Right_Link:
           Value: true
-        Caster_frontleft_Link:
+        Caster_Rear_Left_Link:
           Value: true
-        Caster_frontright_Link:
+        Caster_Rear_Right_Link:
           Value: true
-        camera_link:
+        Depth_Camera_Link:
           Value: true
-        Left_Drive_wheel_Link:
+        Diff_Wheel_Left_Link:
           Value: true
+        Diff_Wheel_Right_Link:
+          Value: true
+        Gripper:
+          Value: true
+        Gripper_L:
+          Value: false
+        Gripper_R:
+          Value: false
         Lidar_Link:
           Value: true
         Manipulator_J1_Link:
@@ -92,15 +100,7 @@ Visualization Manager:
           Value: true
         Manipulator_J5_Link:
           Value: true
-        Manipulator_J6_Link_1:
-          Value: true
-        Manipulator_J6_Link_2:
-          Value: true
-        Manipulator_J6_Link_EEL:
-          Value: false
-        Manipulator_J6_Link_EER:
-          Value: false
-        Right_Drive_wheel_Link:
+        Manipulator_J6_Link:
           Value: true
         base_link:
           Value: true
@@ -114,15 +114,17 @@ Visualization Manager:
       Tree:
         odom:
           base_link:
-            Caster_backleft_Link:
+            Caster_Front_Left_Link:
               {}
-            Caster_backright_Link:
+            Caster_Front_Right_Link:
               {}
-            Caster_frontleft_Link:
+            Caster_Rear_Left_Link:
               {}
-            Caster_frontright_Link:
+            Caster_Rear_Right_Link:
               {}
-            Left_Drive_wheel_Link:
+            Diff_Wheel_Left_Link:
+              {}
+            Diff_Wheel_Right_Link:
               {}
             Lidar_Link:
               {}
@@ -131,16 +133,14 @@ Visualization Manager:
                 Manipulator_J3_Link:
                   Manipulator_J4_Link:
                     Manipulator_J5_Link:
-                      Manipulator_J6_Link_1:
-                        camera_link:
+                      Manipulator_J6_Link:
+                        Depth_Camera_Link:
+                          {}
+                        Gripper:
+                          Gripper_L:
                             {}
-                        Manipulator_J6_Link_2:
-                          Manipulator_J6_Link_EEL:
+                          Gripper_R:
                             {}
-                          Manipulator_J6_Link_EER:
-                            {}
-            Right_Drive_wheel_Link:
-              {}
       Update Interval: 0
       Value: true
     - Class: moveit_rviz_plugin/PlanningScene
@@ -160,27 +160,37 @@ Visualization Manager:
         Attached Body Color: 150; 50; 150
         Links:
           All Links Enabled: true
-          Caster_backleft_Link:
+          Caster_Front_Left_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_backright_Link:
+          Caster_Front_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_frontleft_Link:
+          Caster_Rear_Left_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_frontright_Link:
+          Caster_Rear_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          camera_link:
+          Depth_Camera_Link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Diff_Wheel_Left_Link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Diff_Wheel_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -188,7 +198,17 @@ Visualization Manager:
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
-          Left_Drive_wheel_Link:
+          Gripper:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Gripper_L:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Gripper_R:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -224,27 +244,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          Manipulator_J6_Link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_EEL:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_EER:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Right_Drive_wheel_Link:
+          Manipulator_J6_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -264,27 +264,37 @@ Visualization Manager:
       Interrupt Display: false
       Links:
         All Links Enabled: true
-        Caster_backleft_Link:
+        Caster_Front_Left_Link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        Caster_backright_Link:
+        Caster_Front_Right_Link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        Caster_frontleft_Link:
+        Caster_Rear_Left_Link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        Caster_frontright_Link:
+        Caster_Rear_Right_Link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_link:
+        Depth_Camera_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Diff_Wheel_Left_Link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Diff_Wheel_Right_Link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -292,7 +302,17 @@ Visualization Manager:
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
-        Left_Drive_wheel_Link:
+        Gripper:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Gripper_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Gripper_R:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -328,27 +348,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        Manipulator_J6_Link_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        Manipulator_J6_Link_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        Manipulator_J6_Link_EEL:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        Manipulator_J6_Link_EER:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        Right_Drive_wheel_Link:
+        Manipulator_J6_Link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -398,27 +398,37 @@ Visualization Manager:
         Interrupt Display: false
         Links:
           All Links Enabled: true
-          Caster_backleft_Link:
+          Caster_Front_Left_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_backright_Link:
+          Caster_Front_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_frontleft_Link:
+          Caster_Rear_Left_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_frontright_Link:
+          Caster_Rear_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          camera_link:
+          Depth_Camera_Link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Diff_Wheel_Left_Link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Diff_Wheel_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -426,7 +436,17 @@ Visualization Manager:
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
-          Left_Drive_wheel_Link:
+          Gripper:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Gripper_L:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Gripper_R:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -462,27 +482,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          Manipulator_J6_Link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_EEL:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_EER:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Right_Drive_wheel_Link:
+          Manipulator_J6_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -534,27 +534,37 @@ Visualization Manager:
         Attached Body Color: 150; 50; 150
         Links:
           All Links Enabled: true
-          Caster_backleft_Link:
+          Caster_Front_Left_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_backright_Link:
+          Caster_Front_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_frontleft_Link:
+          Caster_Rear_Left_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          Caster_frontright_Link:
+          Caster_Rear_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          camera_link:
+          Depth_Camera_Link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Diff_Wheel_Left_Link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Diff_Wheel_Right_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -562,7 +572,17 @@ Visualization Manager:
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
-          Left_Drive_wheel_Link:
+          Gripper:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Gripper_L:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          Gripper_R:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -598,27 +618,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          Manipulator_J6_Link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_EEL:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_EER:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Right_Drive_wheel_Link:
+          Manipulator_J6_Link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -634,7 +634,7 @@ Visualization Manager:
       Value: true
       Velocity_Scaling_Factor: 0.1
     - Class: moveit_task_constructor/Motion Planning Tasks
-      Enabled: true
+      Enabled: false
       Interrupt Display: false
       Loop Animation: false
       Markers:
@@ -645,100 +645,10 @@ Visualization Manager:
         Fixed Robot Color: 150; 50; 150
         Links:
           All Links Enabled: true
-          Caster_backleft_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Caster_backright_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Caster_frontleft_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Caster_frontright_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          camera_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
-          Left_Drive_wheel_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Lidar_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
           Link Tree Style: Links in Alphabetic Order
-          Manipulator_J1_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J2_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J3_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J4_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J5_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_EEL:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Manipulator_J6_Link_EER:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          Right_Drive_wheel_Link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
         Robot Alpha: 0.5
         Show Robot Collision: false
         Show Robot Visual: true
@@ -758,7 +668,7 @@ Visualization Manager:
       Tasks:
         {}
       Trail Step Size: 1
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -777,25 +687,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.132650136947632
+      Distance: 3.432267427444458
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.7465193867683411
-        Y: 0.376642107963562
-        Z: -0.791329026222229
+        X: -0.16036710143089294
+        Y: 1.049784541130066
+        Z: 0.32086652517318726
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5597967505455017
+      Pitch: 0.4147966206073761
       Target Frame: Manipulator_J6_Link_2
       Value: Orbit (rviz_default_plugins)
-      Yaw: 5.656774997711182
+      Yaw: 5.421777725219727
     Saved: ~
 Window Geometry:
   Displays:

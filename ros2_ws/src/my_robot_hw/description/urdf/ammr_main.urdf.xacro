@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ammr_main">
+<robot name="ammr_main" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:arg name="initial_positions_file" default="$(find my_robot_hw)/config/initial_positions.yaml"/>
 
     <!-- Import ammr_main urdf file -->
@@ -12,6 +12,5 @@
     <!-- Import control_xacro -->
     <xacro:include filename="$(find my_robot_hw)/ros2_control/ammr_main.ros2_control.xacro" />
 
-    <xacro:ammr_main_ros2_control name="AMMR_FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
-
+    <xacro:ammr_main_ros2_control name="AMMRSystemHardware" initial_positions_file="$(arg initial_positions_file)"/>
 </robot>

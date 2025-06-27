@@ -35,6 +35,7 @@ urlpatterns = [
     path('O0015/', position_list.O0015, name='O0015'),
 
     path('O0016/', teach_path.O0016, name='O0016'),
+    path('O0017/', teach_path.O0017, name='O0017'),
 
     path('O0021/', move.O0021, name='O0021'),
     path('O0022/', move.O0022, name='O0022'),
@@ -63,5 +64,6 @@ urlpatterns = [
     path('missions/', maps.missions, name='missions'),
     path('record/', maps.record, name='record'),
     path('grip/', move_path.grip, name='grip'),
+    path('copy/', components.copy, name='copy'),
 
 ]

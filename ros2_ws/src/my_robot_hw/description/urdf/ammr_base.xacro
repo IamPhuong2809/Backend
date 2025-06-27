@@ -5,136 +5,126 @@ WHICH CONSIST OF THE BASE FRAME, CASTER WHEELS AND MANIPULATOR BASE-->
 
     <xacro:property name="frame_ground_offset" value="0.115"/>
     <xacro:property name="caster_wheels_radius" value="0.033"/>
+    <xacro:property name="ee_offset" value="0.005"/>
 
 
     <link name="base_link">
-    <visual>
-        <origin xyz="0 0 ${frame_ground_offset}" rpy="0 0 0" />
-        <geometry>
-            <mesh filename="file://$(find my_robot_hw)/meshes/base_link.STL" />
-        </geometry>
-        <material name="">
-            <color rgba="0.109803921568627 0.109803921568627 0.109803921568627 1" />
-        </material>
-    </visual>
-
-    <inertial>
-        <origin xyz="0.0638 0 ${frame_ground_offset + 0.2215}" rpy="0 0 0" />
-        <mass value="13.4575990474881" />
+        <inertial>
+        <origin xyz="0.0843344657157599 -7.86875557256608E-05 0.347829275093551" rpy="0 0 0" />
+        <mass value="16.8220453457958" />
         <inertia
-            ixx="0.0749328452865162"
-            ixy="-3.34691918883614E-07"
-            ixz="-7.21976014961377E-06"
-            iyy="0.208344462052985"
-            iyz="2.91737092245682E-06"
-            izz="0.255209316885901" />
-    </inertial>
-
-    <collision>
-        <origin xyz="0 0 ${frame_ground_offset}" rpy="0 0 0" />
-        <geometry>
-            <mesh filename="file://$(find my_robot_hw)/meshes/base_link.STL" />
-        </geometry>
-    </collision>
-
-    
+            ixx="0.137587648129073"
+            ixy="-3.84688174731315E-05"
+            ixz="-4.36558760196584E-05"
+            iyy="0.280019164877919"
+            iyz="2.90993670823719E-06"
+            izz="0.308407533084174" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find my_robot_hw)/meshes/base_link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.929 0.298 0.337 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find my_robot_hw)/meshes/base_link.STL" />
+            </geometry>
+        </collision>
     </link>
-    <link name="base_footprint">
-    </link>
-    <joint name="base_footprint_joint" type="fixed">
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <parent link="base_link" />
-        <child link="base_footprint" />
-    </joint>
 
 <!-- CASTER WHEELS LINK-->
-    <!-- FRONT RIGHT CASTER WHEELS-->
-    <link name="Caster_frontright_Link">
+    <!-- FRONT RIGHT CASTER WHEEL-->
+    <link name="Caster_Front_Right_Link">
         <inertial>
-            <origin xyz="-0.0123 0.0325 ${frame_ground_offset}" rpy="0 0 0" />
-            <mass value="0.111608045817562" />
-            <inertia
-                ixx="4.75864898068099E-05"
-                ixy="1.61941943522179E-06"
-                ixz="3.91878885089351E-10"
-                iyy="5.65023298002223E-05"
-                iyz="-6.24847969157307E-09"
-                izz="6.48109553875577E-05" />
+        <origin xyz="0.0122909477628896 0.0325242160467338 2.69391509248318E-05" rpy="0 0 0" />
+        <mass value="0.111608047031429" />
+        <inertia
+            ixx="4.75864901536561E-05"
+            ixy="-1.61941948605726E-06"
+            ixz="3.92007560488086E-10"
+            iyy="5.65023301036708E-05"
+            iyz="6.24854641452572E-09"
+            izz="6.48109557448597E-05" />
         </inertial>
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_frontright_Link.STL" />
+                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_Front_Right_Link.STL" />
             </geometry>
             <material name="">
-                <color rgba="0.8 0.8 0.8 1" />
+                <color rgba="0.8 0.807843137254902 0.8 1" />
             </material>
         </visual>
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <sphere radius="${caster_wheels_radius}"/>
+                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_Front_Right_Link.STL" />
             </geometry>
         </collision>
     </link>
-    <joint name="Caster_frontright_Link" type="fixed">
-        <origin xyz="0.447 -0.262 ${frame_ground_offset - 0.08335}" rpy="1.5707963267949 0 0" />
+    <joint name="Caster_Front_Right_Joint" type="fixed">
+        <origin xyz="0.412 -0.261999999999999 0.0315000000000004" rpy="1.5707963267949 0 0" />
         <parent link="base_link" />
-        <child link="Caster_frontright_Link" />
+        <child link="Caster_Front_Right_Link" />
         <axis xyz="0 0 0" />
     </joint>
-    <!-- FRONT LEFT CASTER WHEELS-->
-    <link name="Caster_frontleft_Link">
+    <!-- FRONT LEFT CASTER WHEEL-->
+    <link name="Caster_Front_Left_Link">
         <inertial>
-            <origin xyz="-0.01229 0.03252 0" rpy="0 0 0" />
-            <mass value="0.111608046232635" />
+            <origin xyz="0.0122909504235307 0.0325242155101724 2.69394639507148E-05" rpy="0 0 0" />
+            <mass value="0.111608045330165" />
             <inertia
-                ixx="4.75864901264927E-05"
-                ixy="1.61941948382726E-06"
-                ixz="3.91999887235058E-10"
-                iyy="5.65023300764558E-05"
-                iyz="-6.2487680010785E-09"
-                izz="6.48109557119836E-05" />
+                ixx="4.75864895381337E-05"
+                ixy="-1.61941879538326E-06"
+                ixz="3.91979875380023E-10"
+                iyy="5.6502329985394E-05"
+                iyz="6.24852186755407E-09"
+                izz="6.48109553727099E-05" />
         </inertial>
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_frontleft_Link.STL" />
+                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_Front_Left_Link.STL" />
             </geometry>
             <material name="">
-                <color rgba="0.8 0.8 0.8 1" />
+                <color rgba="0.8 0.807843137254902 0.8 1" />
             </material>
         </visual>
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <sphere radius="${caster_wheels_radius}"/>
+                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_Front_Left_Link.STL" />
             </geometry>
         </collision>
     </link>
-    <joint name="Caster_frontleft_Joint" type="fixed">
-        <origin xyz="0.447 0.262 ${frame_ground_offset - 0.08335}" rpy="${pi/2} 0 0" />
+    <joint name="Caster_Front_Left_Joint" type="fixed">
+        <origin xyz="0.412 0.261999999999994 0.0314999999999938" rpy="1.57079631559686 0 0" />
         <parent link="base_link" />
-        <child link="Caster_frontleft_Link" />
+        <child link="Caster_Front_Left_Link" />
         <axis xyz="0 0 0" />
     </joint>
     <!-- REAR RIGHT CASTER WHEELS-->
-    <link name="Caster_backright_Link">
+    <link name="Caster_Rear_Right_Link">
         <inertial>
-            <origin xyz="-0.0123 0.0325 0" rpy="0 0 0" />
-            <mass value="0.111608042759464" />
+            <origin xyz="0.0122909479792908 0.0325242165612812 2.69390912403522E-05" rpy="0 0 0" />
+            <mass value="0.111608045006266" />
             <inertia
-                ixx="4.7586489109651E-05"
-                ixy="1.61941942376714E-06"
-                ixz="3.91868858418766E-10"
-                iyy="5.650232910697E-05"
-                iyz="-6.24820035109413E-09"
-                izz="6.48109545818733E-05" />
+            ixx="4.75864897572974E-05"
+            ixy="-1.61941947341402E-06"
+            ixz="3.91993220606357E-10"
+            iyy="5.65023297148291E-05"
+            iyz="6.24861321163926E-09"
+            izz="6.48109553340786E-05" />
         </inertial>
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_backright_Link.STL" />
+                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_Rear_Right_Link.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.8 0.807843137254902 0.8 1" />
@@ -143,33 +133,33 @@ WHICH CONSIST OF THE BASE FRAME, CASTER WHEELS AND MANIPULATOR BASE-->
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <sphere radius="${caster_wheels_radius}"/>
+                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_Rear_Right_Link.STL" />
             </geometry>
         </collision>
     </link>
-    <joint name="Caster_backright_Joint" type="fixed">
-        <origin xyz="-0.377 -0.262 ${frame_ground_offset - 0.08335}" rpy="1.5707963267949 0 0" />
+    <joint name="Caster_Rear_Right_Joint" type="fixed">
+        <origin xyz="-0.412 -0.262000000000012 0.0315000000000084" rpy="1.57079632679488 0 0" />
         <parent link="base_link" />
-        <child link="Caster_backright_Link" />
+        <child link="Caster_Rear_Right_Link" />
         <axis xyz="0 0 0" />
     </joint>
     <!-- REAR LEFT CASTER WHEELS-->
-    <link name="Caster_backleft_Link">
+    <link name="Caster_Rear_Left_Link">
         <inertial>
-            <origin xyz="-0.01229 0.03252 0" rpy="0 0 0" />
-            <mass value="0.111608043890482" />
+            <origin xyz="0.0122909504412406 0.0325242155284727 2.69394587262828E-05" rpy="0 0 0" />
+            <mass value="0.111608045573072" />
             <inertia
-                ixx="4.75864893867588E-05"
-                ixy="1.61941942703802E-06"
-                ixz="3.91879892164815E-10"
-                iyy="5.65023293877921E-05"
-                iyz="-6.24808701339665E-09"
-                izz="6.4810954938133E-05" />
+                ixx="4.75864894832217E-05"
+                ixy="-1.61941874677764E-06"
+                ixz="3.91858873672206E-10"
+                iyy="5.65023299739322E-05"
+                iyz="6.24834801484459E-09"
+                izz="6.4810955385779E-05" />
         </inertial>
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_backleft_Link.STL" />
+                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_Rear_Left_Link.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.8 0.807843137254902 0.8 1" />
@@ -178,15 +168,14 @@ WHICH CONSIST OF THE BASE FRAME, CASTER WHEELS AND MANIPULATOR BASE-->
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <sphere radius="${caster_wheels_radius}"/>
+                <mesh filename="file://$(find my_robot_hw)/meshes/Caster_Rear_Left_Link.STL" />
             </geometry>
         </collision>
     </link>
-    <joint name="Caster_backleft_Joint" type="fixed">
-        <origin xyz="-0.377 0.262 ${frame_ground_offset - 0.08335}" rpy="1.5707963267949 0 0" />
+    <joint name="Caster_Rear_Left_Joint" type="fixed">
+        <origin xyz="-0.412 0.261999999999998 0.0314999999999996" rpy="1.57079631559687 0 0" />
         <parent link="base_link" />
-        <child link="Caster_backleft_Link" />
+        <child link="Caster_Rear_Left_Link" />
         <axis xyz="0 0 0" />
     </joint>
-    
 </robot>

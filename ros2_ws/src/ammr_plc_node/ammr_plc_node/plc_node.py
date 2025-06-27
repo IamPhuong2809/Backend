@@ -149,7 +149,7 @@ class manipulator(Node):
             print(f"End Point -> pos: {joint}")
 
             try:
-                self.PLC.randomwrite(
+                self.PLCR.randomwrite(
                     word_devices=[], word_values=[],  # Có thể bỏ hoặc đặt index tùy ý
                     dword_devices=self.pos_addrs_write,
                     dword_values=joint
@@ -175,6 +175,8 @@ class manipulator(Node):
         value = [int(d * 100000) for d in data]
         print(value)
         try:
+            print(self.jogpos_addrs_write)
+            print(value)
             self.PLCR.randomwrite(
                 word_devices=[], word_values=[],
                 dword_devices=self.jogpos_addrs_write,

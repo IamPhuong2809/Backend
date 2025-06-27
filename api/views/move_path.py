@@ -4,11 +4,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.models import Point, Path
 from django.db.models import F
+from django.core.cache import cache
 from api.views.plc_manager import get_plc_manager
 from api.views.move import controller
 from api.views.components import robotData
-from api.views.Kinematics import quaternion_ik
-import math
 import time
 
 plc_manager = get_plc_manager()
@@ -18,7 +17,7 @@ def O0008(request):
     paths = Path.objects.all().values('path_id', 'name')  
     result = [{'id': p['path_id'], 'name': p['name']} for p in paths]
     plc_manager.rising_pulse(device_name=["M108"])
-    jog_addrs_write = [f"D{addr}" for addr in range(5550, 5563, 2)]
+    jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
     joint = [0, 0, 0, 0, 0, 0, 200000]
     keys = ['t1', 't2', 't3', 't4', 't5', 't6']
     for i, key in enumerate(keys):
@@ -28,46 +27,64 @@ def O0008(request):
         dword_values=joint
     )
     plc_manager.rising_pulse(device_name=["M113"])
-    return Response(result)
+    idPoint = cache.get("idPoint")
+    idPath = cache.get("idPath")
+    grip = cache.get("grip")
+    print(idPoint, idPath, grip)
+    return Response({
+        "name": result,
+        "idPoint": idPoint,
+        "idPath": idPath,
+        "grip": grip
+    })
 
 @api_view(['POST'])
 def O0026(request):
-    try:
-        data = request.data
-        idPoint = data.get('idPoint')
-        idPath = data.get("idPath")
-        stepMode = data.get("stepMode")
-        position = Point.objects.filter(point_id=idPoint, path_id=idPath).values('x', 'y', 'z', 'roll', 'pitch', 'yaw')[0]
-        grip = Point.objects.filter(point_id=idPoint, path_id=idPath).values('ee')[0]
-        if not position:
-            return Response({"error": "ID not found"}, status=status.HTTP_404_NOT_FOUND)
+    # try:
+    data = request.data
+    idPoint = data.get('idPoint')
+    idPath = data.get("idPath")
+    grip = data.get("grip")
+    cache.set("idPoint", idPoint)
+    cache.set("idPath", idPath)
 
-        joint = [0, 0, 0, 0, 0, 0]
-        keys = ['t1', 't2', 't3', 't4', 't5', 't6']
-        for i, key in enumerate(keys):
-            joint[i] = robotData["jointCurrent"][key]
-
-        xyzrpy = [position['x'], position['y'], position['z'], position['roll'], position['pitch'], position['yaw']]
-
-        msg = Float64MultiArray()
-        # success, theta, _ , _ , _ , _ = quaternion_ik(xyzrpy, joint)
-        success = True
-        if success:
-            msg.data = [j for j in xyzrpy]
-            controller.publisher_joint.publish(msg)
-            return Response({"success": True, "grip": grip}, status=status.HTTP_200_OK)
+    theta_dict = Point.objects.filter(point_id=idPoint, path_id=idPath).values('t1', 't2', 't3', 't4', 't5', 't6')[0]
+    grip_dict = Point.objects.filter(point_id=idPoint, path_id=idPath).values('ee')[0]
+    
+    if grip == "SKIP":
+        if theta_dict:
+            keys = ['t1', 't2', 't3', 't4', 't5', 't6']
+            theta = [theta_dict[f] for f in keys]
+            plc_manager.move_joint_degree(theta)
+            cache.set("grip", grip_dict["ee"])
+            return Response({"success": "point", "grip": grip_dict['ee']}, status=status.HTTP_200_OK)
         else:
             return Response({"success": False}, status=status.HTTP_200_OK)
+    else:
+        if grip == "GRIP":
+            plc_manager.write_device_block(device_name=["M350"], values=[1])
+            time.sleep(0.3)
+            plc_manager.write_device_block(device_name=["M350"], values=[0])
+            cache.set("grip", "SKIP")
+            return Response({"success": "grip", "grip": "SKIP"}, status=status.HTTP_200_OK)
+        else:
+            plc_manager.write_device_block(device_name=["M351"], values=[1])
+            time.sleep(0.3)
+            plc_manager.write_device_block(device_name=["M351"], values=[0])
+            cache.set("grip", "SKIP")
+            return Response({"success": "release", "grip": "SKIP"}, status=status.HTTP_200_OK)
+        
 
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+            
+    # except Exception as e:
+    #     return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def grip(request):
     # try:
     data = request.data
     bool_grip = data.get("grip")
-    print(bool_grip)
 
     if bool_grip == "GRIP":
         plc_manager.write_device_block(device_name=["M350"], values=[1])

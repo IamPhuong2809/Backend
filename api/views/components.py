@@ -6,6 +6,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
 import pymcprotocol
 import math
+from api.models import Point, Global
 from api.views.plc_manager import get_plc_manager
 # from api.views.position import data
 import numpy as np
@@ -31,7 +32,7 @@ robotData = {
     "tool": 0,
     "work": 0,
     "positionCurrent": {"x": 0, "y": 1, "z": 2, "rl": 3, "pt": 4, "yw": 5},
-    "jointCurrent": {"t1": 6, "t2": 7, "t3": 8, "t4": 9, "t5": 10, "t6": 11},
+    "jointCurrent": {"t1": 90, "t2": 90, "t3": 45, "t4": 90, "t5": 90, "t6": 180},
 }
 
 @api_view(['GET'])
@@ -39,6 +40,34 @@ def EMG(request):
     plc_manager.write_device_block(device_name=["M108"], values=[1])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def copy(request):
+    data = request.data
+    type_data = data.get("type")
+    if type_data == "Global":
+        idPathCopy = data.get("idPathCopy")
+        idCopy = data.get("idCopy")
+        id = data.get("id")
+        theta_dict = Global.objects.filter(point_id=id).values('t1', 't2', 't3', 't4', 't5', 't6')[0]
+        if idPathCopy == -1:
+            updated = Global.objects.filter(point_id=idCopy).update(**theta_dict)
+        else:
+            updated = Point.objects.filter(path_id=idPathCopy, point_id=idCopy).update(**theta_dict)
+    else:
+        idPathCopy = data.get("idPathCopy")
+        idCopy = data.get("idCopy")
+        id = data.get("id")
+        idPath = data.get("idPath")
+        theta_dict = Point.objects.filter(path_id=idPath, point_id=id).values('t1', 't2', 't3', 't4', 't5', 't6')[0]
+        if idPathCopy == -1:
+            updated = Global.objects.filter(point_id=idCopy).update(**theta_dict)
+        else:
+            updated = Point.objects.filter(path_id=idPathCopy, point_id=idCopy).update(**theta_dict)
+    if updated:
+        return Response({"success": True}, status=status.HTTP_200_OK)
+    else:
+        return Response({"success": False}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def I1001(request):

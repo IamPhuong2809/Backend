@@ -61,7 +61,8 @@ public:
 private:
   int initMelcli();
 
-  std::vector<double> hw_commands_;
+  std::vector<double> hw_commands_pos_;
+  std::vector<double> hw_commands_vel_;
   std::vector<double> hw_positions_;
   std::vector<double> hw_velocities_;
   std::vector<double> transmission_ratio_;
@@ -71,6 +72,7 @@ private:
   int is_active_ = false;
   int initialized = false;
   const double a = 0.161;
+  const double d = 0.46;
 
   int pos_len = 10;
   int vel_len = 10;

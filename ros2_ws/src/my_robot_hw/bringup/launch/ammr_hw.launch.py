@@ -36,7 +36,6 @@ def generate_launch_description():
     moveit_config = (
         MoveItConfigsBuilder(
             "ammr",                                                         # Change this to the name of your robot (e.g., "your_robot_name")
-            # package_name                        = "ammr_moveit_config"      # Replace with your MoveIt 2 config package name
         )
         .robot_description(file_path            = moveit_urdf_path,
         )   # Pass the mappings for the robot description
@@ -48,6 +47,18 @@ def generate_launch_description():
         )
         .planning_pipelines(pipelines           = ["ompl", "chomp", "pilz_industrial_motion_planner"])                 # These are common planners; update if necessary
         .to_moveit_configs()
+    )
+
+    ammr_moveit = Node(
+        name="ammr_moveit_controller",
+        package="ammr_moveit_controller",
+        executable="move_robot_service",
+        output="screen",
+        parameters=[
+            moveit_config.robot_description,
+            moveit_config.robot_description_semantic,
+            moveit_config.robot_description_kinematics,
+        ],
     )
 
     # Start the move_group node/action server for planning and execution
@@ -97,12 +108,6 @@ def generate_launch_description():
         output='screen',
         parameters=[moveit_config.robot_description]
     )
-
-    # ammr_moveit_controller_node = Node(
-    #     package='ammr_moveit_controller',
-    #     executable='ammr_moveit_controller',
-    #     output='log'   
-    # )
 
     ## LAUNCH ROS2 CONTROL NODE
     env = os.environ.copy()
@@ -154,9 +159,10 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        rviz_node,
+        # rviz_node,
         static_tf_node,
         robot_state_publisher_node,
+        ammr_moveit,
         # ammr_moveit_controller_node,
         move_group_node,
         ros2_control_node,

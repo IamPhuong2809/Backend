@@ -54,7 +54,7 @@ def generate_launch_description():
           'odom_sensor_sync': True,
           'map_negative_poses_ignored': True,
           #'wait_imu_to_init': 'true',
-          'wait_for_transform': 0.1,    #delay to avoid some TF warning
+          'wait_for_transform': 0.5,    #delay to avoid some TF warning
           'visual_odometry': 'true',
           # RTAB-Map's parameters should be strings:
           'Odom/Strategy': '0',
@@ -75,7 +75,7 @@ def generate_launch_description():
           'RGBD/NeighborLinkRefining':'false',       # Do odometry correction with consecutive laser scans
           'RGBD/OptimizeFromGraphEnd': 'true',
           # Loc du lieu
-          'RGBD/ProximityMaxDepth': "3.0",  # Bỏ qua điểm sâu >5m
+          'RGBD/ProximityMaxDepth': "3.5",  # Bỏ qua điểm sâu >5m
           'RGBD/RangeMax': '3.0',
           'RGBD/RangeMin': '0.2',
           #'qos_image': 0,    # Su dung chat luong dich vu (Qos) cho cam bien, 0=sensor_data/1=parameters/2=services/3=default, ep kieu integer
@@ -93,14 +93,14 @@ def generate_launch_description():
           'Grid/RayTracing':'false', # Fill empty space
           'Grid/3D':'false', # Use 2D occupancy
           # Cau hinh Nav2
-          'Grid/RangeMax':'8.0',               # o=inf
+          'Grid/RangeMax':'0.0',               # o=inf
           'Grid/NormalsSegmentation':'false', # Use passthrough filter to detect obstacles
           'Grid/Sensor':'2', # Use both laser scan and camera for obstacle detection in global map
           'Grid/CellSize': "0.05",      # Kích thước mỗi ô (m)
           'Grid/MaxGroundHeight':'0.05', # All points above 5 cm are obstacles
-          'Grid/MaxObstacleHeight':'1.0',  # All points over 1 meter are ignored
-          'Grid/RangeMin':'0.55', # ignore laser scan points on the robot itself
-        #   'Grid/FromDepth': 'false',        # Create 2D occupancy grid from laser scan
+          'Grid/MaxObstacleHeight':'2.0',  # All points over 1 meter are ignored
+          'Grid/RangeMin':'0.4', # ignore laser scan points on the robot itself
+         #'Grid/FromDepth': 'false',        # Create 2D occupancy grid from laser scan
           #'Optimizer/GravitySigma':'0', # Disable imu constraints (we are already in 2D)
           #'Vis/UseIMU': "true",        # giảm drift yaw
           'Vis/FeatureType': "2" ,      # Sử dụng ORB (nhanh)
@@ -109,7 +109,7 @@ def generate_launch_description():
           'Vis/InlierDistance': '0.1',      # so sanh point cloud cua frame hien tai va fram trc, khoang cach point cloud 2 frame > nguong thi loai bo
           'Kp/DetectorStrategy': '2', # 0=SURF 1=SIFT 2=ORB 3=FAST/FREAK 4=FAST/BRIEF 5=GFTT/FREAK 6=GFTT/BRIEF 7=BRISK 8=GFTT/ORB
           'Kp/MaxDepth': '0.0',             # do sau toi da cua depth cam
-          'Kp/MaxFeatures': '600',
+          'Kp/MaxFeatures': '400',
           'Kp/MinFeatures': '20',
           'Mem/TimeThr': '800',
           'Mem/STMSize': '30',          # Chi giu lai 30 node gan nhat

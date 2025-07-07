@@ -10,6 +10,7 @@
             <joint name="Manipulator_J1_Joint">
                 <command_interface name="position"/>
                 <command_interface name="velocity"/>
+                <command_interface name="acceleration"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['Manipulator_J1_Joint']}</param>
                 </state_interface>
@@ -20,6 +21,7 @@
             <joint name="Manipulator_J2_Joint">
                 <command_interface name="position"/>
                 <command_interface name="velocity"/>
+                <command_interface name="acceleration"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['Manipulator_J2_Joint']}</param>
                 </state_interface>
@@ -30,6 +32,7 @@
             <joint name="Manipulator_J3_Joint">
                 <command_interface name="position"/>
                 <command_interface name="velocity"/>
+                <command_interface name="acceleration"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['Manipulator_J3_Joint']}</param>
                 </state_interface>
@@ -40,6 +43,7 @@
             <joint name="Manipulator_J4_Joint">
                 <command_interface name="position"/>
                 <command_interface name="velocity"/>
+                <command_interface name="acceleration"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['Manipulator_J4_Joint']}</param>
                 </state_interface>
@@ -50,6 +54,7 @@
             <joint name="Manipulator_J5_Joint">
                 <command_interface name="position"/>
                 <command_interface name="velocity"/>
+                <command_interface name="acceleration"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['Manipulator_J5_Joint']}</param>
                 </state_interface>
@@ -60,6 +65,7 @@
             <joint name="Manipulator_J6_Joint">
                 <command_interface name="position"/>
                 <command_interface name="velocity"/>
+                <command_interface name="acceleration"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['Manipulator_J6_Joint']}</param>
                 </state_interface>
@@ -87,6 +93,7 @@
             </joint>
             <joint name="Diff_Wheel_Right_Joint">
                 <command_interface name="velocity"/>
+                <command_interface name="acceleration"/>
                 <state_interface name="position"/>
                 <state_interface name="velocity">
                   <param name="initial_value">0.0</param>
@@ -94,6 +101,7 @@
             </joint>
             <joint name="Diff_Wheel_Left_Joint">
                 <command_interface name="velocity"/>
+                <command_interface name="acceleration"/>
                 <state_interface name="position"/>
                 <state_interface name="velocity">
                   <param name="initial_value">0.0</param>

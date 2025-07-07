@@ -12,6 +12,7 @@ from django.db.models import Max
 import math
 import threading
 import time
+import numpy as np
 from api.views.plc_manager import get_plc_manager
 from api.views.components import robotData
 from api.views.Kinematics import quaternion_ik
@@ -99,22 +100,49 @@ def O0022(request):
     dataArray = [data.get("velocity"), data.get("acceleration")]
     moveMode = data.get("moveMode") 
 
-    joint = [0, 0, 0, 0, 0, 0]
-    keys = ['t1', 't2', 't3', 't4', 't5', 't6']
-    for i, key in enumerate(keys):
-        joint[i] = robotData["jointCurrent"][key]
+    all_zero = all(int(value) == 0 for value in dataJoint)
+    if all_zero:
+        return Response({"success": True}, status=status.HTTP_200_OK)
 
+    joint = [0, 0, 0, 0, 0, 0]
+    keys = ['x', 'y', 'z', 'rl', 'pt', 'yw']
+    for i, key in enumerate(keys):
+        joint[i] = robotData["positionCurrent"][key]
     if moveMode == "LIN":
-        msg = Float64MultiArray()
-        msg.data = [float(j) for j in dataArray] 
-        controller.publisher_lin.publish(msg)
+        diff = [target - current for target, current in zip(dataJoint, joint)]
+        position_diff = diff[:3]
+        rotation_diff = diff[3:]
+        if any(abs(val) > 1 for val in rotation_diff) and any(abs(val) > 10 for val in position_diff):
+            xyz = [round(pos/1000, 2) for pos in dataJoint[:3]]
+            rpy = dataJoint[3:]
+            qx, qy, qz, qw = rpy_to_quaternion(rpy)
+            target_rot = xyz + [qx, qy, qz, qw] 
+            success, message = controller.call_move_robot("p2p", target_rot) 
+
+            timeout = 10 
+            start_time = time.time()    
+            while robotData.get("busy", True):
+                if time.time() - start_time > timeout:
+                    break
+                time.sleep(0.1)
+            target_pos = [round(val / 1000, 2) for val in position_diff]
+            success, message = controller.call_move_robot("cartesian", target_pos)
+        elif any(abs(val) > 1 for val in rotation_diff):
+            xyz = [round(pos/1000, 2) for pos in dataJoint[:3]]
+            rpy = dataJoint[3:]
+            qx, qy, qz, qw = rpy_to_quaternion(rpy)
+            target = xyz + [qx, qy, qz, qw] 
+            success, message = controller.call_move_robot("p2p", target) 
+        elif any(abs(val) > 10 for val in position_diff):
+            target = [round(val / 1000, 2) for val in position_diff]
+            success, message = controller.call_move_robot("cartesian", target)
+        if not success:
+            return Response({"success": False}, status=status.HTTP_200_OK)
     elif moveMode =="Joint":
         theta = [round(float(j),3) for j in dataJoint]
         plc_manager.move_joint_degree(theta)
     elif moveMode == "PTP":
-        if all(item == 0 for item in dataJoint):
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        xyz = xyz = [pos/1000 for pos in dataJoint[:3]]
+        xyz = [pos/1000 for pos in dataJoint[:3]]
         rpy = dataJoint[3:]
         qx, qy, qz, qw = rpy_to_quaternion(rpy)
         target = xyz + [qx, qy, qz, qw] 
@@ -130,23 +158,28 @@ def O0023(request):
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def O0024(request):
-    jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
-    joint = [9000000, 9000000, 4500000, 9000000, 9000000, 18000000, 200000]
-    plc_manager.write_random(
-        dword_devices=jog_addrs_write,
-        dword_values=joint
-    )
+    data = request.data
+    jogMode = data.get("jogMode")
+    moveMode = data.get("moveMode")
+    if jogMode == "Joint" or moveMode == "Joint":
+        jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
+        joint = [9000000, 9000000, 4500000, 9000000, 9000000, 18000000, 200000]
+        plc_manager.write_random(
+            dword_devices=jog_addrs_write,
+            dword_values=joint
+        )
+    else:
+        target = [np.pi/2, np.pi/2, np.pi/4, np.pi/2, np.pi/2, np.pi]
+        controller.call_move_robot("joint", target)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
 def jog_mode(request):
-    type = request.data.get("type")
-    plc_manager.rising_pulse(device_name=["M108"])
-    print(type)
-    if type == "Joint":
+    type_data = request.data.get("type")
+    if type_data == "Joint":
         jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
         joint = [0, 0, 0, 0, 0, 0, 200000]
         keys = ['t1', 't2', 't3', 't4', 't5', 't6']
@@ -156,9 +189,9 @@ def jog_mode(request):
             dword_devices=jog_addrs_write,
             dword_values=joint
         )
-        plc_manager.rising_pulse(device_name=["M113"])
-    elif type == "Work" or type == "PTP":
-        plc_manager.rising_pulse(device_name=["M106"])
+        plc_manager.write_device_block(device_name=["M206"], values=[1])
+    else:
+        plc_manager.write_device_block(device_name=["M204"], values=[1])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 

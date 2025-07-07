@@ -14,7 +14,6 @@ plc_manager = get_plc_manager()
 def O0007(request):
     paths = Path.objects.all().values('path_id', 'name')  
     result = [{'id': p['path_id'], 'name': p['name']} for p in paths]
-    plc_manager.rising_pulse(device_name=["M108"])
     jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
     joint = [0, 0, 0, 0, 0, 0, 200000]
     keys = ['t1', 't2', 't3', 't4', 't5', 't6']
@@ -24,7 +23,7 @@ def O0007(request):
         dword_devices=jog_addrs_write,
         dword_values=joint
     )
-    plc_manager.rising_pulse(device_name=["M113"])
+    plc_manager.write_device_block(device_name=["M206"], values=[1])
     return Response(result)
 
 @api_view(['POST'])
@@ -34,15 +33,14 @@ def O0016(request):
         parameter = data.get('data')
         idPoint = data.get('idPoint')
         idPath = data.get("idPath")
-
-        motion, ee, stop, vel, acc, corner = parameter
-        stop_bool = True if stop.upper() == 'TRUE' else False
+        motion, _, _, _, _, _= parameter
         if motion == "P&P":
             updated = True
             pos = data.get("pos")
-            motion, task, id, _, _, _ = parameter
+            _ , task, id, _, _, _ = parameter
             id = 0 if stop.upper() == 'FALSE' else int(id)
             point = Point.objects.get(point_id=idPoint, path_id=idPath)
+            Point.objects.filter(path_id=idPath, point_id=idPoint).update(motion="P&P")
             has_aruco = Aruco.objects.filter(point=point).exists()
             if has_aruco:
                 return Response({"success": False, "error": "This point has a aruco id. Please choose another point to save"}, status=status.HTTP_200_OK)

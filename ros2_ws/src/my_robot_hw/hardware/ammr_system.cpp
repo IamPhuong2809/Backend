@@ -48,11 +48,27 @@ namespace my_robot_hw
   };
 
   const char* CMD_POS_ADDRS[] = {
-      "D5500","D5502","D5504","D5506","D5508", "D5510", NULL
+    "D5500","D5502","D5504","D5506","D5508", "D5510", NULL
   };
 
     const char* CMD_VEL_ADDRS[] = {
-      "D5520","D5522","D5524","D5526","D5528", "D5530", "D5650", "D5650", "D5546", "D5548", NULL
+    "D5520","D5522","D5524","D5526","D5528", "D5530",
+    "D5650", "D5650", "D5546", "D5548", NULL
+  };
+
+  // const char* CMD_ACC_INC_ADDRS[] = {
+  //     "D5700","D5704","D5708","D5712","D5716",
+  //     "D5720", "D5724", "D5728", "D5732", "D5736", NULL
+  // };
+
+  // const char* CMD_ACC_DEC_ADDRS[] = {
+  //     "D5702","D5706","D5710","D5714","D5718",
+  //     "D5722", "D5726", "D5730", "D5734", "D5738", NULL
+  // };
+
+  const char* CMD_ACC_ADDRS[] = {
+    "D5700","D5702","D5704","D5706","D5708",
+    "D5710", "D5712", "D5714", "D5716", "D5718", NULL
   };
   //"D5560","D5560","D5564","D5568",
   hardware_interface::CallbackReturn AMMRSystemHardware::on_init(const hardware_interface::HardwareInfo & info)
@@ -65,6 +81,8 @@ namespace my_robot_hw
     size_t num_joints = info.joints.size();
     hw_commands_pos_.resize(num_joints, 0.0);
     hw_commands_vel_.resize(num_joints, 0.0);
+    hw_commands_last_vel_.resize(num_joints, 0.0);
+    hw_commands_acc_.resize(num_joints, 0.0);
     hw_positions_.resize(num_joints, 0.0);
     hw_velocities_.resize(num_joints, 0.0);
 
@@ -79,10 +97,10 @@ namespace my_robot_hw
     for (size_t i = 0; i < num_joints; ++i)
     {
       if (info.joints[i].state_interfaces.size() != 2 ||
-          (info.joints[i].command_interfaces.size() != 1 && info.joints[i].command_interfaces.size() != 2))
+          (info.joints[i].command_interfaces.size() != 1 && info.joints[i].command_interfaces.size() != 2 && info.joints[i].command_interfaces.size() != 3))
       {
         RCLCPP_FATAL(rclcpp::get_logger("AMMRSystemHardware"),
-                    "Joint %s must have 2 state interfaces and 1 or 2 command interface", info.joints[i].name.c_str());
+                    "Joint %s must have 2 state interfaces and 1, 2 or 3 command interface", info.joints[i].name.c_str());
         return hardware_interface::CallbackReturn::ERROR;
       }
     }
@@ -112,6 +130,7 @@ namespace my_robot_hw
       {
         command_interfaces.emplace_back(info_.joints[i].name, "position", &hw_commands_pos_[i]);
         command_interfaces.emplace_back(info_.joints[i].name, "velocity", &hw_commands_vel_[i]);
+        command_interfaces.emplace_back(info_.joints[i].name, "acceleration", &hw_commands_acc_[i]);
       }
       else if (i < 8)
       {
@@ -120,6 +139,7 @@ namespace my_robot_hw
       else
       {
         command_interfaces.emplace_back(info_.joints[i].name, "velocity", &hw_commands_vel_[i]);
+        command_interfaces.emplace_back(info_.joints[i].name, "acceleration", &hw_commands_acc_[i]);
       }
     }
     return command_interfaces;
@@ -133,6 +153,8 @@ namespace my_robot_hw
       hw_velocities_[i] = 0.0;
       hw_commands_pos_[i] = 0.0;
       hw_commands_vel_[i] = 0.0;
+      hw_commands_last_vel_[i] = 0.0;
+      hw_commands_acc_[i] = 0.0;
     }
 
     RCLCPP_INFO(rclcpp::get_logger("AMMRSystemHardware"), "System configured");
@@ -183,25 +205,25 @@ namespace my_robot_hw
 
     if (melcli_random_read_dword(g_ctx, NULL, POS_ADDRS, &pos_data, NULL) != 0) {
       RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Position read failed: len=%d", pos_len);
-      melcli_disconnect(g_ctx);
-      melcli_free_context(g_ctx);
-      g_ctx = nullptr;
-      if (initMelcli() != 0) {
-        return hardware_interface::return_type::ERROR;
-      }
+      // melcli_disconnect(g_ctx);
+      // melcli_free_context(g_ctx);
+      // g_ctx = nullptr;
+      // if (initMelcli() != 0) {
+      //   return hardware_interface::return_type::ERROR;
+      // }
       return hardware_interface::return_type::ERROR;
     }
 
     // Read velocities
     if (melcli_random_read_dword(g_ctx, NULL, VEL_ADDRS, &vel_data, NULL) != 0) {
       RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Velocity read failed: len=%d", vel_len);
-      melcli_free(pos_data);
-      melcli_disconnect(g_ctx);
-      melcli_free_context(g_ctx);
-      g_ctx = nullptr;
-      if (initMelcli() != 0) {
-        return hardware_interface::return_type::ERROR;
-      }
+      // melcli_free(pos_data);
+      // melcli_disconnect(g_ctx);
+      // melcli_free_context(g_ctx);
+      // g_ctx = nullptr;
+      // if (initMelcli() != 0) {
+      //   return hardware_interface::return_type::ERROR;
+      // }
       return hardware_interface::return_type::ERROR;
     }
 
@@ -231,49 +253,75 @@ namespace my_robot_hw
         slmp_ok = (slmp_init() == 0);
     }
 
-    uint32_t hw_commands_pos_dword[6];
-    uint32_t hw_commands_vel_dword[6];
+    uint32_t hw_commands_pos_dword[10];
+    uint32_t hw_commands_vel_dword[10];
+    uint32_t hw_commands_time_acc_dword[10];
     for (size_t i = 0; i < 10; ++i) {
       if(i < 6)
       {
         hw_commands_pos_dword[i] = static_cast<uint32_t>(hw_commands_pos_[i] * 18000000 / M_PI);
-        double vel = hw_commands_vel_[i];
+        // double vel = hw_commands_vel_[i];
 
-        if (std::abs(vel) < 1e-6) {
-          hw_commands_vel_dword[i] = 0;
-        } else {
-          hw_commands_vel_dword[i] = static_cast<int32_t>(std::abs((180000 * 60 * hw_commands_vel_[i]) /  M_PI));
-        }
+        // if (std::abs(vel) < 1e-6) {
+        //   hw_commands_vel_dword[i] = 0;
+        // } else {
+        //   hw_commands_vel_dword[i] = static_cast<uint32_t>((180000 * 60 * vel) /  M_PI);
+        // }
+
+        hw_commands_vel_dword[i] = static_cast<uint32_t>((180000 * 60 * hw_commands_vel_[i]) /  M_PI);
       }
       else if(i > 7)
       {
         hw_commands_vel_dword[i] = static_cast<uint32_t>((hw_commands_vel_[i] * 60 * 100 * 1000 * a)) ;
         // RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Velocity wheel [%zu]: %f rad/s ,%u mm/min", i, hw_commands_vel_[i], hw_commands_vel_dword[i]);
       }
+
+      if ( std::abs(hw_commands_vel_[i] - hw_commands_last_vel_[i]) < 1e-7)
+      {
+        hw_commands_time_acc_dword[i] = static_cast<uint32_t>(1);
+      }
+      else
+      {
+        hw_commands_time_acc_dword[i] = static_cast<uint32_t>(std::abs(1000 * (hw_commands_vel_[i] - hw_commands_last_vel_[i]) /  hw_commands_acc_[i]));
+      }
+      // if(i <6)
+      // RCLCPP_INFO(rclcpp::get_logger("AMMRSystemHardware"), "Time acceleration [%zu]: %u ms, %f rad/s, last %f rad/s, acc %f rad/s^2",
+      //                  i, hw_commands_time_acc_dword[i], hw_commands_vel_[i], hw_commands_last_vel_[i], hw_commands_acc_[i]);
+      hw_commands_last_vel_[i] = hw_commands_vel_[i];
     }
 
     if (melcli_random_write_dword(g_ctx, NULL, CMD_POS_ADDRS, hw_commands_pos_dword) != 0) {
       RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Position write failed: len=%d", pos_len);
-      melcli_disconnect(g_ctx);
-      melcli_free_context(g_ctx);
-      g_ctx = nullptr;
-      if (initMelcli() != 0) {
-        return hardware_interface::return_type::ERROR;
-      }
+      // melcli_disconnect(g_ctx);
+      // melcli_free_context(g_ctx);
+      // g_ctx = nullptr;
+      // if (initMelcli() != 0) {
+      //   return hardware_interface::return_type::ERROR;
+      // }
       return hardware_interface::return_type::ERROR;
     }
 
     if (melcli_random_write_dword(g_ctx, NULL, CMD_VEL_ADDRS, hw_commands_vel_dword) != 0) {
       RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Velocity write failed: len=%d", pos_len);
-      melcli_disconnect(g_ctx);
-      melcli_free_context(g_ctx);
-      g_ctx = nullptr;
-      if (initMelcli() != 0) {
-        return hardware_interface::return_type::ERROR;
-      }
+      // melcli_disconnect(g_ctx);
+      // melcli_free_context(g_ctx);
+      // g_ctx = nullptr;
+      // if (initMelcli() != 0) {
+      //   return hardware_interface::return_type::ERROR;
+      // }
       return hardware_interface::return_type::ERROR;
     }
 
+    if (melcli_random_write_dword(g_ctx, NULL, CMD_ACC_ADDRS, hw_commands_time_acc_dword) != 0) {
+      RCLCPP_ERROR(rclcpp::get_logger("AMMRSystemHardware"), "Accleration write failed: len=%d", pos_len);
+      // melcli_disconnect(g_ctx);
+      // melcli_free_context(g_ctx);
+      // g_ctx = nullptr;
+      // if (initMelcli() != 0) {
+      //   return hardware_interface::return_type::ERROR;
+      // }
+      return hardware_interface::return_type::ERROR;
+    }
 
     return hardware_interface::return_type::OK;
   }

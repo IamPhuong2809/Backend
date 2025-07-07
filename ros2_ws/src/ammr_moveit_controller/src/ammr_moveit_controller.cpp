@@ -14,8 +14,8 @@
 
 
 static const double PLANNING_TIME_S = 5.0;
-static const double MAX_VELOCITY_SCALE = 0.1;
-static const double MAX_ACCELERATION_SCALE = 0.05;
+static const double MAX_VELOCITY_SCALE = 0.05;
+static const double MAX_ACCELERATION_SCALE = 0.08;
 static const unsigned int PLANNING_ATTEMPTS = 5;
 static const double GOAL_TOLERANCE = 1e-3;
 
@@ -134,7 +134,7 @@ void MoveRobot::execute_request(
           return;
         }
         
-        move_group_->setPoseReferenceFrame("odom");
+        move_group_->setPoseReferenceFrame("base_link");
         move_group_->setEndEffectorLink("Gripper");
 
         std::vector<geometry_msgs::msg::Pose> waypoints;
@@ -165,8 +165,8 @@ void MoveRobot::execute_request(
         waypoints.push_back(target_pose);
 
         moveit_msgs::msg::RobotTrajectory trajectory;
-        const double eef_step = 0.05;
-        const double jump_threshold = 0.0;
+        const double eef_step = 0.01;
+        const double jump_threshold = 4.0;
 
         double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
         

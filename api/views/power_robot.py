@@ -9,10 +9,8 @@ plc_manager = get_plc_manager()
 
 @api_view(['GET'])
 def O0000(request):
-    plc_manager.write_device_block(device_name=["M108"], values=[1])
-    time.sleep(0.02)
-    plc_manager.write_device_block(device_name=["M108"], values=[0])
-
+    plc_manager.write_device_block(device_name=["M207"], values=[1])
+    time.sleep(0.1)
     success = plc_manager.write_device_block(
         device_name=["M30042"],
         values=[0]
@@ -27,7 +25,8 @@ def O0000(request):
 
 @api_view(['GET'])
 def O0001(request):
-    plc_manager.write_device_block(device_name=["M108"], values=[0])
+    plc_manager.write_device_block(device_name=["M207"], values=[1])
+    time.sleep(0.1)
     success = plc_manager.write_device_block(
         device_name=["M30042"],
         values=[1]
@@ -42,17 +41,15 @@ def O0001(request):
 
 @api_view(['GET'])
 def O0002(request):
+    plc_manager.write_device_block(device_name=["M207"], values=[1])
+    time.sleep(0.1)
     plc_manager.rising_pulse(device_name=["M115"])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def O0003(request):
-    plc_manager.write_device_block(device_name=['M108'], values=[1])
-    time.sleep(0.05)
-    plc_manager.write_device_block(device_name=["M102"], values=[1])
-    plc_manager.write_device_block(device_name=['M108'],values=[0])
-
+    plc_manager.write_device_block(device_name=["M203"], values=[1])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 

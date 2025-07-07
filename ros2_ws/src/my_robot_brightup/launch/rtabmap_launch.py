@@ -77,7 +77,7 @@ def generate_launch_description():
           # Loc du lieu
           'RGBD/ProximityMaxDepth': "3.5",  # Bỏ qua điểm sâu >5m
           'RGBD/RangeMax': '3.0',
-          'RGBD/RangeMin': '0.2',
+          'RGBD/RangeMin': '0.3',
           #'qos_image': 0,    # Su dung chat luong dich vu (Qos) cho cam bien, 0=sensor_data/1=parameters/2=services/3=default, ep kieu integer
           #
           'RGBD/ProximityPathFiltering': "true",
@@ -90,7 +90,7 @@ def generate_launch_description():
           'RGBD/StartAtOrigin': 'False',         # starting with the first node
           #'RGBD/LoopClosureFeatures': '0',      # so luong features de chap nhan loop closure
           #'RGBD/OptimizeStrategy': '2',        # g20=1, GTSAM=2
-          'Grid/RayTracing':'false', # Fill empty space
+          'Grid/RayTracing':'true', # Fill empty space
           'Grid/3D':'false', # Use 2D occupancy
           # Cau hinh Nav2
           'Grid/RangeMax':'0.0',               # o=inf

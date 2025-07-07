@@ -16,7 +16,6 @@ plc_manager = get_plc_manager()
 def O0008(request):
     paths = Path.objects.all().values('path_id', 'name')  
     result = [{'id': p['path_id'], 'name': p['name']} for p in paths]
-    plc_manager.rising_pulse(device_name=["M108"])
     jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
     joint = [0, 0, 0, 0, 0, 0, 200000]
     keys = ['t1', 't2', 't3', 't4', 't5', 't6']
@@ -26,7 +25,7 @@ def O0008(request):
         dword_devices=jog_addrs_write,
         dword_values=joint
     )
-    plc_manager.rising_pulse(device_name=["M113"])
+    plc_manager.write_device_block(device_name=["M206"], values=[1])
     idPoint = cache.get("idPoint")
     idPath = cache.get("idPath")
     grip = cache.get("grip")
@@ -80,22 +79,22 @@ def O0026(request):
     # except Exception as e:
     #     return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def grip(request):
-    # try:
-    data = request.data
-    bool_grip = data.get("grip")
+# @api_view(['POST'])
+# def grip(request):
+#     # try:
+#     data = request.data
+#     bool_grip = data.get("grip")
 
-    if bool_grip == "GRIP":
-        plc_manager.write_device_block(device_name=["M350"], values=[1])
-        time.sleep(1)
-        plc_manager.write_device_block(device_name=["M350"], values=[0])
-    elif bool_grip == "RELEASE":
-        plc_manager.write_device_block(device_name=["M351"], values=[1])
-        time.sleep(1)
-        plc_manager.write_device_block(device_name=["M351"], values=[0])
+#     if bool_grip == "GRIP":
+#         plc_manager.write_device_block(device_name=["M350"], values=[1])
+#         time.sleep()
+#         plc_manager.write_device_block(device_name=["M350"], values=[0])
+#     elif bool_grip == "RELEASE":
+#         plc_manager.write_device_block(device_name=["M351"], values=[1])
+#         time.sleep(1)
+#         plc_manager.write_device_block(device_name=["M351"], values=[0])
 
-    return Response({"success": True}, status=status.HTTP_200_OK)
+#     return Response({"success": True}, status=status.HTTP_200_OK)
         
     # except Exception as e:
     #     return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
 from .views import (
     power_robot,
     move,
@@ -63,7 +65,8 @@ urlpatterns = [
     path('jog/', move.jog_mode, name='jog'),
     path('missions/', maps.missions, name='missions'),
     path('record/', maps.record, name='record'),
-    path('grip/', move_path.grip, name='grip'),
+    # path('grip/', move_path.grip, name='grip'),
     path('copy/', components.copy, name='copy'),
-
-]
+    path('update/', maps.update, name='update'),
+    path('position/', maps.position, name='position'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

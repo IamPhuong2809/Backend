@@ -14,8 +14,10 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(pkg_rplidar_dir, 'launch', 'rplidar_a1_launch.py')
-            )
+            ),
+            launch_arguments={'serial_port': '/dev/ttyUSB0'}.items()
         ),
+
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(pkg_camera_dir, 'launch', 'rs_launch.py')

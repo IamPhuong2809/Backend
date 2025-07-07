@@ -4,6 +4,7 @@ from rest_framework import status
 from api.models import Map, Site
 from django.db import transaction
 from django.db.models import F
+import yaml
 import os
 import shutil
 from api.views.plc_manager import get_plc_manager
@@ -19,18 +20,27 @@ def O0031(request):
 
 @api_view(['GET'])
 def missions(request):
-    plc_manager.rising_pulse(device_name=["M108"])
-    plc_manager.rising_pulse(device_name=["M110"])
+    plc_manager.write_device_block(device_name=["M202"], values=[1])
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def record(request):
-    plc_manager.rising_pulse(device_name=["M108"])
-    plc_manager.rising_pulse(device_name=["M110"])
+    plc_manager.write_device_block(device_name=["M202"], values=[1])
 
-    
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def update(request):
+    yaml_path = '/home/horizon/map/map.yaml'
+    with open(yaml_path, 'r') as f:
+        metadata = yaml.safe_load(f)
+    
+    return Response({
+        'image_url': 'map/map.png',
+        'resolution': metadata['resolution'],
+        'origin': metadata['origin']
+    })
 
 @api_view(['POST', 'DELETE'])
 def site_list(request):    
@@ -140,3 +150,15 @@ def save_map(request):
         return Response({"success": True}, status=status.HTTP_200_OK)
     else:
         return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def position(request):
+    data = request.data
+    name = data.get('name')
+    pos = data.get("pos")
+    print(name, pos)
+    return Response({"success": True}, status=status.HTTP_200_OK)
+    # if updated:  
+    #     return Response({"success": True}, status=status.HTTP_200_OK)
+    # else:
+    #     return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)

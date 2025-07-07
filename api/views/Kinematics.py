@@ -258,7 +258,7 @@ def ForwardKinematics(joint_deg, N=6):
         [   0,  -np.pi/2,  -L5,       joint[3] ],
         [   0,   np.pi/2,    0,       joint[4] ],
         [   0,   np.pi/2,    0,       joint[5] ],
-        [ -L7,       0,     L6,       0        ]
+        [ -L7,  -np.pi,     L6,     0        ]
     ])
 
     A = np.zeros((N+1, 4, 4))

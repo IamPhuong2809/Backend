@@ -63,6 +63,8 @@ private:
 
   std::vector<double> hw_commands_pos_;
   std::vector<double> hw_commands_vel_;
+  std::vector<double> hw_commands_last_vel_;
+  std::vector<double> hw_commands_acc_;
   std::vector<double> hw_positions_;
   std::vector<double> hw_velocities_;
   std::vector<double> transmission_ratio_;

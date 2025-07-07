@@ -18,7 +18,6 @@ plc_manager = get_plc_manager()
 def O0006(request):
     points = Global.objects.all().values('point_id', 'name')  
     result = [{'id': p['point_id'], 'name': p['name']} for p in points]
-    plc_manager.rising_pulse(device_name=["M108"])
     jog_addrs_write = [f"D{addr}" for addr in range(2500, 2513, 2)]
     joint = [0, 0, 0, 0, 0, 0, 200000]
     keys = ['t1', 't2', 't3', 't4', 't5', 't6']
@@ -28,7 +27,7 @@ def O0006(request):
         dword_devices=jog_addrs_write,
         dword_values=joint
     )
-    plc_manager.rising_pulse(device_name=["M113"])
+    plc_manager.write_device_block(device_name=["M206"], values=[1])
     return Response(result)
 
 @api_view(['POST'])

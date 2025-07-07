@@ -3,67 +3,114 @@ from rest_framework.response import Response
 from rest_framework import status
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64MultiArray
-import pymcprotocol
+from rclpy.executors import MultiThreadedExecutor
+from tf2_ros import Buffer, TransformListener
+from geometry_msgs.msg import TransformStamped
+from rclpy.time import Time
 import math
+import threading
 from api.models import Point, Global
 from api.views.plc_manager import get_plc_manager
-# from api.views.position import data
-import numpy as np
 from scipy.spatial.transform import Rotation as R
 import warnings
+
 warnings.filterwarnings("ignore", category=UserWarning)
 
 plc_manager = get_plc_manager()
 
 pos_addrs_read = [f"D{addr}" for addr in range(1000, 1028, 3)]
-joint_real = [0, 0, 0, 0, 0, 0]
-med = [-90, 0, -45, -90, -90, 0]
 robotData = {
-    "Power":True,
+    "Power": True,
     "S": True,
     "I": False,
     "AUX": False,
     "busy": False,
     "ee": True,
-    "abort":False,
+    "abort": False,
     "error": False,
     "override": 100,
     "tool": 0,
     "work": 0,
-    "positionCurrent": {"x": 0, "y": 1, "z": 2, "rl": 3, "pt": 4, "yw": 5},
-    "jointCurrent": {"t1": 90, "t2": 90, "t3": 45, "t4": 90, "t5": 90, "t6": 180},
+    "positionCurrent": {"x": 0, "y": 0, "z": 0, "rl": 0, "pt": 0, "yw": 0},
+    "jointCurrent": {"t1": 0, "t2": 0, "t3": 0, "t4": 0, "t5": 0, "t6": 0},
 }
 
+# --- ROS2 Node TF Listener ---
+class TFPositionListener(Node):
+    def __init__(self):
+        super().__init__('tf_position_listener')
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, self)
+        self.timer = self.create_timer(0.2, self.lookup_transform)  # 5 Hz
+
+    def lookup_transform(self):
+        try:
+            trans: TransformStamped = self.tf_buffer.lookup_transform(
+                'base_link',         
+                'Gripper',           
+                Time())             
+            pos = trans.transform.translation
+            q = trans.transform.rotation
+
+            rotation = R.from_quat([q.x, q.y, q.z, q.w])
+            rx, ry, rz = rotation.as_euler('xyz', degrees=False)
+
+            robotData["positionCurrent"] = {
+                "x": round(pos.x * 1000, 3),
+                "y": round(pos.y * 1000, 3),
+                "z": round(pos.z * 1000, 3),
+                "rl": round(math.degrees(rx), 3),
+                "pt": round(math.degrees(ry), 3),
+                "yw": round(math.degrees(rz), 3),
+            }
+
+            robotData["busy"], robotData["S"], robotData["error"] = plc_manager.read_device_block(device_name="M650", size=3)
+
+        except Exception as e:
+            self.get_logger().warn(f"Không lấy được TF: {str(e)}")
+
+# --- Start ROS Node in background thread ---
+def start_ros_node():
+    rclpy.init()
+    node = TFPositionListener()
+    executor = MultiThreadedExecutor()
+    executor.add_node(node)
+    executor.spin()
+    node.destroy_node()
+    rclpy.shutdown()
+
+ros_thread = threading.Thread(target=start_ros_node, daemon=True)
+ros_thread.start()
+
+# --- Django REST API views ---
 @api_view(['GET'])
 def EMG(request):
-    plc_manager.write_device_block(device_name=["M108"], values=[1])
-
+    plc_manager.write_device_block(device_name=["M208"], values=[1])
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
 def copy(request):
     data = request.data
     type_data = data.get("type")
+
+    idCopy = data.get("idCopy")
+    id = data.get("id")
+    idPathCopy = data.get("idPathCopy")
+    idPath = data.get("idPath")
+
     if type_data == "Global":
-        idPathCopy = data.get("idPathCopy")
-        idCopy = data.get("idCopy")
-        id = data.get("id")
         theta_dict = Global.objects.filter(point_id=id).values('t1', 't2', 't3', 't4', 't5', 't6')[0]
         if idPathCopy == -1:
             updated = Global.objects.filter(point_id=idCopy).update(**theta_dict)
         else:
             updated = Point.objects.filter(path_id=idPathCopy, point_id=idCopy).update(**theta_dict)
     else:
-        idPathCopy = data.get("idPathCopy")
-        idCopy = data.get("idCopy")
-        id = data.get("id")
-        idPath = data.get("idPath")
         theta_dict = Point.objects.filter(path_id=idPath, point_id=id).values('t1', 't2', 't3', 't4', 't5', 't6')[0]
         if idPathCopy == -1:
             updated = Global.objects.filter(point_id=idCopy).update(**theta_dict)
         else:
             updated = Point.objects.filter(path_id=idPathCopy, point_id=idCopy).update(**theta_dict)
+
     if updated:
         return Response({"success": True}, status=status.HTTP_200_OK)
     else:
@@ -79,62 +126,11 @@ def updateRobotData():
         #Joint
         data_joint = plc_manager.read_random(dword_devices=pos_addrs_read)
         joint = [val / 100000.0  for val in data_joint[1]]
-        for i in range(6):
-            joint_real[i] = joint[i] + med[i]
         if joint and len(joint) >= 6:
             keys = ['t1', 't2', 't3', 't4', 't5', 't6']
             for i, key in enumerate(keys):
                 robotData["jointCurrent"][key] = round(joint[i], 3)
-        #Position
-        pos_rpy = ForwardKinematis(joint_real)
-        keys = ["x", "y", "z", "rl", "pt", "yw"]
-        for i, key in enumerate(keys):
-            robotData["positionCurrent"][key] = round(float(pos_rpy[i]), 3)
-
-        # print(data)
-
         #Bit
         robotData["busy"], robotData["S"], robotData["error"] = plc_manager.read_device_block(device_name="M650", size=3)
     except Exception as e:
         print(e)
-
-
-def ForwardKinematis(joint_deg, N=6):
-    L0 = 220; L1 = 737; L2 = 40; L3 = 500; L4 = 0.9; L5 = 419.8; L6 = 160; L7 = 200
-    joint = np.radians(joint_deg)
-    DH = np.array([
-        [  L0,       0,     L1,       joint[0] ],
-        [ -L2,   np.pi/2,    0,       joint[1] ],
-        [  L3,       0,      0,       joint[2] ],
-        [   0,  -np.pi/2,  -L5,       joint[3] ],
-        [   0,   np.pi/2,    0,       joint[4] ],
-        [   0,   np.pi/2,    0,       joint[5] ],
-        [ -L7,       0,     L6,       0        ]
-    ])
-
-    A = np.zeros((N+1, 4, 4))
-    for i in range(N+1):
-        a, alpha, d, theta = DH[i]
-        ca, sa = np.cos(alpha), np.sin(alpha)
-        ct, st = np.cos(theta), np.sin(theta)
-        A[i] = np.array([
-            [ct, -st, 0, a],
-            [st*ca, ct*ca, -sa, -sa*d],
-            [st*sa, ct*sa,  ca,  ca*d],
-            [0, 0, 0, 1]
-        ])
-
-    T = A[0]
-    for i in range(1, N+1):
-        T = T @ A[i]
-    position = T[:3, 3]         
-    rotation = T[:3, :3]
-
-    r = R.from_matrix(rotation)
-    rpy = r.as_euler('zyz', degrees=True)
-    yaw, pitch, roll = rpy[0], rpy[1], rpy[2] 
-
-    return np.array([*position, roll, pitch, yaw])
-
-    
-

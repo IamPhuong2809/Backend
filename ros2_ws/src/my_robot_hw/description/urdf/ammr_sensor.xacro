@@ -32,7 +32,7 @@
         </collision>
     </link>
     <joint name="Lidar_Joint" type="fixed">
-        <origin xyz="0.383790057428704 8.26282722502653E-05 0.297164672203901" rpy="0 0 0" />
+        <origin xyz="0.383790057428704 8.26282722502653E-05 0.297164672203901" rpy="0 0 ${pi}" />
         <parent link="base_link" />
         <child link="Lidar_Link" />
         <axis xyz="0 0 0" />

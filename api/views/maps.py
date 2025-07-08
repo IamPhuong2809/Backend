@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import Map, Site
+from api.models import Map, Site, GoalPose
 from django.db import transaction
 from django.db.models import F
 import yaml
@@ -18,11 +18,19 @@ def O0031(request):
     result = [{'id': p['site_id'], 'name': p['name']} for p in sites]
     return Response(result)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def missions(request):
-    plc_manager.write_device_block(device_name=["M202"], values=[1])
+    plc_manager.write_device_block(device_name=["M202"], values=[1])    
+    data = request.data
+    id = data.get("id")
+    id_site = data.get("id_site")
+    try:
+        map_obj = Map.objects.get(site_id=id_site, map_id=id)
+    except Map.DoesNotExist:
+        return Response({'error': 'Map not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    goals = GoalPose.objects.filter(map=map_obj).values('x','y','yaw','name','goal_id')
+    return Response(goals, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def record(request):
@@ -154,11 +162,28 @@ def save_map(request):
 @api_view(['POST'])
 def position(request):
     data = request.data
+    id = data.get("id")
+    id_site = data.get("id_site")
     name = data.get('name')
     pos = data.get("pos")
-    print(name, pos)
-    return Response({"success": True}, status=status.HTTP_200_OK)
-    # if updated:  
-    #     return Response({"success": True}, status=status.HTTP_200_OK)
-    # else:
-    #     return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
+    map_obj = Map.objects.get(site_id=id_site,map_id=id)
+    last_goal = GoalPose.objects.filter(map=map_obj).order_by('-goal_id').first()
+
+    if last_goal:
+        new_goal_id = last_goal.goal_id + 1
+    else:
+        new_goal_id = 1
+
+    # Tạo mới
+    updated = GoalPose.objects.create(
+        map=map_obj,
+        x=pos['x'],
+        y=pos['y'],
+        yaw=pos['theta'],
+        name=name,
+        goal_id=new_goal_id
+    )
+    if updated:  
+        return Response({"success": True}, status=status.HTTP_200_OK)
+    else:
+        return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)

@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Home(models.Model):
     id = models.AutoField(primary_key=True) 
     t1 = models.FloatField()
@@ -141,3 +140,20 @@ class Accounts(models.Model):
 
     def __str__(self):
         return f"Its work with {self.username}"
+
+
+class GoalPose(models.Model):
+    map = models.ForeignKey(Map, on_delete=models.CASCADE, related_name='map_tags')
+
+    name = models.CharField()
+    goal_id = models.IntegerField()
+    x = models.FloatField()
+    y = models.FloatField()
+    yaw = models.FloatField()
+
+
+    class Meta:
+        ordering = ["id"]
+
+    def __str__(self):
+        return f"This is home id: {self.map}"

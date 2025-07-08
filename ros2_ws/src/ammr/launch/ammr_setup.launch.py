@@ -13,7 +13,7 @@ def generate_launch_description():
         # Include Python launch files
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(pkg_rplidar_dir, 'launch', 'rplidar_a1_launch.py')
+                os.path.join(pkg_rplidar_dir, 'launch', 'rplidar_a2m8_launch.py')
             ),
             launch_arguments={'serial_port': '/dev/ttyUSB0'}.items()
         ),
@@ -29,5 +29,5 @@ def generate_launch_description():
             FrontendLaunchDescriptionSource(
                 os.path.join(pkg_rosbridge_dir, 'launch', 'rosbridge_websocket_launch.xml')
             )
-        )
+        ),
     ])

@@ -77,7 +77,7 @@ def generate_launch_description():
           # Loc du lieu
           'RGBD/ProximityMaxDepth': "3.5",  # Bỏ qua điểm sâu >5m
           'RGBD/RangeMax': '3.0',
-          'RGBD/RangeMin': '0.3',
+          'RGBD/RangeMin': '0.5',
           #'qos_image': 0,    # Su dung chat luong dich vu (Qos) cho cam bien, 0=sensor_data/1=parameters/2=services/3=default, ep kieu integer
           #
           'RGBD/ProximityPathFiltering': "true",
@@ -104,12 +104,12 @@ def generate_launch_description():
           #'Optimizer/GravitySigma':'0', # Disable imu constraints (we are already in 2D)
           #'Vis/UseIMU': "true",        # giảm drift yaw
           'Vis/FeatureType': "2" ,      # Sử dụng ORB (nhanh)
-          'Vis/MaxFeatures': "400",    # Giới hạn số feature
-          'Vis/MinInliers': "6",        # Tăng ngưỡng inliers
+          'Vis/MaxFeatures': "600",    # Giới hạn số feature
+          'Vis/MinInliers': "8",        # Tăng ngưỡng inliers
           'Vis/InlierDistance': '0.1',      # so sanh point cloud cua frame hien tai va fram trc, khoang cach point cloud 2 frame > nguong thi loai bo
           'Kp/DetectorStrategy': '2', # 0=SURF 1=SIFT 2=ORB 3=FAST/FREAK 4=FAST/BRIEF 5=GFTT/FREAK 6=GFTT/BRIEF 7=BRISK 8=GFTT/ORB
           'Kp/MaxDepth': '0.0',             # do sau toi da cua depth cam
-          'Kp/MaxFeatures': '400',
+          'Kp/MaxFeatures': '600',
           'Kp/MinFeatures': '20',
           'Mem/TimeThr': '800',
           'Mem/STMSize': '30',          # Chi giu lai 30 node gan nhat
@@ -176,6 +176,14 @@ def generate_launch_description():
         #        tag_settings
         #    ],
         #    remappings=remappings),
+
+        Node(
+            package='robot_pose_publisher',
+            executable='robot_pose_publisher',
+            name='robot_pose_publisher',
+            output='screen',
+        ),
+
         Node(
             package='rtabmap_sync', executable='rgbd_sync', output='screen',
             parameters=[{'approx_sync':True,

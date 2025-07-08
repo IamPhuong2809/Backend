@@ -165,8 +165,8 @@ void MoveRobot::execute_request(
         waypoints.push_back(target_pose);
 
         moveit_msgs::msg::RobotTrajectory trajectory;
-        const double eef_step = 0.01;
-        const double jump_threshold = 4.0;
+        const double eef_step = 0.02;
+        const double jump_threshold = 10.0;
 
         double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
         

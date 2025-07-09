@@ -157,3 +157,16 @@ class GoalPose(models.Model):
 
     def __str__(self):
         return f"This is home id: {self.map}"
+
+class Action(models.Model):
+    TYPE_CHOICES = [
+        (0, 'Mobile'),
+        (1, 'Manipulator'),
+    ]
+
+    typeData = models.IntegerField(choices=TYPE_CHOICES)
+    idData = models.IntegerField()
+    grip = models.CharField()
+
+    def __str__(self):
+        return f"This is set for: {self.get_typeData_display()}"

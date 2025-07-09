@@ -33,7 +33,7 @@ def O0016(request):
         parameter = data.get('data')
         idPoint = data.get('idPoint')
         idPath = data.get("idPath")
-        motion, _, _, _, _, _= parameter
+        motion, _, stop, _, _, _= parameter
         if motion == "P&P":
             updated = True
             pos = data.get("pos")
@@ -59,7 +59,7 @@ def O0016(request):
                 else:
                     updated = False
         else:
-            motion, ee, stop, vel, acc, corner = parameter
+            motion, ee, _, vel, acc, corner = parameter
             stop_bool = True if stop.upper() == 'TRUE' else False
             updated = Point.objects.filter(point_id=idPoint, path_id=idPath).update(
                 motion=motion,

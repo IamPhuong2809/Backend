@@ -10,7 +10,8 @@ from .views import (
     position_list,
     components,
     maps,
-    login
+    login,
+    action
 )
 
 urlpatterns = [
@@ -69,4 +70,7 @@ urlpatterns = [
     path('copy/', components.copy, name='copy'),
     path('update/', maps.update, name='update'),
     path('position/', maps.position, name='position'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('position_mobile/', action.position_mobile, name='position_mobile'),
+    path('aruco_id/', action.aruco_id, name='aruco_id'),
+
+]
